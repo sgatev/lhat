@@ -6,6 +6,10 @@ cc_library(
     hdrs = [
         "names.h",
     ],
+    deps = [
+        "//named:ast",
+        "//nameless:ast",
+    ],
 )
 
 cc_test(

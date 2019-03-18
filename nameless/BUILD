@@ -10,6 +10,7 @@ cc_library(
         "parser.h",
         "printer.h",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_test(
