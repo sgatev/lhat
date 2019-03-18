@@ -1,0 +1,23 @@
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: false
+      compiler: gcc
+      env: BAZEL_OS=linux
+      script: script/travis/test.sh
+    - os: linux
+      dist: trusty
+      sudo: false
+      compiler: clang
+      env: BAZEL_OS=linux
+      script: script/travis/test.sh
+    - os: osx
+      env: BAZEL_OS=darwin
+      compiler: clang
+      script: script/travis/test.sh
+
+notifications:
+  email: false
