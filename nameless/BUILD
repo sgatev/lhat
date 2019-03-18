@@ -15,6 +15,7 @@ cc_library(
 cc_test(
     name = "ast_test",
     srcs = [
+        "ast_test.cc",
         "parser_test.cc",
         "printer_test.cc",
     ],
