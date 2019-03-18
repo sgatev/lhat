@@ -26,3 +26,29 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "vars",
+    srcs = [
+        "vars.cc",
+    ],
+    hdrs = [
+        "vars.h",
+    ],
+    deps = [
+        ":ast",
+    ],
+)
+
+cc_test(
+    name = "vars_test",
+    srcs = [
+        "vars_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":vars",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
