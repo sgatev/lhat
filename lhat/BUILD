@@ -7,8 +7,8 @@ cc_library(
         "names.h",
     ],
     deps = [
-        "//named:ast",
-        "//nameless:ast",
+        "//lhat/named:ast",
+        "//lhat/nameless:ast",
     ],
 )
 
