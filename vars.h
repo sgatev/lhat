@@ -20,6 +20,9 @@ void InsertFreeVarNames(const std::shared_ptr<Term> term,
 // InsertVarNames inserts the names of all variables of term in var_names.
 void InsertVarNames(const std::shared_ptr<Term> term,
                     std::unordered_set<std::string> *var_names);
+
+// NewVarName generates a variable name that is not present in var_names.
+std::string NewVarName(std::unordered_set<std::string> var_names);
 }  // namespace lhat
 
 #endif  // LHAT_VARS_H

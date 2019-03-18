@@ -137,5 +137,28 @@ TEST(InsertVarNames, Appl) {
 
   EXPECT_THAT(var_names, UnorderedElementsAre("x", "y", "u", "v"));
 }
+
+TEST(NewVarName, Empty) {
+  const std::unordered_set<std::string> var_names;
+  EXPECT_EQ(NewVarName(var_names), "a");
+}
+
+TEST(NewVarName, Taken) {
+  const std::unordered_set<std::string> var_names = {
+      "a",
+      "b",
+      "d",
+      "e",
+  };
+  EXPECT_EQ(NewVarName(var_names), "c");
+}
+
+TEST(NewVarName, AllSingleLetterTaken) {
+  std::unordered_set<std::string> var_names = {};
+  for (char c = 'a'; c <= 'z'; c++) {
+    var_names.insert(std::string(1, c));
+  }
+  EXPECT_EQ(NewVarName(var_names), "aa");
+}
 }  // namespace
 }  // namespace lhat

@@ -1,5 +1,7 @@
 #include "vars.h"
 
+#include <deque>
+
 namespace lhat {
 void InsertBoundVarNames(const std::shared_ptr<Term> term,
                          std::unordered_set<std::string>* var_names) {
@@ -57,5 +59,41 @@ void InsertVarNames(const std::shared_ptr<Term> term,
                     std::unordered_set<std::string>* var_names) {
   InsertFreeVarNames(term, var_names);
   InsertBoundVarNames(term, var_names);
+}
+
+std::string NewVarName(std::unordered_set<std::string> var_names) {
+  std::deque<char> name_chars;
+  while (true) {
+    if (!name_chars.empty() && name_chars.back() == 'z') {
+      int count = 0;
+      while (!name_chars.empty() && name_chars.back() == 'z') {
+        count++;
+        name_chars.pop_back();
+      }
+      if (name_chars.empty()) {
+        name_chars.push_back('a');
+      } else {
+        char c = name_chars.back();
+        name_chars.pop_back();
+        name_chars.push_back(c + 1);
+      }
+      for (int i = 0; i < count; i++) {
+        name_chars.push_back('a');
+      }
+    } else {
+      if (name_chars.empty()) {
+        name_chars.push_back('a');
+      } else {
+        char c = name_chars.back();
+        name_chars.pop_back();
+        name_chars.push_back(c + 1);
+      }
+    }
+
+    std::string name(name_chars.begin(), name_chars.end());
+    if (var_names.find(name) == var_names.end()) {
+      return name;
+    }
+  }
 }
 }  // namespace lhat

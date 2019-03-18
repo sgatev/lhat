@@ -52,3 +52,29 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "sub",
+    srcs = [
+        "sub.cc",
+    ],
+    hdrs = [
+        "sub.h",
+    ],
+    deps = [
+        ":vars",
+    ],
+)
+
+cc_test(
+    name = "sub_test",
+    srcs = [
+        "sub_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":sub",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
