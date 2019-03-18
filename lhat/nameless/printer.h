@@ -2,6 +2,7 @@
 #define LHAT_NAMELESS_PRINTER_H
 
 #include <string>
+#include <vector>
 
 #include "ast.h"
 
@@ -11,18 +12,18 @@ namespace nameless {
 class Printer {
 public:
   // Print returns the lambda expression corresponding to term.
-  static std::string Print(std::shared_ptr<Term> term);
+  static std::string Print(const std::shared_ptr<Term> term);
 
 private:
   Printer();
 
-  std::string PrintTerm(std::shared_ptr<Term> term);
-  std::string PrintVarTerm(std::shared_ptr<VarTerm> var);
-  std::string PrintAbstTerm(std::shared_ptr<AbstTerm> abst);
-  std::string PrintApplTerm(std::shared_ptr<ApplTerm> appl);
+  void PrintTerm(const std::shared_ptr<Term> term);
+  void PrintVarTerm(const std::shared_ptr<VarTerm> var);
+  void PrintAbstTerm(const std::shared_ptr<AbstTerm> abst);
+  void PrintApplTerm(const std::shared_ptr<ApplTerm> appl);
 
   int abst_count_;
-  std::string result_;
+  std::vector<std::string> result_pieces_;
 };
 }  // namespace nameless
 }  // namespace lhat

@@ -1,41 +1,54 @@
 #include "printer.h"
 
+#include <memory>
+
+#include "absl/strings/str_join.h"
+
 namespace lhat {
 namespace nameless {
-std::string Printer::Print(std::shared_ptr<Term> term) {
-  if (term == nullptr) {
-    return "";
-  }
-  return Printer().PrintTerm(term);
+std::string Printer::Print(const std::shared_ptr<Term> term) {
+  Printer printer;
+  printer.PrintTerm(term);
+  return absl::StrJoin(printer.result_pieces_, "");
 }
 
 Printer::Printer() : abst_count_(0) {}
 
-std::string Printer::PrintTerm(std::shared_ptr<Term> term) {
+void Printer::PrintTerm(const std::shared_ptr<Term> term) {
+  if (term == nullptr) {
+    return;
+  }
   switch (term->Type()) {
     case VAR_TERM:
-      return PrintVarTerm(std::static_pointer_cast<VarTerm>(term));
+      PrintVarTerm(std::static_pointer_cast<VarTerm>(term));
+      break;
     case ABST_TERM:
-      return PrintAbstTerm(std::static_pointer_cast<AbstTerm>(term));
+      PrintAbstTerm(std::static_pointer_cast<AbstTerm>(term));
+      break;
     case APPL_TERM:
-      return PrintApplTerm(std::static_pointer_cast<ApplTerm>(term));
+      PrintApplTerm(std::static_pointer_cast<ApplTerm>(term));
+      break;
   }
-  return "";
 }
 
-std::string Printer::PrintVarTerm(std::shared_ptr<VarTerm> var) {
-  return std::to_string(var->idx + abst_count_);
+void Printer::PrintVarTerm(const std::shared_ptr<VarTerm> var) {
+  result_pieces_.push_back(std::to_string(var->idx + abst_count_));
 }
 
-std::string Printer::PrintAbstTerm(std::shared_ptr<AbstTerm> abst) {
+void Printer::PrintAbstTerm(const std::shared_ptr<AbstTerm> abst) {
   abst_count_++;
-  const std::string result = "(^ " + PrintTerm(abst->body) + ")";
+  result_pieces_.push_back("(^ ");
+  PrintTerm(abst->body);
+  result_pieces_.push_back(")");
   abst_count_--;
-  return result;
 }
 
-std::string Printer::PrintApplTerm(std::shared_ptr<ApplTerm> appl) {
-  return "(" + PrintTerm(appl->func) + " " + PrintTerm(appl->arg) + ")";
+void Printer::PrintApplTerm(const std::shared_ptr<ApplTerm> appl) {
+  result_pieces_.push_back("(");
+  PrintTerm(appl->func);
+  result_pieces_.push_back(" ");
+  PrintTerm(appl->arg);
+  result_pieces_.push_back(")");
 }
 }  // namespace nameless
 }  // namespace lhat

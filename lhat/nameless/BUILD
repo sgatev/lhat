@@ -11,6 +11,9 @@ cc_library(
         "printer.h",
     ],
     visibility = ["//visibility:public"],
+    deps = [
+        "@absl//absl/strings",
+    ],
 )
 
 cc_test(
