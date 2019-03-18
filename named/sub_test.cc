@@ -4,6 +4,7 @@
 #include "gtest/gtest.h"
 
 namespace lhat {
+namespace named {
 namespace {
 using ::testing::IsNull;
 using ::testing::NotNull;
@@ -162,4 +163,5 @@ TEST(SafeSub, Appl) {
   EXPECT_EQ(arg_var->name, "y");
 }
 }  // namespace
+}  // namespace named
 }  // namespace lhat

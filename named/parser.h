@@ -1,11 +1,12 @@
-#ifndef LHAT_PARSER_H
-#define LHAT_PARSER_H
+#ifndef LHAT_NAMED_PARSER_H
+#define LHAT_NAMED_PARSER_H
 
 #include <string>
 
 #include "ast.h"
 
 namespace lhat {
+namespace named {
 // Parser constructs ASTs from lambda terms.
 class Parser {
 public:
@@ -27,6 +28,7 @@ private:
   int idx_;
   bool done_;
 };
+}  // namespace named
 }  // namespace lhat
 
-#endif  // LHAT_PARSER_H
+#endif  // LHAT_NAMED_PARSER_H

@@ -1,6 +1,7 @@
 #include "ast.h"
 
 namespace lhat {
+namespace named {
 Term::~Term() {}
 
 AbstTerm::AbstTerm(const std::string& var_name, std::shared_ptr<Term> body)
@@ -16,4 +17,5 @@ TermType ApplTerm::Type() const { return APPL_TERM; }
 VarTerm::VarTerm(const std::string& name) : name(name) {}
 
 TermType VarTerm::Type() const { return VAR_TERM; }
+}  // namespace named
 }  // namespace lhat

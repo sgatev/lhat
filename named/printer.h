@@ -1,11 +1,12 @@
-#ifndef LHAT_PRINTER_H
-#define LHAT_PRINTER_H
+#ifndef LHAT_NAMED_PRINTER_H
+#define LHAT_NAMED_PRINTER_H
 
 #include <string>
 
 #include "ast.h"
 
 namespace lhat {
+namespace named {
 // Parser constructs lambda expressions from ASTs.
 class Printer {
 public:
@@ -20,6 +21,7 @@ private:
 
   std::string result;
 };
+}  // namespace named
 }  // namespace lhat
 
-#endif  // LHAT_PRINTER_H
+#endif  // LHAT_NAMED_PRINTER_H

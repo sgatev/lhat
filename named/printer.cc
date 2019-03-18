@@ -1,6 +1,7 @@
 #include "printer.h"
 
 namespace lhat {
+namespace named {
 std::string Printer::Print(std::shared_ptr<Term> term) {
   if (term == nullptr) {
     return "";
@@ -31,4 +32,5 @@ std::string Printer::PrintAbstTerm(std::shared_ptr<AbstTerm> abst) {
 std::string Printer::PrintApplTerm(std::shared_ptr<ApplTerm> appl) {
   return "(" + PrintTerm(appl->func) + " " + PrintTerm(appl->arg) + ")";
 }
+}  // namespace named
 }  // namespace lhat

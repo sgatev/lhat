@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 namespace lhat {
+namespace named {
 namespace {
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ x y) (u v))";
@@ -12,4 +13,5 @@ TEST(Ast, ParsePrintConsistency) {
   EXPECT_EQ(Printer::Print(term), expr);
 }
 }  // namespace
+}  // namespace named
 }  // namespace lhat

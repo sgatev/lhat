@@ -3,6 +3,7 @@
 #include <deque>
 
 namespace lhat {
+namespace named {
 void InsertBoundVarNames(const std::shared_ptr<Term> term,
                          std::unordered_set<std::string>* var_names) {
   if (term == nullptr) {
@@ -96,4 +97,5 @@ std::string NewVarName(std::unordered_set<std::string> var_names) {
     }
   }
 }
+}  // namespace named
 }  // namespace lhat

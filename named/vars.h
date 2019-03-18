@@ -1,5 +1,5 @@
-#ifndef LHAT_VARS_H
-#define LHAT_VARS_H
+#ifndef LHAT_NAMED_VARS_H
+#define LHAT_NAMED_VARS_H
 
 #include <string>
 #include <unordered_set>
@@ -7,6 +7,7 @@
 #include "ast.h"
 
 namespace lhat {
+namespace named {
 // InsertBoundVarsNames inserts the names of the bound variables of term in
 // var_names.
 void InsertBoundVarNames(const std::shared_ptr<Term> term,
@@ -23,6 +24,7 @@ void InsertVarNames(const std::shared_ptr<Term> term,
 
 // NewVarName generates a variable name that is not present in var_names.
 std::string NewVarName(std::unordered_set<std::string> var_names);
+}  // namespace named
 }  // namespace lhat
 
-#endif  // LHAT_VARS_H
+#endif  // LHAT_NAMED_VARS_H

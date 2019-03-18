@@ -5,6 +5,7 @@
 #include "vars.h"
 
 namespace lhat {
+namespace named {
 namespace {
 std::shared_ptr<Term> RenameBoundVarInTerm(const std::shared_ptr<Term> term,
                                            const std::string& from,
@@ -112,4 +113,5 @@ std::shared_ptr<Term> Sub(const std::shared_ptr<Term> target,
                         term);
   }
 }
+}  // namespace named
 }  // namespace lhat

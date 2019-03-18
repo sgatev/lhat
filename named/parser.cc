@@ -1,6 +1,7 @@
 #include "parser.h"
 
 namespace lhat {
+namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 }  // namespace
@@ -83,4 +84,5 @@ void Parser::Next() {
     done_ = true;
   }
 }
+}  // namespace named
 }  // namespace lhat

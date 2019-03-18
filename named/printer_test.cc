@@ -6,6 +6,7 @@
 #include "gtest/gtest.h"
 
 namespace lhat {
+namespace named {
 namespace {
 TEST(Printer, Null) {
   const std::shared_ptr<Term> term = nullptr;
@@ -37,4 +38,5 @@ TEST(Printer, Complex) {
   EXPECT_EQ(Printer::Print(term), "((^ x y) (u v))");
 }
 }  // namespace
+}  // namespace named
 }  // namespace lhat

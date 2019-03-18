@@ -1,9 +1,10 @@
-#ifndef LHAT_AST_H
-#define LHAT_AST_H
+#ifndef LHAT_NAMED_AST_H
+#define LHAT_NAMED_AST_H
 
 #include <string>
 
 namespace lhat {
+namespace named {
 // TermType is an enumeration of types of lambda terms.
 enum TermType {
   // ABST_TERM is a function abstraction lambda term.
@@ -64,6 +65,7 @@ public:
   std::string name;
 };
 
+}  // namespace named
 }  // namespace lhat
 
-#endif  // LHAT_AST_H
+#endif  // LHAT_NAMED_AST_H
