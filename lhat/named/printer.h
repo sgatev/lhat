@@ -1,10 +1,11 @@
 #ifndef LHAT_NAMED_PRINTER_H
 #define LHAT_NAMED_PRINTER_H
 
-#include <string>
 #include <vector>
 
 #include "ast.h"
+
+#include "absl/strings/string_view.h"
 
 namespace lhat {
 namespace named {
@@ -20,7 +21,7 @@ private:
   void PrintAbstTerm(const std::shared_ptr<AbstTerm> abst);
   void PrintApplTerm(const std::shared_ptr<ApplTerm> appl);
 
-  std::vector<std::string> result_pieces_;
+  std::vector<absl::string_view> result_pieces_;
 };
 }  // namespace named
 }  // namespace lhat
