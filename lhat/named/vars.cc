@@ -62,7 +62,7 @@ void InsertVarNames(const std::shared_ptr<Term> term,
   InsertBoundVarNames(term, var_names);
 }
 
-std::string NewVarName(std::unordered_set<std::string> var_names) {
+std::string NewVarName(const std::unordered_set<std::string>& var_names) {
   std::deque<char> name_chars;
   while (true) {
     if (!name_chars.empty() && name_chars.back() == 'z') {

@@ -23,7 +23,7 @@ void InsertVarNames(const std::shared_ptr<Term> term,
                     std::unordered_set<std::string> *var_names);
 
 // NewVarName generates a variable name that is not present in var_names.
-std::string NewVarName(std::unordered_set<std::string> var_names);
+std::string NewVarName(const std::unordered_set<std::string> &var_names);
 }  // namespace named
 }  // namespace lhat
 
