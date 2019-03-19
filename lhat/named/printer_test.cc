@@ -1,6 +1,7 @@
 #include "printer.h"
 
 #include <memory>
+#include <string>
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -10,24 +11,32 @@ namespace named {
 namespace {
 TEST(Printer, Null) {
   const std::shared_ptr<Term> term = nullptr;
-  EXPECT_EQ(Printer::Print(term), "");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "");
 }
 
 TEST(Printer, Var) {
   const auto term = std::make_shared<VarTerm>("x");
-  EXPECT_EQ(Printer::Print(term), "x");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "x");
 }
 
 TEST(Printer, Abst) {
   const auto term =
       std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
-  EXPECT_EQ(Printer::Print(term), "(^ x y)");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(^ x y)");
 }
 
 TEST(Printer, Appl) {
   const auto term = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
                                                std::make_shared<VarTerm>("y"));
-  EXPECT_EQ(Printer::Print(term), "(x y)");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(x y)");
 }
 
 TEST(Printer, Complex) {
@@ -35,7 +44,9 @@ TEST(Printer, Complex) {
       std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
       std::make_shared<ApplTerm>(std::make_shared<VarTerm>("u"),
                                  std::make_shared<VarTerm>("v")));
-  EXPECT_EQ(Printer::Print(term), "((^ x y) (u v))");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "((^ x y) (u v))");
 }
 }  // namespace
 }  // namespace named

@@ -5,6 +5,8 @@
 
 #include "ast.h"
 
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_join.h"
 #include "absl/strings/string_view.h"
 
 namespace lhat {
@@ -13,7 +15,12 @@ namespace named {
 class Printer {
 public:
   // Print returns the lambda expression corresponding to term.
-  static std::string Print(const std::shared_ptr<Term> term);
+  template <class OutType>
+  static void Print(const std::shared_ptr<Term> term, OutType out) {
+    Printer printer;
+    printer.PrintTerm(term);
+    absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
+  }
 
 private:
   void PrintTerm(const std::shared_ptr<Term> term);

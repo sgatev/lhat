@@ -2,16 +2,8 @@
 
 #include <memory>
 
-#include "absl/strings/str_join.h"
-
 namespace lhat {
 namespace nameless {
-std::string Printer::Print(const std::shared_ptr<Term> term) {
-  Printer printer;
-  printer.PrintTerm(term);
-  return absl::StrJoin(printer.result_pieces_, "");
-}
-
 Printer::Printer() : abst_count_(0) {}
 
 void Printer::PrintTerm(const std::shared_ptr<Term> term) {

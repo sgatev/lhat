@@ -1,6 +1,8 @@
 #include "parser.h"
 #include "printer.h"
 
+#include <string>
+
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -10,7 +12,9 @@ namespace {
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ 0) (^ (0 ((^ 2) 1))))";
   const std::shared_ptr<Term> term = Parser::Parse(expr);
-  EXPECT_EQ(Printer::Print(term), expr);
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, expr);
 }
 }  // namespace
 }  // namespace nameless

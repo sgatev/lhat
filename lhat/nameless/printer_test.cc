@@ -1,6 +1,7 @@
 #include "printer.h"
 
 #include <memory>
+#include <string>
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -10,34 +11,46 @@ namespace nameless {
 namespace {
 TEST(Printer, Null) {
   const std::shared_ptr<Term> term = nullptr;
-  EXPECT_EQ(Printer::Print(term), "");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "");
 }
 
 TEST(Printer, Var) {
   const auto term = std::make_shared<VarTerm>(21);
-  EXPECT_EQ(Printer::Print(term), "21");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "21");
 }
 
 TEST(Printer, AbstFree) {
   const auto term = std::make_shared<AbstTerm>(std::make_shared<VarTerm>(1));
-  EXPECT_EQ(Printer::Print(term), "(^ 2)");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(^ 2)");
 }
 
 TEST(Printer, AbstBound) {
   const auto term = std::make_shared<AbstTerm>(std::make_shared<VarTerm>(-1));
-  EXPECT_EQ(Printer::Print(term), "(^ 0)");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(^ 0)");
 }
 
 TEST(Printer, MultiAbstBound) {
   const auto term = std::make_shared<AbstTerm>(
       std::make_shared<AbstTerm>(std::make_shared<VarTerm>(-1)));
-  EXPECT_EQ(Printer::Print(term), "(^ (^ 1))");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(^ (^ 1))");
 }
 
 TEST(Printer, Appl) {
   const auto term = std::make_shared<ApplTerm>(std::make_shared<VarTerm>(1),
                                                std::make_shared<VarTerm>(2));
-  EXPECT_EQ(Printer::Print(term), "(1 2)");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(1 2)");
 }
 
 TEST(Printer, Complex) {
@@ -45,7 +58,9 @@ TEST(Printer, Complex) {
       std::make_shared<AbstTerm>(std::make_shared<VarTerm>(0)),
       std::make_shared<ApplTerm>(std::make_shared<VarTerm>(1),
                                  std::make_shared<VarTerm>(0)));
-  EXPECT_EQ(Printer::Print(term), "((^ 1) (1 0))");
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "((^ 1) (1 0))");
 }
 }  // namespace
 }  // namespace nameless
