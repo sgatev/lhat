@@ -32,6 +32,33 @@ cc_test(
 )
 
 cc_library(
+    name = "equiv",
+    srcs = [
+        "equiv.cc",
+    ],
+    hdrs = [
+        "equiv.h",
+    ],
+    deps = [
+        ":ast",
+        ":sub",
+    ],
+)
+
+cc_test(
+    name = "equiv_test",
+    srcs = [
+        "equiv_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":equiv",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "sub",
     srcs = [
         "sub.cc",
