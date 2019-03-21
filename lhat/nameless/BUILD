@@ -30,3 +30,31 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "shift",
+    srcs = [
+        "shift.cc",
+    ],
+    hdrs = [
+        "shift.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ast",
+    ],
+)
+
+cc_test(
+    name = "shift_test",
+    srcs = [
+        "shift_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":ast",
+        ":shift",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
