@@ -13,91 +13,76 @@ TEST(AlphaEquiv, Null) {
 }
 
 TEST(AlphaEquiv, OneIsNull) {
-  const auto m = std::make_shared<VarTerm>("x");
+  const auto m = VarTerm::Make("x");
   const std::shared_ptr<Term> n = nullptr;
   EXPECT_FALSE(AlphaEquiv(m, n));
 
   const std::shared_ptr<Term> u = nullptr;
-  const auto v = std::make_shared<VarTerm>("x");
+  const auto v = VarTerm::Make("x");
   EXPECT_FALSE(AlphaEquiv(u, v));
 }
 
 TEST(AlphaEquiv, DistinctTypes) {
-  const auto m = std::make_shared<VarTerm>("x");
-  const auto n =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto m = VarTerm::Make("x");
+  const auto n = AbstTerm::Make("x", VarTerm::Make("y"));
   EXPECT_FALSE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, DistinctFreeVars) {
-  const auto m = std::make_shared<VarTerm>("x");
-  const auto n = std::make_shared<VarTerm>("y");
+  const auto m = VarTerm::Make("x");
+  const auto n = VarTerm::Make("y");
   EXPECT_FALSE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, SameFreeVars) {
-  const auto m = std::make_shared<VarTerm>("x");
-  const auto n = std::make_shared<VarTerm>("x");
+  const auto m = VarTerm::Make("x");
+  const auto n = VarTerm::Make("x");
   EXPECT_TRUE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, AbstDistinctBoundVars) {
-  const auto m =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x"));
-  const auto n =
-      std::make_shared<AbstTerm>("y", std::make_shared<VarTerm>("y"));
+  const auto m = AbstTerm::Make("x", VarTerm::Make("x"));
+  const auto n = AbstTerm::Make("y", VarTerm::Make("y"));
   EXPECT_TRUE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, AbstSameBoundVars) {
-  const auto m =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x"));
-  const auto n =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x"));
+  const auto m = AbstTerm::Make("x", VarTerm::Make("x"));
+  const auto n = AbstTerm::Make("x", VarTerm::Make("x"));
   EXPECT_TRUE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, AbstDistinctBodies) {
-  const auto m =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
-  const auto n =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("z"));
+  const auto m = AbstTerm::Make("x", VarTerm::Make("y"));
+  const auto n = AbstTerm::Make("x", VarTerm::Make("z"));
   EXPECT_FALSE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, ApplDistinctFuncs) {
-  const auto m = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                            std::make_shared<VarTerm>("z"));
-  const auto n = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("y"),
-                                            std::make_shared<VarTerm>("z"));
+  const auto m = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("z"));
+  const auto n = ApplTerm::Make(VarTerm::Make("y"), VarTerm::Make("z"));
   EXPECT_FALSE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, ApplDistinctArgs) {
-  const auto m = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                            std::make_shared<VarTerm>("y"));
-  const auto n = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                            std::make_shared<VarTerm>("z"));
+  const auto m = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("y"));
+  const auto n = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("z"));
   EXPECT_FALSE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, ApplSameFuncsAndArgs) {
-  const auto m = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                            std::make_shared<VarTerm>("y"));
-  const auto n = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                            std::make_shared<VarTerm>("y"));
+  const auto m = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("y"));
+  const auto n = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("y"));
   EXPECT_TRUE(AlphaEquiv(m, n));
 }
 
 TEST(AlphaEquiv, Complex) {
-  const auto m = std::make_shared<AbstTerm>(
-      "u", std::make_shared<ApplTerm>(
-               std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x")),
-               std::make_shared<VarTerm>("y")));
-  const auto n = std::make_shared<AbstTerm>(
-      "v", std::make_shared<ApplTerm>(
-               std::make_shared<AbstTerm>("z", std::make_shared<VarTerm>("z")),
-               std::make_shared<VarTerm>("y")));
+  const auto m = AbstTerm::Make(
+      "u", ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("x")),
+                          VarTerm::Make("y")));
+  const auto n = AbstTerm::Make(
+      "v", ApplTerm::Make(AbstTerm::Make("z", VarTerm::Make("z")),
+                          VarTerm::Make("y")));
   EXPECT_TRUE(AlphaEquiv(m, n));
 }
 }  // namespace

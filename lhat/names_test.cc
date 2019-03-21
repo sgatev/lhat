@@ -23,7 +23,7 @@ TEST(NameContext, AddAndGetNames) {
 }
 
 TEST(StripNames, Var) {
-  const auto named_term = std::make_shared<named::VarTerm>("x");
+  const auto named_term = named::VarTerm::Make("x");
 
   const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
   ASSERT_THAT(nameless_term, NotNull());
@@ -34,8 +34,7 @@ TEST(StripNames, Var) {
 }
 
 TEST(StripNames, AbstBound) {
-  const auto named_term = std::make_shared<named::AbstTerm>(
-      "x", std::make_shared<named::VarTerm>("x"));
+  const auto named_term = named::AbstTerm::Make("x", named::VarTerm::Make("x"));
 
   const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
   ASSERT_THAT(nameless_term, NotNull());
@@ -49,8 +48,7 @@ TEST(StripNames, AbstBound) {
 }
 
 TEST(StripNames, AbstFree) {
-  const auto named_term = std::make_shared<named::AbstTerm>(
-      "x", std::make_shared<named::VarTerm>("y"));
+  const auto named_term = named::AbstTerm::Make("x", named::VarTerm::Make("y"));
 
   const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
   ASSERT_THAT(nameless_term, NotNull());
@@ -64,9 +62,8 @@ TEST(StripNames, AbstFree) {
 }
 
 TEST(StripNames, Appl) {
-  const auto named_term =
-      std::make_shared<named::ApplTerm>(std::make_shared<named::VarTerm>("x"),
-                                        std::make_shared<named::VarTerm>("y"));
+  const auto named_term = named::ApplTerm::Make(named::VarTerm::Make("x"),
+                                                named::VarTerm::Make("y"));
 
   const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
   ASSERT_THAT(nameless_term, NotNull());
@@ -84,11 +81,10 @@ TEST(StripNames, Appl) {
 }
 
 TEST(StripNames, Complex) {
-  const auto named_term = std::make_shared<named::ApplTerm>(
-      std::make_shared<named::AbstTerm>("x",
-                                        std::make_shared<named::VarTerm>("y")),
-      std::make_shared<named::ApplTerm>(std::make_shared<named::VarTerm>("u"),
-                                        std::make_shared<named::VarTerm>("v")));
+  const auto named_term = named::ApplTerm::Make(
+      named::AbstTerm::Make("x", named::VarTerm::Make("y")),
+      named::ApplTerm::Make(named::VarTerm::Make("u"),
+                            named::VarTerm::Make("v")));
 
   const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
   ASSERT_THAT(nameless_term, NotNull());

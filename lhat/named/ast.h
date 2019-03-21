@@ -1,6 +1,7 @@
 #ifndef LHAT_NAMED_AST_H
 #define LHAT_NAMED_AST_H
 
+#include <memory>
 #include <string>
 
 namespace lhat {
@@ -29,6 +30,10 @@ public:
 // AbstTerm is a lambda term that represents function abstraction.
 class AbstTerm : public Term {
 public:
+  // Makes a function abstraction lambda term.
+  static std::shared_ptr<AbstTerm> Make(const std::string& var_name,
+                                        std::shared_ptr<Term> body);
+
   AbstTerm(const std::string& var_name, std::shared_ptr<Term> body);
 
   TermType Type() const override;
@@ -43,6 +48,10 @@ public:
 // ApplTerm is a lambda term that represents function application.
 class ApplTerm : public Term {
 public:
+  // Makes a function application lambda term.
+  static std::shared_ptr<ApplTerm> Make(std::shared_ptr<Term> func,
+                                        std::shared_ptr<Term> arg);
+
   ApplTerm(std::shared_ptr<Term> func, std::shared_ptr<Term> arg);
 
   TermType Type() const override;
@@ -57,6 +66,9 @@ public:
 // VarTerm is a lambda term that represents a variable.
 class VarTerm : public Term {
 public:
+  // Makes a variable lambda term.
+  static std::shared_ptr<VarTerm> Make(const std::string& name);
+
   VarTerm(const std::string& name);
 
   TermType Type() const override;
@@ -64,7 +76,6 @@ public:
   // Name of the variable.
   std::string name;
 };
-
 }  // namespace named
 }  // namespace lhat
 

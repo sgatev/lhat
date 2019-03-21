@@ -10,14 +10,13 @@ using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(Sub, Null) {
-  const std::shared_ptr<Term> result =
-      Sub(nullptr, "x", std::make_shared<VarTerm>("y"));
+  const std::shared_ptr<Term> result = Sub(nullptr, "x", VarTerm::Make("y"));
   ASSERT_THAT(result, IsNull());
 }
 
 TEST(Sub, SameVar) {
   const std::shared_ptr<Term> result =
-      Sub(std::make_shared<VarTerm>("x"), "x", std::make_shared<VarTerm>("y"));
+      Sub(VarTerm::Make("x"), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto var = std::static_pointer_cast<VarTerm>(result);
@@ -27,7 +26,7 @@ TEST(Sub, SameVar) {
 
 TEST(Sub, OtherVar) {
   const std::shared_ptr<Term> result =
-      Sub(std::make_shared<VarTerm>("z"), "x", std::make_shared<VarTerm>("y"));
+      Sub(VarTerm::Make("z"), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto var = std::static_pointer_cast<VarTerm>(result);
@@ -37,8 +36,7 @@ TEST(Sub, OtherVar) {
 
 TEST(Sub, AbstSameVar) {
   const std::shared_ptr<Term> result =
-      Sub(std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x")), "x",
-          std::make_shared<VarTerm>("y"));
+      Sub(AbstTerm::Make("x", VarTerm::Make("x")), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto abst = std::static_pointer_cast<AbstTerm>(result);
@@ -53,8 +51,7 @@ TEST(Sub, AbstSameVar) {
 
 TEST(Sub, AbstOtherVar) {
   const std::shared_ptr<Term> result =
-      Sub(std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")), "y",
-          std::make_shared<VarTerm>("z"));
+      Sub(AbstTerm::Make("x", VarTerm::Make("y")), "y", VarTerm::Make("z"));
   ASSERT_THAT(result, NotNull());
 
   const auto abst = std::static_pointer_cast<AbstTerm>(result);
@@ -69,9 +66,8 @@ TEST(Sub, AbstOtherVar) {
 
 TEST(Sub, Appl) {
   const std::shared_ptr<Term> result =
-      Sub(std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                     std::make_shared<VarTerm>("x")),
-          "x", std::make_shared<VarTerm>("y"));
+      Sub(ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("x")), "x",
+          VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto appl = std::static_pointer_cast<ApplTerm>(result);
@@ -88,13 +84,13 @@ TEST(Sub, Appl) {
 
 TEST(SafeSub, Null) {
   const std::shared_ptr<Term> result =
-      SafeSub(nullptr, "x", std::make_shared<VarTerm>("y"));
+      SafeSub(nullptr, "x", VarTerm::Make("y"));
   ASSERT_THAT(result, IsNull());
 }
 
 TEST(SafeSub, SameVar) {
-  const std::shared_ptr<Term> result = SafeSub(
-      std::make_shared<VarTerm>("x"), "x", std::make_shared<VarTerm>("y"));
+  const std::shared_ptr<Term> result =
+      SafeSub(VarTerm::Make("x"), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto var = std::static_pointer_cast<VarTerm>(result);
@@ -103,8 +99,8 @@ TEST(SafeSub, SameVar) {
 }
 
 TEST(SafeSub, OtherVar) {
-  const std::shared_ptr<Term> result = SafeSub(
-      std::make_shared<VarTerm>("z"), "x", std::make_shared<VarTerm>("y"));
+  const std::shared_ptr<Term> result =
+      SafeSub(VarTerm::Make("z"), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto var = std::static_pointer_cast<VarTerm>(result);
@@ -114,8 +110,7 @@ TEST(SafeSub, OtherVar) {
 
 TEST(SafeSub, AbstSameVar) {
   const std::shared_ptr<Term> result =
-      SafeSub(std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("x")),
-              "x", std::make_shared<VarTerm>("y"));
+      SafeSub(AbstTerm::Make("x", VarTerm::Make("x")), "x", VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto abst = std::static_pointer_cast<AbstTerm>(result);
@@ -130,8 +125,7 @@ TEST(SafeSub, AbstSameVar) {
 
 TEST(SafeSub, AbstOtherVar) {
   const std::shared_ptr<Term> result =
-      SafeSub(std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
-              "y", std::make_shared<VarTerm>("z"));
+      SafeSub(AbstTerm::Make("x", VarTerm::Make("y")), "y", VarTerm::Make("z"));
   ASSERT_THAT(result, NotNull());
 
   const auto abst = std::static_pointer_cast<AbstTerm>(result);
@@ -146,9 +140,8 @@ TEST(SafeSub, AbstOtherVar) {
 
 TEST(SafeSub, Appl) {
   const std::shared_ptr<Term> result =
-      SafeSub(std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                         std::make_shared<VarTerm>("x")),
-              "x", std::make_shared<VarTerm>("y"));
+      SafeSub(ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("x")), "x",
+              VarTerm::Make("y"));
   ASSERT_THAT(result, NotNull());
 
   const auto appl = std::static_pointer_cast<ApplTerm>(result);

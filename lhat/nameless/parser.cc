@@ -47,7 +47,7 @@ std::shared_ptr<AbstTerm> Parser::ParseAbstTerm() {
 
   abst_count_--;
 
-  return std::make_shared<AbstTerm>(term);
+  return AbstTerm::Make(term);
 }
 
 std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
@@ -61,7 +61,7 @@ std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
   // consume ')'
   Next();
 
-  return std::make_shared<ApplTerm>(left, right);
+  return ApplTerm::Make(left, right);
 }
 
 std::shared_ptr<VarTerm> Parser::ParseVarTerm() {
@@ -72,7 +72,7 @@ std::shared_ptr<VarTerm> Parser::ParseVarTerm() {
     Next();
   } while (!done_ && !IsSpecial(Peek()));
 
-  return std::make_shared<VarTerm>(std::stoi(idx) - abst_count_);
+  return VarTerm::Make(std::stoi(idx) - abst_count_);
 }
 
 char Parser::Peek() { return expr_[idx_]; }

@@ -17,33 +17,30 @@ TEST(Printer, Null) {
 }
 
 TEST(Printer, Var) {
-  const auto term = std::make_shared<VarTerm>("x");
+  const auto term = VarTerm::Make("x");
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "x");
 }
 
 TEST(Printer, Abst) {
-  const auto term =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ x y)");
 }
 
 TEST(Printer, Appl) {
-  const auto term = std::make_shared<ApplTerm>(std::make_shared<VarTerm>("x"),
-                                               std::make_shared<VarTerm>("y"));
+  const auto term = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("y"));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(x y)");
 }
 
 TEST(Printer, Complex) {
-  const auto term = std::make_shared<ApplTerm>(
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
-      std::make_shared<ApplTerm>(std::make_shared<VarTerm>("u"),
-                                 std::make_shared<VarTerm>("v")));
+  const auto term =
+      ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
+                     ApplTerm::Make(VarTerm::Make("u"), VarTerm::Make("v")));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "((^ x y) (u v))");

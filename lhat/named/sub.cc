@@ -15,25 +15,24 @@ std::shared_ptr<AbstTerm> RenameBoundVarInAbstTerm(
     const std::shared_ptr<AbstTerm> abst, const std::string& from,
     const std::string& to) {
   if (abst->var_name == from) {
-    return std::make_shared<AbstTerm>(
-        to, Sub(abst->body, from, std::make_shared<VarTerm>(to)));
+    return AbstTerm::Make(to, Sub(abst->body, from, VarTerm::Make(to)));
   } else {
-    return std::make_shared<AbstTerm>(
-        abst->var_name, RenameBoundVarInTerm(abst->body, from, to));
+    return AbstTerm::Make(abst->var_name,
+                          RenameBoundVarInTerm(abst->body, from, to));
   }
 }
 
 std::shared_ptr<ApplTerm> RenameBoundVarInApplTerm(
     const std::shared_ptr<ApplTerm> appl, const std::string& from,
     const std::string& to) {
-  return std::make_shared<ApplTerm>(RenameBoundVarInTerm(appl->func, from, to),
-                                    RenameBoundVarInTerm(appl->arg, from, to));
+  return ApplTerm::Make(RenameBoundVarInTerm(appl->func, from, to),
+                        RenameBoundVarInTerm(appl->arg, from, to));
 }
 
 std::shared_ptr<VarTerm> RenameBoundVarInVarTerm(
     const std::shared_ptr<VarTerm> var, const std::string& from,
     const std::string& to) {
-  return std::make_shared<VarTerm>(var->name);
+  return VarTerm::Make(var->name);
 }
 
 std::shared_ptr<Term> RenameBoundVarInTerm(const std::shared_ptr<Term> term,
@@ -60,15 +59,14 @@ std::shared_ptr<Term> SubAbstTerm(const std::shared_ptr<AbstTerm> target,
   if (target->var_name == var_name) {
     return target;
   }
-  return std::make_shared<AbstTerm>(target->var_name,
-                                    Sub(target->body, var_name, term));
+  return AbstTerm::Make(target->var_name, Sub(target->body, var_name, term));
 }
 
 std::shared_ptr<Term> SubApplTerm(const std::shared_ptr<ApplTerm> target,
                                   const std::string& var_name,
                                   const std::shared_ptr<Term> term) {
-  return std::make_shared<ApplTerm>(Sub(target->func, var_name, term),
-                                    Sub(target->arg, var_name, term));
+  return ApplTerm::Make(Sub(target->func, var_name, term),
+                        Sub(target->arg, var_name, term));
 }
 
 std::shared_ptr<Term> SubVarTerm(const std::shared_ptr<VarTerm> target,

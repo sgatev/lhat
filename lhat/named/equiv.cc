@@ -18,9 +18,8 @@ bool AlphaEquiv(const std::shared_ptr<Term> m, const std::shared_ptr<Term> n) {
     case ABST_TERM: {
       const auto m_abst = std::static_pointer_cast<AbstTerm>(m);
       const auto n_abst = std::static_pointer_cast<AbstTerm>(n);
-      return AlphaEquiv(m_abst->body,
-                        Sub(n_abst->body, n_abst->var_name,
-                            std::make_shared<VarTerm>(m_abst->var_name)));
+      return AlphaEquiv(m_abst->body, Sub(n_abst->body, n_abst->var_name,
+                                          VarTerm::Make(m_abst->var_name)));
     }
     case APPL_TERM: {
       const auto m_appl = std::static_pointer_cast<ApplTerm>(m);

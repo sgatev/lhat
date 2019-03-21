@@ -17,47 +17,44 @@ TEST(Printer, Null) {
 }
 
 TEST(Printer, Var) {
-  const auto term = std::make_shared<VarTerm>(21);
+  const auto term = VarTerm::Make(21);
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "21");
 }
 
 TEST(Printer, AbstFree) {
-  const auto term = std::make_shared<AbstTerm>(std::make_shared<VarTerm>(1));
+  const auto term = AbstTerm::Make(VarTerm::Make(1));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ 2)");
 }
 
 TEST(Printer, AbstBound) {
-  const auto term = std::make_shared<AbstTerm>(std::make_shared<VarTerm>(-1));
+  const auto term = AbstTerm::Make(VarTerm::Make(-1));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ 0)");
 }
 
 TEST(Printer, MultiAbstBound) {
-  const auto term = std::make_shared<AbstTerm>(
-      std::make_shared<AbstTerm>(std::make_shared<VarTerm>(-1)));
+  const auto term = AbstTerm::Make(AbstTerm::Make(VarTerm::Make(-1)));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ (^ 1))");
 }
 
 TEST(Printer, Appl) {
-  const auto term = std::make_shared<ApplTerm>(std::make_shared<VarTerm>(1),
-                                               std::make_shared<VarTerm>(2));
+  const auto term = ApplTerm::Make(VarTerm::Make(1), VarTerm::Make(2));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(1 2)");
 }
 
 TEST(Printer, Complex) {
-  const auto term = std::make_shared<ApplTerm>(
-      std::make_shared<AbstTerm>(std::make_shared<VarTerm>(0)),
-      std::make_shared<ApplTerm>(std::make_shared<VarTerm>(1),
-                                 std::make_shared<VarTerm>(0)));
+  const auto term =
+      ApplTerm::Make(AbstTerm::Make(VarTerm::Make(0)),
+                     ApplTerm::Make(VarTerm::Make(1), VarTerm::Make(0)));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "((^ 1) (1 0))");

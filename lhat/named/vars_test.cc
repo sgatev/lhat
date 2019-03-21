@@ -22,7 +22,7 @@ TEST(InsertBoundVarNames, Null) {
 }
 
 TEST(InsertBoundVarNames, Var) {
-  const auto term = std::make_shared<VarTerm>("x");
+  const auto term = VarTerm::Make("x");
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -31,8 +31,7 @@ TEST(InsertBoundVarNames, Var) {
 }
 
 TEST(InsertBoundVarNames, Abst) {
-  const auto term =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -41,9 +40,8 @@ TEST(InsertBoundVarNames, Abst) {
 }
 
 TEST(InsertBoundVarNames, Appl) {
-  const auto term = std::make_shared<ApplTerm>(
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
-      std::make_shared<AbstTerm>("u", std::make_shared<VarTerm>("v")));
+  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
+                                   AbstTerm::Make("u", VarTerm::Make("v")));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -61,7 +59,7 @@ TEST(InsertFreeVarNames, Null) {
 }
 
 TEST(InsertFreeVarNames, Var) {
-  const auto term = std::make_shared<VarTerm>("x");
+  const auto term = VarTerm::Make("x");
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -70,8 +68,7 @@ TEST(InsertFreeVarNames, Var) {
 }
 
 TEST(InsertFreeVarNames, Abst) {
-  const auto term =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -80,8 +77,7 @@ TEST(InsertFreeVarNames, Abst) {
 }
 
 TEST(InsertFreeVarNames, AbstAlreadyExists) {
-  const auto term =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
 
   std::unordered_set<std::string> var_names = {"x"};
   InsertFreeVarNames(term, &var_names);
@@ -90,9 +86,8 @@ TEST(InsertFreeVarNames, AbstAlreadyExists) {
 }
 
 TEST(InsertFreeVarNames, Appl) {
-  const auto term = std::make_shared<ApplTerm>(
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
-      std::make_shared<AbstTerm>("u", std::make_shared<VarTerm>("v")));
+  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
+                                   AbstTerm::Make("u", VarTerm::Make("v")));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -110,7 +105,7 @@ TEST(InsertVarNames, Null) {
 }
 
 TEST(InsertVarNames, Var) {
-  const auto term = std::make_shared<VarTerm>("x");
+  const auto term = VarTerm::Make("x");
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -119,8 +114,7 @@ TEST(InsertVarNames, Var) {
 }
 
 TEST(InsertVarNames, Abst) {
-  const auto term =
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y"));
+  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -129,9 +123,8 @@ TEST(InsertVarNames, Abst) {
 }
 
 TEST(InsertVarNames, Appl) {
-  const auto term = std::make_shared<ApplTerm>(
-      std::make_shared<AbstTerm>("x", std::make_shared<VarTerm>("y")),
-      std::make_shared<AbstTerm>("u", std::make_shared<VarTerm>("v")));
+  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
+                                   AbstTerm::Make("u", VarTerm::Make("v")));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
