@@ -17,9 +17,9 @@ private:
   Parser(const std::string& expr);
 
   std::shared_ptr<Term> ParseTerm();
-  std::shared_ptr<AbstTerm> ParseAbstTerm();
-  std::shared_ptr<ApplTerm> ParseApplTerm();
-  std::shared_ptr<VarTerm> ParseVarTerm();
+  std::shared_ptr<Term> ParseAbstTerm();
+  std::shared_ptr<Term> ParseApplTerm();
+  std::shared_ptr<Term> ParseVarTerm();
 
   char Peek();
   void Next();

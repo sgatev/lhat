@@ -30,33 +30,33 @@ std::shared_ptr<Term> Parser::ParseTerm() {
   return ParseApplTerm();
 }
 
-std::shared_ptr<AbstTerm> Parser::ParseAbstTerm() {
+std::shared_ptr<Term> Parser::ParseAbstTerm() {
   // consume '^'
   Next();
 
   // consume ' '
   Next();
 
-  std::shared_ptr<VarTerm> var = ParseVarTerm();
+  const std::string& var_name = ParseName();
 
   // consume ' '
   Next();
 
-  std::shared_ptr<Term> term = ParseTerm();
+  const std::shared_ptr<Term> term = ParseTerm();
 
   // consume ')'
   Next();
 
-  return AbstTerm::Make(var->name, term);
+  return AbstTerm::Make(var_name, term);
 }
 
-std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
-  std::shared_ptr<Term> left = ParseTerm();
+std::shared_ptr<Term> Parser::ParseApplTerm() {
+  const std::shared_ptr<Term> left = ParseTerm();
 
   // consume ' '
   Next();
 
-  std::shared_ptr<Term> right = ParseTerm();
+  const std::shared_ptr<Term> right = ParseTerm();
 
   // consume ')'
   Next();
@@ -64,15 +64,20 @@ std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
   return ApplTerm::Make(left, right);
 }
 
-std::shared_ptr<VarTerm> Parser::ParseVarTerm() {
-  std::string var;
+std::shared_ptr<Term> Parser::ParseVarTerm() {
+  const std::string& name = ParseName();
+  return VarTerm::Make(name);
+}
+
+std::string Parser::ParseName() {
+  std::string name;
 
   do {
-    var.push_back(expr_[idx_]);
+    name.push_back(expr_[idx_]);
     Next();
   } while (!done_ && !IsSpecial(Peek()));
 
-  return VarTerm::Make(var);
+  return name;
 }
 
 char Parser::Peek() { return expr_[idx_]; }

@@ -31,7 +31,7 @@ std::shared_ptr<Term> Parser::ParseTerm() {
   return ParseApplTerm();
 }
 
-std::shared_ptr<AbstTerm> Parser::ParseAbstTerm() {
+std::shared_ptr<Term> Parser::ParseAbstTerm() {
   abst_count_++;
 
   // consume '^'
@@ -40,7 +40,7 @@ std::shared_ptr<AbstTerm> Parser::ParseAbstTerm() {
   // consume ' '
   Next();
 
-  std::shared_ptr<Term> term = ParseTerm();
+  const std::shared_ptr<Term> term = ParseTerm();
 
   // consume ')'
   Next();
@@ -50,13 +50,13 @@ std::shared_ptr<AbstTerm> Parser::ParseAbstTerm() {
   return AbstTerm::Make(term);
 }
 
-std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
-  std::shared_ptr<Term> left = ParseTerm();
+std::shared_ptr<Term> Parser::ParseApplTerm() {
+  const std::shared_ptr<Term> left = ParseTerm();
 
   // consume ' '
   Next();
 
-  std::shared_ptr<Term> right = ParseTerm();
+  const std::shared_ptr<Term> right = ParseTerm();
 
   // consume ')'
   Next();
@@ -64,7 +64,7 @@ std::shared_ptr<ApplTerm> Parser::ParseApplTerm() {
   return ApplTerm::Make(left, right);
 }
 
-std::shared_ptr<VarTerm> Parser::ParseVarTerm() {
+std::shared_ptr<Term> Parser::ParseVarTerm() {
   std::string idx;
 
   do {
