@@ -24,7 +24,13 @@ public:
   virtual ~Term();
 
   // Type returns the type of the term.
-  virtual TermType Type() const = 0;
+  TermType Type() const;
+
+protected:
+  Term(TermType type);
+
+private:
+  TermType type_;
 };
 
 // AbstTerm is a lambda term that represents function abstraction.
@@ -35,8 +41,6 @@ public:
                                         std::shared_ptr<Term> body);
 
   AbstTerm(const std::string& var_name, std::shared_ptr<Term> body);
-
-  TermType Type() const override;
 
   // Name of the function variable.
   std::string var_name;
@@ -54,8 +58,6 @@ public:
 
   ApplTerm(std::shared_ptr<Term> func, std::shared_ptr<Term> arg);
 
-  TermType Type() const override;
-
   // Lambda term representing the function.
   std::shared_ptr<Term> func;
 
@@ -70,8 +72,6 @@ public:
   static std::shared_ptr<VarTerm> Make(const std::string& name);
 
   VarTerm(const std::string& name);
-
-  TermType Type() const override;
 
   // Name of the variable.
   std::string name;

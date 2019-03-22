@@ -2,15 +2,17 @@
 
 namespace lhat {
 namespace nameless {
+Term::Term(TermType type) : type_(type) {}
+
 Term::~Term() {}
+
+TermType Term::Type() const { return type_; }
 
 std::shared_ptr<AbstTerm> AbstTerm::Make(std::shared_ptr<Term> body) {
   return std::make_shared<AbstTerm>(body);
 }
 
-AbstTerm::AbstTerm(std::shared_ptr<Term> body) : body(body) {}
-
-TermType AbstTerm::Type() const { return ABST_TERM; }
+AbstTerm::AbstTerm(std::shared_ptr<Term> body) : Term(ABST_TERM), body(body) {}
 
 std::shared_ptr<ApplTerm> ApplTerm::Make(std::shared_ptr<Term> func,
                                          std::shared_ptr<Term> arg) {
@@ -18,16 +20,12 @@ std::shared_ptr<ApplTerm> ApplTerm::Make(std::shared_ptr<Term> func,
 }
 
 ApplTerm::ApplTerm(std::shared_ptr<Term> func, std::shared_ptr<Term> arg)
-    : func(func), arg(arg) {}
-
-TermType ApplTerm::Type() const { return APPL_TERM; }
+    : Term(APPL_TERM), func(func), arg(arg) {}
 
 std::shared_ptr<VarTerm> VarTerm::VarTerm::Make(int idx) {
   return std::make_shared<VarTerm>(idx);
 }
 
-VarTerm::VarTerm(int idx) : idx(idx) {}
-
-TermType VarTerm::Type() const { return VAR_TERM; }
+VarTerm::VarTerm(int idx) : Term(VAR_TERM), idx(idx) {}
 }  // namespace nameless
 }  // namespace lhat
