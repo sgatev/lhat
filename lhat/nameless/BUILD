@@ -32,12 +32,12 @@ cc_test(
 )
 
 cc_library(
-    name = "shift",
+    name = "sub",
     srcs = [
-        "shift.cc",
+        "sub.cc",
     ],
     hdrs = [
-        "shift.h",
+        "sub.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -46,14 +46,14 @@ cc_library(
 )
 
 cc_test(
-    name = "shift_test",
+    name = "sub_test",
     srcs = [
-        "shift_test.cc",
+        "sub_test.cc",
     ],
     copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
-        ":shift",
+        ":sub",
         "@gtest",
         "@gtest//:gtest_main",
     ],
