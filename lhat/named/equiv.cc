@@ -11,8 +11,9 @@ bool AlphaEquiv(const Term& m, const Term& n) {
   return m.Match(
       [&n](const Abst& m_abst) -> bool {
         const Abst* n_abst = n.Get<Abst>();
-        return AlphaEquiv(m_abst.Body(), Sub(n_abst->Body(), n_abst->VarName(),
-                                             Term(Var(m_abst.VarName()))));
+        Term abst_body = n_abst->Body();
+        Sub(n_abst->VarName(), Term(Var(m_abst.VarName())), &abst_body);
+        return AlphaEquiv(m_abst.Body(), abst_body);
       },
       [&n](const Appl& m_appl) -> bool {
         const Appl* n_appl = n.Get<Appl>();

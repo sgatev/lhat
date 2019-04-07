@@ -10,31 +10,31 @@ using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(Sub, SameVar) {
-  const Term target(Var("x"));
+  Term target(Var("x"));
   const Term replacement(Var("y"));
-  const Term result = Sub(target, "x", replacement);
+  Sub("x", replacement, &target);
 
-  const Var* var = result.Get<Var>();
+  const Var* var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Name(), "y");
 }
 
 TEST(Sub, OtherVar) {
-  const Term target(Var("z"));
+  Term target(Var("z"));
   const Term replacement(Var("y"));
-  const Term result = Sub(target, "x", replacement);
+  Sub("x", replacement, &target);
 
-  const Var* var = result.Get<Var>();
+  const Var* var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Name(), "z");
 }
 
 TEST(Sub, AbstSameVar) {
-  const Term target(Abst("x", Term(Var("x"))));
+  Term target(Abst("x", Term(Var("x"))));
   const Term replacement(Var("y"));
-  const Term result = Sub(target, "x", replacement);
+  Sub("x", replacement, &target);
 
-  const Abst* abst = result.Get<Abst>();
+  const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   EXPECT_EQ(abst->VarName(), "x");
@@ -45,11 +45,11 @@ TEST(Sub, AbstSameVar) {
 }
 
 TEST(Sub, AbstOtherVar) {
-  const Term target(Abst("x", Term(Var("y"))));
+  Term target(Abst("x", Term(Var("y"))));
   const Term replacement(Var("z"));
-  const Term result = Sub(target, "y", replacement);
+  Sub("y", replacement, &target);
 
-  const Abst* abst = result.Get<Abst>();
+  const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   EXPECT_EQ(abst->VarName(), "x");
@@ -60,11 +60,11 @@ TEST(Sub, AbstOtherVar) {
 }
 
 TEST(Sub, Appl) {
-  const Term target(Appl(Term(Var("x")), Term(Var("x"))));
+  Term target(Appl(Term(Var("x")), Term(Var("x"))));
   const Term replacement(Var("y"));
-  const Term result = Sub(target, "x", replacement);
+  Sub("x", replacement, &target);
 
-  const Appl* appl = result.Get<Appl>();
+  const Appl* appl = target.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
   const Var* func_var = appl->Func().Get<Var>();
@@ -77,31 +77,31 @@ TEST(Sub, Appl) {
 }
 
 TEST(SafeSub, SameVar) {
-  const Term target(Var("x"));
+  Term target(Var("x"));
   const Term replacement(Var("y"));
-  const Term result = SafeSub(target, "x", replacement);
+  SafeSub("x", replacement, &target);
 
-  const Var* var = result.Get<Var>();
+  const Var* var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Name(), "y");
 }
 
 TEST(SafeSub, OtherVar) {
-  const Term target(Var("z"));
+  Term target(Var("z"));
   const Term replacement(Var("y"));
-  const Term result = SafeSub(target, "x", replacement);
+  SafeSub("x", replacement, &target);
 
-  const Var* var = result.Get<Var>();
+  const Var* var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Name(), "z");
 }
 
 TEST(SafeSub, AbstSameVar) {
-  const Term target(Abst("x", Term(Var("x"))));
+  Term target(Abst("x", Term(Var("x"))));
   const Term replacement(Var("y"));
-  const Term result = SafeSub(target, "x", replacement);
+  SafeSub("x", replacement, &target);
 
-  const Abst* abst = result.Get<Abst>();
+  const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   EXPECT_EQ(abst->VarName(), "x");
@@ -112,11 +112,11 @@ TEST(SafeSub, AbstSameVar) {
 }
 
 TEST(SafeSub, AbstOtherVar) {
-  const Term target(Abst("x", Term(Var("y"))));
+  Term target(Abst("x", Term(Var("y"))));
   const Term replacement(Var("z"));
-  const Term result = SafeSub(target, "y", replacement);
+  SafeSub("y", replacement, &target);
 
-  const Abst* abst = result.Get<Abst>();
+  const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   EXPECT_EQ(abst->VarName(), "x");
@@ -127,11 +127,11 @@ TEST(SafeSub, AbstOtherVar) {
 }
 
 TEST(SafeSub, Appl) {
-  const Term target(Appl(Term(Var("x")), Term(Var("x"))));
+  Term target(Appl(Term(Var("x")), Term(Var("x"))));
   const Term replacement(Var("y"));
-  const Term result = SafeSub(target, "x", replacement);
+  SafeSub("x", replacement, &target);
 
-  const Appl* appl = result.Get<Appl>();
+  const Appl* appl = target.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
   const Var* func_var = appl->Func().Get<Var>();

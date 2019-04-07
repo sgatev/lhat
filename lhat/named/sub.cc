@@ -12,7 +12,9 @@ Term RenameBoundVarInTerm(const Term& term, const std::string& from,
   return term.Match(
       [&from, &to](const Abst& abst) -> Term {
         if (abst.VarName() == from) {
-          return Term(Abst(to, Sub(abst.Body(), from, Term(Var(to)))));
+          Term body = abst.Body();
+          Sub(from, Term(Var(to)), &body);
+          return Term(Abst(to, body));
         } else {
           return Term(Abst(abst.VarName(),
                            RenameBoundVarInTerm(abst.Body(), from, to)));
@@ -26,34 +28,29 @@ Term RenameBoundVarInTerm(const Term& term, const std::string& from,
 }
 }  // namespace
 
-Term SafeSub(const Term& target, const std::string& var_name,
-             const Term& replacement) {
+void SafeSub(const std::string& var_name, const Term& replacement,
+             Term* target) {
   std::unordered_set<std::string> var_names;
-  InsertBoundVarNames(target, &var_names);
+  InsertBoundVarNames(*target, &var_names);
   InsertFreeVarNames(replacement, &var_names);
   std::string new_var_name = NewVarName(var_names);
-  return Sub(target, var_name, replacement);
+  return Sub(var_name, replacement, target);
 }
 
-Term Sub(const Term& target, const std::string& var_name,
-         const Term& replacement) {
-  return target.Match(
-      [&var_name, &replacement, &target](const Abst& abst) -> Term {
-        if (abst.VarName() == var_name) {
-          return target;
+void Sub(const std::string& var_name, const Term& replacement, Term* target) {
+  target->Match(
+      [&var_name, &replacement](Abst& abst) {
+        if (abst.VarName() != var_name) {
+          Sub(var_name, replacement, abst.MutableBody());
         }
-        return Term(
-            Abst(abst.VarName(), Sub(abst.Body(), var_name, replacement)));
       },
-      [&var_name, &replacement](const Appl& appl) -> Term {
-        return Term(Appl(Sub(appl.Func(), var_name, replacement),
-                         Sub(appl.Arg(), var_name, replacement)));
+      [&var_name, &replacement](Appl& appl) {
+        Sub(var_name, replacement, appl.MutableFunc());
+        Sub(var_name, replacement, appl.MutableArg());
       },
-      [&var_name, &replacement, &target](const Var& var) -> Term {
+      [&var_name, &replacement, target](const Var& var) {
         if (var.Name() == var_name) {
-          return replacement;
-        } else {
-          return target;
+          *target = replacement;
         }
       });
 }
