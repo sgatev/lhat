@@ -12,6 +12,7 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        ":overloaded",
         "@absl//absl/strings",
     ],
 )
@@ -57,4 +58,12 @@ cc_test(
         "@gtest",
         "@gtest//:gtest_main",
     ],
+)
+
+cc_library(
+    name = "overloaded",
+    hdrs = [
+        "overloaded.h",
+    ],
+    visibility = ["//visibility:public"],
 )

@@ -9,52 +9,44 @@
 namespace lhat {
 namespace nameless {
 namespace {
-TEST(Printer, Null) {
-  const std::shared_ptr<Term> term = nullptr;
-  std::string out;
-  Printer::Print(term, &out);
-  EXPECT_EQ(out, "");
-}
-
 TEST(Printer, Var) {
-  const auto term = VarTerm::Make(21);
+  const Term term(Var(21));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "21");
 }
 
 TEST(Printer, AbstFree) {
-  const auto term = AbstTerm::Make(VarTerm::Make(1));
+  const Term term(Abst(Term(Var(1))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ 2)");
 }
 
 TEST(Printer, AbstBound) {
-  const auto term = AbstTerm::Make(VarTerm::Make(-1));
+  const Term term(Abst(Term(Var(-1))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ 0)");
 }
 
 TEST(Printer, MultiAbstBound) {
-  const auto term = AbstTerm::Make(AbstTerm::Make(VarTerm::Make(-1)));
+  const Term term(Abst(Term((Abst(Term(Var(-1)))))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ (^ 1))");
 }
 
 TEST(Printer, Appl) {
-  const auto term = ApplTerm::Make(VarTerm::Make(1), VarTerm::Make(2));
+  const Term term(Appl(Term(Var(1)), Term(Var(2))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(1 2)");
 }
 
 TEST(Printer, Complex) {
-  const auto term =
-      ApplTerm::Make(AbstTerm::Make(VarTerm::Make(0)),
-                     ApplTerm::Make(VarTerm::Make(1), VarTerm::Make(0)));
+  const Term term(
+      Appl(Term(Abst(Term(Var(0)))), Term(Appl(Term(Var(1)), Term(Var(0))))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "((^ 1) (1 0))");

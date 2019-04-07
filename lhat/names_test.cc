@@ -24,60 +24,52 @@ TEST(NameContext, AddAndGetNames) {
 
 TEST(StripNames, Var) {
   const auto named_term = named::VarTerm::Make("x");
+  const nameless::Term nameless_term = StripNames(named_term);
 
-  const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
-  ASSERT_THAT(nameless_term, NotNull());
-
-  const auto var = std::static_pointer_cast<nameless::VarTerm>(nameless_term);
+  const auto var = nameless_term.Get<nameless::Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->idx, 0);
+  EXPECT_EQ(var->Index(), 0);
 }
 
 TEST(StripNames, AbstBound) {
   const auto named_term = named::AbstTerm::Make("x", named::VarTerm::Make("x"));
+  const nameless::Term nameless_term = StripNames(named_term);
 
-  const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
-  ASSERT_THAT(nameless_term, NotNull());
-
-  const auto abst = std::static_pointer_cast<nameless::AbstTerm>(nameless_term);
+  const auto abst = nameless_term.Get<nameless::Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto var = std::static_pointer_cast<nameless::VarTerm>(abst->body);
+  const auto var = abst->Body().Get<nameless::Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->idx, -1);
+  EXPECT_EQ(var->Index(), -1);
 }
 
 TEST(StripNames, AbstFree) {
   const auto named_term = named::AbstTerm::Make("x", named::VarTerm::Make("y"));
+  const nameless::Term nameless_term = StripNames(named_term);
 
-  const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
-  ASSERT_THAT(nameless_term, NotNull());
-
-  const auto abst = std::static_pointer_cast<nameless::AbstTerm>(nameless_term);
+  const auto abst = nameless_term.Get<nameless::Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto var = std::static_pointer_cast<nameless::VarTerm>(abst->body);
+  const auto var = abst->Body().Get<nameless::Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->idx, 0);
+  EXPECT_EQ(var->Index(), 0);
 }
 
 TEST(StripNames, Appl) {
   const auto named_term = named::ApplTerm::Make(named::VarTerm::Make("x"),
                                                 named::VarTerm::Make("y"));
+  const nameless::Term nameless_term = StripNames(named_term);
 
-  const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
-  ASSERT_THAT(nameless_term, NotNull());
-
-  const auto appl = std::static_pointer_cast<nameless::ApplTerm>(nameless_term);
+  const auto appl = nameless_term.Get<nameless::Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_var = std::static_pointer_cast<nameless::VarTerm>(appl->func);
+  const auto func_var = appl->Func().Get<nameless::Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->idx, 0);
+  EXPECT_EQ(func_var->Index(), 0);
 
-  const auto arg_var = std::static_pointer_cast<nameless::VarTerm>(appl->arg);
+  const auto arg_var = appl->Arg().Get<nameless::Var>();
   ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->idx, 1);
+  EXPECT_EQ(arg_var->Index(), 1);
 }
 
 TEST(StripNames, Complex) {
@@ -85,34 +77,28 @@ TEST(StripNames, Complex) {
       named::AbstTerm::Make("x", named::VarTerm::Make("y")),
       named::ApplTerm::Make(named::VarTerm::Make("u"),
                             named::VarTerm::Make("v")));
+  const nameless::Term nameless_term = StripNames(named_term);
 
-  const std::shared_ptr<nameless::Term> nameless_term = StripNames(named_term);
-  ASSERT_THAT(nameless_term, NotNull());
-
-  const auto appl = std::static_pointer_cast<nameless::ApplTerm>(nameless_term);
+  const auto appl = nameless_term.Get<nameless::Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_abst =
-      std::static_pointer_cast<nameless::AbstTerm>(appl->func);
+  const auto func_abst = appl->Func().Get<nameless::Abst>();
   ASSERT_THAT(func_abst, NotNull());
 
-  const auto abst_var =
-      std::static_pointer_cast<nameless::VarTerm>(func_abst->body);
+  const auto abst_var = func_abst->Body().Get<nameless::Var>();
   ASSERT_THAT(abst_var, NotNull());
-  EXPECT_EQ(abst_var->idx, 0);
+  EXPECT_EQ(abst_var->Index(), 0);
 
-  const auto arg_appl = std::static_pointer_cast<nameless::ApplTerm>(appl->arg);
+  const auto arg_appl = appl->Arg().Get<nameless::Appl>();
   ASSERT_THAT(arg_appl, NotNull());
 
-  const auto arg_func_var =
-      std::static_pointer_cast<nameless::VarTerm>(arg_appl->func);
+  const auto arg_func_var = arg_appl->Func().Get<nameless::Var>();
   ASSERT_THAT(arg_func_var, NotNull());
-  EXPECT_EQ(arg_func_var->idx, 1);
+  EXPECT_EQ(arg_func_var->Index(), 1);
 
-  const auto arg_arg_var =
-      std::static_pointer_cast<nameless::VarTerm>(arg_appl->arg);
+  const auto arg_arg_var = arg_appl->Arg().Get<nameless::Var>();
   ASSERT_THAT(arg_arg_var, NotNull());
-  EXPECT_EQ(arg_arg_var->idx, 2);
+  EXPECT_EQ(arg_arg_var->Index(), 2);
 }
 }  // namespace
 }  // namespace lhat

@@ -6,32 +6,27 @@ namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 }  // namespace
 
-std::shared_ptr<Term> Parser::Parse(const std::string& expr) {
-  if (expr.empty()) {
-    return nullptr;
-  }
-  return Parser(expr).ParseTerm();
-}
+Term Parser::Parse(const std::string& expr) { return Parser(expr).ParseTerm(); }
 
 Parser::Parser(const std::string& expr)
     : expr_(expr), abst_count_(0), idx_(0), done_(false) {}
 
-std::shared_ptr<Term> Parser::ParseTerm() {
+Term Parser::ParseTerm() {
   if (Peek() != '(') {
-    return ParseVarTerm();
+    return Term(ParseVar());
   }
 
   // consume '('
   Next();
 
   if (Peek() == '^') {
-    return ParseAbstTerm();
+    return Term(ParseAbst());
   }
 
-  return ParseApplTerm();
+  return Term(ParseAppl());
 }
 
-std::shared_ptr<Term> Parser::ParseAbstTerm() {
+Abst Parser::ParseAbst() {
   abst_count_++;
 
   // consume '^'
@@ -40,31 +35,31 @@ std::shared_ptr<Term> Parser::ParseAbstTerm() {
   // consume ' '
   Next();
 
-  const std::shared_ptr<Term> term = ParseTerm();
+  const Term body = ParseTerm();
 
   // consume ')'
   Next();
 
   abst_count_--;
 
-  return AbstTerm::Make(term);
+  return Abst(body);
 }
 
-std::shared_ptr<Term> Parser::ParseApplTerm() {
-  const std::shared_ptr<Term> left = ParseTerm();
+Appl Parser::ParseAppl() {
+  const Term func = ParseTerm();
 
   // consume ' '
   Next();
 
-  const std::shared_ptr<Term> right = ParseTerm();
+  const Term arg = ParseTerm();
 
   // consume ')'
   Next();
 
-  return ApplTerm::Make(left, right);
+  return Appl(func, arg);
 }
 
-std::shared_ptr<Term> Parser::ParseVarTerm() {
+Var Parser::ParseVar() {
   std::string idx;
 
   do {
@@ -72,7 +67,7 @@ std::shared_ptr<Term> Parser::ParseVarTerm() {
     Next();
   } while (!done_ && !IsSpecial(Peek()));
 
-  return VarTerm::Make(std::stoi(idx) - abst_count_);
+  return Var(std::stoi(idx) - abst_count_);
 }
 
 char Parser::Peek() { return expr_[idx_]; }

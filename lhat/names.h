@@ -31,7 +31,7 @@ private:
 };
 
 // StripNames converts a named lambda term into a nameless lambda term.
-std::shared_ptr<nameless::Term> StripNames(
+nameless::Term StripNames(
     const std::shared_ptr<named::Term> term);
 }  // namespace lhat
 

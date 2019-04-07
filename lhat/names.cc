@@ -5,11 +5,11 @@
 
 namespace lhat {
 namespace {
-std::shared_ptr<nameless::Term> StripNamesFromTerm(
+nameless::Term StripNamesFromTerm(
     const std::shared_ptr<named::Term> term, NameContext* nctx,
     std::unordered_map<std::string, int>* abst_var_names, int abst_count);
 
-std::shared_ptr<nameless::AbstTerm> StripNamesFromAbstTerm(
+nameless::Abst StripNamesFromAbstTerm(
     const std::shared_ptr<named::AbstTerm> abst, NameContext* nctx,
     std::unordered_map<std::string, int>* abst_var_names, int abst_count) {
   int old_abst_var_name_idx = -1;
@@ -18,7 +18,7 @@ std::shared_ptr<nameless::AbstTerm> StripNamesFromAbstTerm(
   }
   abst_var_names->insert({abst->var_name, abst_count});
 
-  const std::shared_ptr<nameless::Term> body =
+  const nameless::Term body =
       StripNamesFromTerm(abst->body, nctx, abst_var_names, abst_count + 1);
 
   if (old_abst_var_name_idx >= 0) {
@@ -27,35 +27,32 @@ std::shared_ptr<nameless::AbstTerm> StripNamesFromAbstTerm(
     abst_var_names->erase(abst->var_name);
   }
 
-  return nameless::AbstTerm::Make(body);
+  return nameless::Abst(body);
 }
 
-std::shared_ptr<nameless::ApplTerm> StripNamesFromApplTerm(
+nameless::Appl StripNamesFromApplTerm(
     const std::shared_ptr<named::ApplTerm> appl, NameContext* nctx,
     std::unordered_map<std::string, int>* abst_var_names, int abst_count) {
-  return nameless::ApplTerm::Make(
+  return nameless::Appl(
       StripNamesFromTerm(appl->func, nctx, abst_var_names, abst_count),
       StripNamesFromTerm(appl->arg, nctx, abst_var_names, abst_count));
 }
 
-std::shared_ptr<nameless::VarTerm> StripNamesFromVarTerm(
+nameless::Var StripNamesFromVarTerm(
     const std::shared_ptr<named::VarTerm> var, NameContext* nctx,
     std::unordered_map<std::string, int>* abst_var_names, int abst_count) {
   if (abst_var_names->find(var->name) != abst_var_names->end()) {
-    return nameless::VarTerm::Make(-abst_var_names->at(var->name) - 1);
+    return nameless::Var(-abst_var_names->at(var->name) - 1);
   }
   if (!nctx->HasName(var->name)) {
     nctx->AddName(var->name);
   }
-  return nameless::VarTerm::Make(nctx->GetIndexForName(var->name));
+  return nameless::Var(nctx->GetIndexForName(var->name));
 }
 
-std::shared_ptr<nameless::Term> StripNamesFromTerm(
+nameless::Term StripNamesFromTerm(
     const std::shared_ptr<named::Term> term, NameContext* nctx,
     std::unordered_map<std::string, int>* abst_var_names, int abst_count) {
-  if (term == nullptr) {
-    return nullptr;
-  }
   switch (term->Type()) {
     case named::ABST_TERM:
       return StripNamesFromAbstTerm(
@@ -96,8 +93,7 @@ bool NameContext::HasName(const std::string& name) const {
   return name_to_idx_.find(name) != name_to_idx_.end();
 }
 
-std::shared_ptr<nameless::Term> StripNames(
-    const std::shared_ptr<named::Term> term) {
+nameless::Term StripNames(const std::shared_ptr<named::Term> term) {
   NameContext nctx;
   std::unordered_map<std::string, int> abst_var_names;
   return StripNamesFromTerm(term, &nctx, &abst_var_names, 0);

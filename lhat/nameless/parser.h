@@ -11,15 +11,15 @@ namespace nameless {
 class Parser {
 public:
   // Parse parses expr and returns the corresponding AST.
-  static std::shared_ptr<Term> Parse(const std::string& expr);
+  static Term Parse(const std::string& expr);
 
 private:
   Parser(const std::string& expr);
 
-  std::shared_ptr<Term> ParseTerm();
-  std::shared_ptr<Term> ParseAbstTerm();
-  std::shared_ptr<Term> ParseApplTerm();
-  std::shared_ptr<Term> ParseVarTerm();
+  Term ParseTerm();
+  Abst ParseAbst();
+  Appl ParseAppl();
+  Var ParseVar();
 
   char Peek();
   void Next();

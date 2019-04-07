@@ -2,30 +2,42 @@
 
 namespace lhat {
 namespace nameless {
-Term::Term(TermType type) : type_(type) {}
+Term::Term(Abst abst) : term_(std::move(abst)) {}
 
-Term::~Term() {}
+Term::Term(Appl appl) : term_(std::move(appl)) {}
 
-TermType Term::Type() const { return type_; }
+Term::Term(Var var) : term_(std::move(var)) {}
 
-std::shared_ptr<AbstTerm> AbstTerm::Make(std::shared_ptr<Term> body) {
-  return std::make_shared<AbstTerm>(body);
-}
+Abst::Abst(Term body) : body_(std::make_unique<Term>(std::move(body))) {}
 
-AbstTerm::AbstTerm(std::shared_ptr<Term> body) : Term(ABST_TERM), body(body) {}
+Abst::Abst(const Abst& other) : body_(std::make_unique<Term>(*other.body_)) {}
 
-std::shared_ptr<ApplTerm> ApplTerm::Make(std::shared_ptr<Term> func,
-                                         std::shared_ptr<Term> arg) {
-  return std::make_shared<ApplTerm>(func, arg);
-}
+Abst& Abst::operator=(const Abst& other) { return *this = Abst(other); }
 
-ApplTerm::ApplTerm(std::shared_ptr<Term> func, std::shared_ptr<Term> arg)
-    : Term(APPL_TERM), func(func), arg(arg) {}
+Term& Abst::Body() { return *body_; }
 
-std::shared_ptr<VarTerm> VarTerm::VarTerm::Make(int idx) {
-  return std::make_shared<VarTerm>(idx);
-}
+const Term& Abst::Body() const { return *body_; }
 
-VarTerm::VarTerm(int idx) : Term(VAR_TERM), idx(idx) {}
+Appl::Appl(Term func, Term arg)
+    : func_(std::make_unique<Term>(std::move(func))),
+      arg_(std::make_unique<Term>(std::move(arg))) {}
+
+Appl::Appl(const Appl& other)
+    : func_(std::make_unique<Term>(*other.func_)),
+      arg_(std::make_unique<Term>(*other.arg_)) {}
+
+Appl& Appl::operator=(const Appl& other) { return *this = Appl(other); }
+
+Term& Appl::Func() { return *func_; }
+
+const Term& Appl::Func() const { return *func_; }
+
+Term& Appl::Arg() { return *arg_; }
+
+const Term& Appl::Arg() const { return *arg_; }
+
+Var::Var(int idx) : idx_(idx) {}
+
+int Var::Index() const { return idx_; }
 }  // namespace nameless
 }  // namespace lhat
