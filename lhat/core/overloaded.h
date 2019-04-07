@@ -1,8 +1,8 @@
-#ifndef LHAT_NAMELESS_OVERLOADED_H
-#define LHAT_NAMELESS_OVERLOADED_H
+#ifndef LHAT_CORE_OVERLOADED_H
+#define LHAT_CORE_OVERLOADED_H
 
 namespace lhat {
-namespace nameless {
+namespace core {
 template <class... Ts>
 struct Overloaded;
 
@@ -22,10 +22,10 @@ struct Overloaded<T, Ts...> : T, Overloaded<Ts...> {
 };
 
 template <class... Ts>
-auto MakeOverloaded(Ts&&... ts) {
+auto Overload(Ts&&... ts) {
   return Overloaded<Ts...>(std::forward<Ts>(ts)...);
 }
-}  // namespace nameless
+}  // namespace core
 }  // namespace lhat
 
-#endif  // LHAT_NAMELESS_OVERLOADED_H
+#endif  // LHAT_CORE_OVERLOADED_H

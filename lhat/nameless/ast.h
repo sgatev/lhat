@@ -4,7 +4,7 @@
 #include <memory>
 #include <variant>
 
-#include "overloaded.h"
+#include "lhat/core/overloaded.h"
 
 namespace lhat {
 namespace nameless {
@@ -89,6 +89,8 @@ public:
   Term& operator=(const Term& other) = default;
   Term& operator=(Term&& other) noexcept = default;
 
+  int Type() const;
+
   template <class T>
   constexpr auto Get() & -> decltype(auto) {
     return std::get_if<T>(&term_);
@@ -101,12 +103,12 @@ public:
 
   template <class... M>
   constexpr auto Match(M&&... matchers) & -> decltype(auto) {
-    return std::visit(MakeOverloaded(std::forward<M>(matchers)...), term_);
+    return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
   }
 
   template <class... M>
   constexpr auto Match(M&&... matchers) const& -> decltype(auto) {
-    return std::visit(MakeOverloaded(std::forward<M>(matchers)...), term_);
+    return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
   }
 
 private:

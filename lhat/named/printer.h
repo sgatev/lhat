@@ -16,17 +16,17 @@ class Printer {
 public:
   // Print returns the lambda expression corresponding to term.
   template <class OutType>
-  static void Print(const std::shared_ptr<Term> term, OutType out) {
+  static void Print(const Term& term, OutType out) {
     Printer printer;
-    printer.PrintTerm(term);
+    printer.Print(term);
     absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
   }
 
 private:
-  void PrintTerm(const std::shared_ptr<Term> term);
-  void PrintVarTerm(const std::shared_ptr<VarTerm> var);
-  void PrintAbstTerm(const std::shared_ptr<AbstTerm> abst);
-  void PrintApplTerm(const std::shared_ptr<ApplTerm> appl);
+  void Print(const Term& term);
+  void Print(const Var& var);
+  void Print(const Abst& abst);
+  void Print(const Appl& appl);
 
   std::vector<absl::string_view> result_pieces_;
 };

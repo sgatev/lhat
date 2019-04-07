@@ -12,6 +12,7 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//lhat/core:overloaded",
         "@absl//absl/strings",
     ],
 )

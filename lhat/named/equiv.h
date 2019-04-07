@@ -7,7 +7,7 @@ namespace lhat {
 namespace named {
 // AlphaEquiv returns true if m and n are simultaneously nullptr or
 // alpha-equivalent.
-bool AlphaEquiv(const std::shared_ptr<Term> m, const std::shared_ptr<Term> n);
+bool AlphaEquiv(const Term& m, const Term& n);
 }  // namespace named
 }  // namespace lhat
 

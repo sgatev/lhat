@@ -4,35 +4,25 @@
 
 namespace lhat {
 namespace named {
-bool AlphaEquiv(const std::shared_ptr<Term> m, const std::shared_ptr<Term> n) {
-  if (m == nullptr && n == nullptr) {
-    return true;
-  }
-  if (m == nullptr || n == nullptr) {
+bool AlphaEquiv(const Term& m, const Term& n) {
+  if (m.Type() != n.Type()) {
     return false;
   }
-  if (m->Type() != n->Type()) {
-    return false;
-  }
-  switch (m->Type()) {
-    case ABST_TERM: {
-      const auto m_abst = std::static_pointer_cast<AbstTerm>(m);
-      const auto n_abst = std::static_pointer_cast<AbstTerm>(n);
-      return AlphaEquiv(m_abst->body, Sub(n_abst->body, n_abst->var_name,
-                                          VarTerm::Make(m_abst->var_name)));
-    }
-    case APPL_TERM: {
-      const auto m_appl = std::static_pointer_cast<ApplTerm>(m);
-      const auto n_appl = std::static_pointer_cast<ApplTerm>(n);
-      return AlphaEquiv(m_appl->func, n_appl->func) &&
-             AlphaEquiv(m_appl->arg, n_appl->arg);
-    }
-    case VAR_TERM: {
-      const auto m_var = std::static_pointer_cast<VarTerm>(m);
-      const auto n_var = std::static_pointer_cast<VarTerm>(n);
-      return m_var->name == n_var->name;
-    }
-  }
+  return m.Match(
+      [&n](const Abst& m_abst) -> bool {
+        const Abst* n_abst = n.Get<Abst>();
+        return AlphaEquiv(m_abst.Body(), Sub(n_abst->Body(), n_abst->VarName(),
+                                             Term(Var(m_abst.VarName()))));
+      },
+      [&n](const Appl& m_appl) -> bool {
+        const Appl* n_appl = n.Get<Appl>();
+        return AlphaEquiv(m_appl.Func(), n_appl->Func()) &&
+               AlphaEquiv(m_appl.Arg(), n_appl->Arg());
+      },
+      [&n](const Var& m_var) -> bool {
+        const Var* n_var = n.Get<Var>();
+        return m_var.Name() == n_var->Name();
+      });
 }
 }  // namespace named
 }  // namespace lhat

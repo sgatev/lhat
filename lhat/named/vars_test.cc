@@ -12,17 +12,8 @@ namespace {
 using ::testing::IsEmpty;
 using ::testing::UnorderedElementsAre;
 
-TEST(InsertBoundVarNames, Null) {
-  const std::shared_ptr<Term> term = nullptr;
-
-  std::unordered_set<std::string> var_names;
-  InsertBoundVarNames(term, &var_names);
-
-  EXPECT_THAT(var_names, IsEmpty());
-}
-
 TEST(InsertBoundVarNames, Var) {
-  const auto term = VarTerm::Make("x");
+  const Term term(Var("x"));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -31,7 +22,7 @@ TEST(InsertBoundVarNames, Var) {
 }
 
 TEST(InsertBoundVarNames, Abst) {
-  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
+  const Term term(Abst("x", Term(Var("y"))));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -40,8 +31,8 @@ TEST(InsertBoundVarNames, Abst) {
 }
 
 TEST(InsertBoundVarNames, Appl) {
-  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
-                                   AbstTerm::Make("u", VarTerm::Make("v")));
+  const Term term(
+      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -49,17 +40,8 @@ TEST(InsertBoundVarNames, Appl) {
   EXPECT_THAT(var_names, UnorderedElementsAre("x", "u"));
 }
 
-TEST(InsertFreeVarNames, Null) {
-  const std::shared_ptr<Term> term = nullptr;
-
-  std::unordered_set<std::string> var_names;
-  InsertFreeVarNames(term, &var_names);
-
-  EXPECT_THAT(var_names, IsEmpty());
-}
-
 TEST(InsertFreeVarNames, Var) {
-  const auto term = VarTerm::Make("x");
+  const Term term(Var("x"));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -68,7 +50,7 @@ TEST(InsertFreeVarNames, Var) {
 }
 
 TEST(InsertFreeVarNames, Abst) {
-  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
+  const Term term(Abst("x", Term(Var("y"))));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -77,7 +59,7 @@ TEST(InsertFreeVarNames, Abst) {
 }
 
 TEST(InsertFreeVarNames, AbstAlreadyExists) {
-  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
+  const Term term(Abst("x", Term(Var("y"))));
 
   std::unordered_set<std::string> var_names = {"x"};
   InsertFreeVarNames(term, &var_names);
@@ -86,8 +68,8 @@ TEST(InsertFreeVarNames, AbstAlreadyExists) {
 }
 
 TEST(InsertFreeVarNames, Appl) {
-  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
-                                   AbstTerm::Make("u", VarTerm::Make("v")));
+  const Term term(
+      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -95,17 +77,8 @@ TEST(InsertFreeVarNames, Appl) {
   EXPECT_THAT(var_names, UnorderedElementsAre("y", "v"));
 }
 
-TEST(InsertVarNames, Null) {
-  const std::shared_ptr<Term> term = nullptr;
-
-  std::unordered_set<std::string> var_names;
-  InsertVarNames(term, &var_names);
-
-  EXPECT_THAT(var_names, IsEmpty());
-}
-
 TEST(InsertVarNames, Var) {
-  const auto term = VarTerm::Make("x");
+  const Term term(Var("x"));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -114,7 +87,7 @@ TEST(InsertVarNames, Var) {
 }
 
 TEST(InsertVarNames, Abst) {
-  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
+  const Term term(Abst("x", Term(Var("y"))));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -123,8 +96,8 @@ TEST(InsertVarNames, Abst) {
 }
 
 TEST(InsertVarNames, Appl) {
-  const auto term = ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
-                                   AbstTerm::Make("u", VarTerm::Make("v")));
+  const Term term(
+      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);

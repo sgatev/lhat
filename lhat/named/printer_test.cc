@@ -1,6 +1,5 @@
 #include "printer.h"
 
-#include <memory>
 #include <string>
 
 #include "gmock/gmock.h"
@@ -9,38 +8,30 @@
 namespace lhat {
 namespace named {
 namespace {
-TEST(Printer, Null) {
-  const std::shared_ptr<Term> term = nullptr;
-  std::string out;
-  Printer::Print(term, &out);
-  EXPECT_EQ(out, "");
-}
-
 TEST(Printer, Var) {
-  const auto term = VarTerm::Make("x");
+  const Term term(Var("x"));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "x");
 }
 
 TEST(Printer, Abst) {
-  const auto term = AbstTerm::Make("x", VarTerm::Make("y"));
+  const Term term(Abst("x", Term(Var("y"))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ x y)");
 }
 
 TEST(Printer, Appl) {
-  const auto term = ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("y"));
+  const Term term(Appl(Term(Var("x")), Term(Var("y"))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(x y)");
 }
 
 TEST(Printer, Complex) {
-  const auto term =
-      ApplTerm::Make(AbstTerm::Make("x", VarTerm::Make("y")),
-                     ApplTerm::Make(VarTerm::Make("u"), VarTerm::Make("v")));
+  const Term term(Appl(Term(Abst("x", Term(Var("y")))),
+                       Term(Appl(Term(Var("u")), Term(Var("v"))))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "((^ x y) (u v))");

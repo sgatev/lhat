@@ -2,32 +2,51 @@
 
 namespace lhat {
 namespace named {
-Term::Term(TermType type) : type_(type) {}
+Term::Term(Abst abst) : term_(std::move(abst)) {}
 
-Term::~Term() {}
+Term::Term(Appl appl) : term_(std::move(appl)) {}
 
-TermType Term::Type() const { return type_; }
+Term::Term(Var var) : term_(std::move(var)) {}
 
-std::shared_ptr<AbstTerm> AbstTerm::Make(const std::string& var_name,
-                                         std::shared_ptr<Term> body) {
-  return std::make_shared<AbstTerm>(var_name, body);
-}
+int Term::Type() const { return term_.index(); }
 
-AbstTerm::AbstTerm(const std::string& var_name, std::shared_ptr<Term> body)
-    : Term(ABST_TERM), var_name(var_name), body(body) {}
+Abst::Abst(std::string var_name, Term body)
+    : var_name_(std::move(var_name)),
+      body_(std::make_unique<Term>(std::move(body))) {}
 
-std::shared_ptr<ApplTerm> ApplTerm::Make(std::shared_ptr<Term> func,
-                                         std::shared_ptr<Term> arg) {
-  return std::make_shared<ApplTerm>(func, arg);
-}
+Abst::Abst(const Abst& other)
+    : var_name_(other.var_name_), body_(std::make_unique<Term>(*other.body_)) {}
 
-ApplTerm::ApplTerm(std::shared_ptr<Term> func, std::shared_ptr<Term> arg)
-    : Term(APPL_TERM), func(func), arg(arg) {}
+Abst& Abst::operator=(const Abst& other) { return *this = Abst(other); }
 
-std::shared_ptr<VarTerm> VarTerm::Make(const std::string& name) {
-  return std::make_shared<VarTerm>(name);
-}
+const std::string& Abst::VarName() const { return var_name_; }
 
-VarTerm::VarTerm(const std::string& name) : Term(VAR_TERM), name(name) {}
+Term* Abst::MutableBody() { return body_.get(); }
+
+const Term& Abst::Body() const { return *body_; }
+
+Appl::Appl(Term func, Term arg)
+    : func_(std::make_unique<Term>(std::move(func))),
+      arg_(std::make_unique<Term>(std::move(arg))) {}
+
+Appl::Appl(const Appl& other)
+    : func_(std::make_unique<Term>(*other.func_)),
+      arg_(std::make_unique<Term>(*other.arg_)) {}
+
+Appl& Appl::operator=(const Appl& other) { return *this = Appl(other); }
+
+Term* Appl::MutableFunc() { return func_.get(); }
+
+const Term& Appl::Func() const { return *func_; }
+
+Term* Appl::MutableArg() { return arg_.get(); }
+
+const Term& Appl::Arg() const { return *arg_; }
+
+Var::Var(std::string name) : name_(std::move(name)) {}
+
+const std::string& Var::Name() const { return name_; }
+
+void Var::SetName(std::string name) { name_ = std::move(name); }
 }  // namespace named
 }  // namespace lhat

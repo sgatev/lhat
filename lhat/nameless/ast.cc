@@ -8,6 +8,8 @@ Term::Term(Appl appl) : term_(std::move(appl)) {}
 
 Term::Term(Var var) : term_(std::move(var)) {}
 
+int Term::Type() const { return term_.index(); }
+
 Abst::Abst(Term body) : body_(std::make_unique<Term>(std::move(body))) {}
 
 Abst::Abst(const Abst& other) : body_(std::make_unique<Term>(*other.body_)) {}

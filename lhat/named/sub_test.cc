@@ -9,151 +9,138 @@ namespace {
 using ::testing::IsNull;
 using ::testing::NotNull;
 
-TEST(Sub, Null) {
-  const std::shared_ptr<Term> result = Sub(nullptr, "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, IsNull());
-}
-
 TEST(Sub, SameVar) {
-  const std::shared_ptr<Term> result =
-      Sub(VarTerm::Make("x"), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Var("x"));
+  const Term replacement(Var("y"));
+  const Term result = Sub(target, "x", replacement);
 
-  const auto var = std::static_pointer_cast<VarTerm>(result);
+  const Var* var = result.Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->name, "y");
+  EXPECT_EQ(var->Name(), "y");
 }
 
 TEST(Sub, OtherVar) {
-  const std::shared_ptr<Term> result =
-      Sub(VarTerm::Make("z"), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Var("z"));
+  const Term replacement(Var("y"));
+  const Term result = Sub(target, "x", replacement);
 
-  const auto var = std::static_pointer_cast<VarTerm>(result);
+  const Var* var = result.Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->name, "z");
+  EXPECT_EQ(var->Name(), "z");
 }
 
 TEST(Sub, AbstSameVar) {
-  const std::shared_ptr<Term> result =
-      Sub(AbstTerm::Make("x", VarTerm::Make("x")), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Abst("x", Term(Var("x"))));
+  const Term replacement(Var("y"));
+  const Term result = Sub(target, "x", replacement);
 
-  const auto abst = std::static_pointer_cast<AbstTerm>(result);
+  const Abst* abst = result.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->var_name, "x");
+  EXPECT_EQ(abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(abst->body);
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "x");
+  EXPECT_EQ(body_var->Name(), "x");
 }
 
 TEST(Sub, AbstOtherVar) {
-  const std::shared_ptr<Term> result =
-      Sub(AbstTerm::Make("x", VarTerm::Make("y")), "y", VarTerm::Make("z"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Abst("x", Term(Var("y"))));
+  const Term replacement(Var("z"));
+  const Term result = Sub(target, "y", replacement);
 
-  const auto abst = std::static_pointer_cast<AbstTerm>(result);
+  const Abst* abst = result.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->var_name, "x");
+  EXPECT_EQ(abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(abst->body);
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "z");
+  EXPECT_EQ(body_var->Name(), "z");
 }
 
 TEST(Sub, Appl) {
-  const std::shared_ptr<Term> result =
-      Sub(ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("x")), "x",
-          VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Appl(Term(Var("x")), Term(Var("x"))));
+  const Term replacement(Var("y"));
+  const Term result = Sub(target, "x", replacement);
 
-  const auto appl = std::static_pointer_cast<ApplTerm>(result);
+  const Appl* appl = result.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_var = std::static_pointer_cast<VarTerm>(appl->func);
+  const Var* func_var = appl->Func().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->name, "y");
+  EXPECT_EQ(func_var->Name(), "y");
 
-  const auto arg_var = std::static_pointer_cast<VarTerm>(appl->arg);
+  const Var* arg_var = appl->Arg().Get<Var>();
   ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->name, "y");
-}
-
-TEST(SafeSub, Null) {
-  const std::shared_ptr<Term> result =
-      SafeSub(nullptr, "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, IsNull());
+  EXPECT_EQ(arg_var->Name(), "y");
 }
 
 TEST(SafeSub, SameVar) {
-  const std::shared_ptr<Term> result =
-      SafeSub(VarTerm::Make("x"), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Var("x"));
+  const Term replacement(Var("y"));
+  const Term result = SafeSub(target, "x", replacement);
 
-  const auto var = std::static_pointer_cast<VarTerm>(result);
+  const Var* var = result.Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->name, "y");
+  EXPECT_EQ(var->Name(), "y");
 }
 
 TEST(SafeSub, OtherVar) {
-  const std::shared_ptr<Term> result =
-      SafeSub(VarTerm::Make("z"), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Var("z"));
+  const Term replacement(Var("y"));
+  const Term result = SafeSub(target, "x", replacement);
 
-  const auto var = std::static_pointer_cast<VarTerm>(result);
+  const Var* var = result.Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->name, "z");
+  EXPECT_EQ(var->Name(), "z");
 }
 
 TEST(SafeSub, AbstSameVar) {
-  const std::shared_ptr<Term> result =
-      SafeSub(AbstTerm::Make("x", VarTerm::Make("x")), "x", VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Abst("x", Term(Var("x"))));
+  const Term replacement(Var("y"));
+  const Term result = SafeSub(target, "x", replacement);
 
-  const auto abst = std::static_pointer_cast<AbstTerm>(result);
+  const Abst* abst = result.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->var_name, "x");
+  EXPECT_EQ(abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(abst->body);
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "x");
+  EXPECT_EQ(body_var->Name(), "x");
 }
 
 TEST(SafeSub, AbstOtherVar) {
-  const std::shared_ptr<Term> result =
-      SafeSub(AbstTerm::Make("x", VarTerm::Make("y")), "y", VarTerm::Make("z"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Abst("x", Term(Var("y"))));
+  const Term replacement(Var("z"));
+  const Term result = SafeSub(target, "y", replacement);
 
-  const auto abst = std::static_pointer_cast<AbstTerm>(result);
+  const Abst* abst = result.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->var_name, "x");
+  EXPECT_EQ(abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(abst->body);
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "z");
+  EXPECT_EQ(body_var->Name(), "z");
 }
 
 TEST(SafeSub, Appl) {
-  const std::shared_ptr<Term> result =
-      SafeSub(ApplTerm::Make(VarTerm::Make("x"), VarTerm::Make("x")), "x",
-              VarTerm::Make("y"));
-  ASSERT_THAT(result, NotNull());
+  const Term target(Appl(Term(Var("x")), Term(Var("x"))));
+  const Term replacement(Var("y"));
+  const Term result = SafeSub(target, "x", replacement);
 
-  const auto appl = std::static_pointer_cast<ApplTerm>(result);
+  const Appl* appl = result.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_var = std::static_pointer_cast<VarTerm>(appl->func);
+  const Var* func_var = appl->Func().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->name, "y");
+  EXPECT_EQ(func_var->Name(), "y");
 
-  const auto arg_var = std::static_pointer_cast<VarTerm>(appl->arg);
+  const Var* arg_var = appl->Arg().Get<Var>();
   ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->name, "y");
+  EXPECT_EQ(arg_var->Name(), "y");
 }
 }  // namespace
 }  // namespace named

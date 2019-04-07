@@ -12,87 +12,72 @@ namespace {
 using ::testing::IsNull;
 using ::testing::NotNull;
 
-TEST(Parser, Empty) {
-  const std::string expr = "";
-
-  const std::shared_ptr<Term> term = Parser::Parse(expr);
-  ASSERT_THAT(term, IsNull());
-}
-
 TEST(Parser, Var) {
   const std::string expr = "x";
+  const Term term = Parser::Parse(expr);
 
-  const std::shared_ptr<Term> term = Parser::Parse(expr);
-  ASSERT_THAT(term, NotNull());
-
-  const auto var = std::static_pointer_cast<VarTerm>(term);
+  const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
 
-  EXPECT_EQ(var->name, "x");
+  EXPECT_EQ(var->Name(), "x");
 }
 
 TEST(Parser, Abst) {
   const std::string expr = "(^ x y)";
+  const Term term = Parser::Parse(expr);
 
-  const std::shared_ptr<Term> term = Parser::Parse(expr);
-  ASSERT_THAT(term, NotNull());
-
-  const auto abst = std::static_pointer_cast<AbstTerm>(term);
+  const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->var_name, "x");
+  EXPECT_EQ(abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(abst->body);
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "y");
+  EXPECT_EQ(body_var->Name(), "y");
 }
 
 TEST(Parser, Appl) {
   const std::string expr = "(x y)";
+  const Term term = Parser::Parse(expr);
 
-  const std::shared_ptr<Term> term = Parser::Parse(expr);
-  ASSERT_THAT(term, NotNull());
-
-  const auto appl = std::static_pointer_cast<ApplTerm>(term);
+  const Appl* appl = term.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_var = std::static_pointer_cast<VarTerm>(appl->func);
+  const Var* func_var = appl->Func().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->name, "x");
+  EXPECT_EQ(func_var->Name(), "x");
 
-  const auto arg_var = std::static_pointer_cast<VarTerm>(appl->arg);
+  const Var* arg_var = appl->Arg().Get<Var>();
   ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->name, "y");
+  EXPECT_EQ(arg_var->Name(), "y");
 }
 
 TEST(Parser, Complex) {
   const std::string expr = "((^ x y) (u v)";
+  const Term term = Parser::Parse(expr);
 
-  const std::shared_ptr<Term> term = Parser::Parse(expr);
-  ASSERT_THAT(term, NotNull());
-
-  const auto appl = std::static_pointer_cast<ApplTerm>(term);
+  const Appl* appl = term.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_abst = std::static_pointer_cast<AbstTerm>(appl->func);
+  const Abst* func_abst = appl->Func().Get<Abst>();
   ASSERT_THAT(func_abst, NotNull());
 
-  EXPECT_EQ(func_abst->var_name, "x");
+  EXPECT_EQ(func_abst->VarName(), "x");
 
-  const auto body_var = std::static_pointer_cast<VarTerm>(func_abst->body);
+  const Var* body_var = func_abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->name, "y");
+  EXPECT_EQ(body_var->Name(), "y");
 
-  const auto arg_appl = std::static_pointer_cast<ApplTerm>(appl->arg);
+  const Appl* arg_appl = appl->Arg().Get<Appl>();
   ASSERT_THAT(arg_appl, NotNull());
 
-  const auto func_var = std::static_pointer_cast<VarTerm>(arg_appl->func);
+  const Var* func_var = arg_appl->Func().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->name, "u");
+  EXPECT_EQ(func_var->Name(), "u");
 
-  const auto arg_var = std::static_pointer_cast<VarTerm>(arg_appl->arg);
+  const Var* arg_var = arg_appl->Arg().Get<Var>();
   ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->name, "v");
+  EXPECT_EQ(arg_var->Name(), "v");
 }
 }  // namespace
 }  // namespace named
