@@ -14,7 +14,7 @@ Abst::Abst(const Abst& other) : body_(std::make_unique<Term>(*other.body_)) {}
 
 Abst& Abst::operator=(const Abst& other) { return *this = Abst(other); }
 
-Term& Abst::Body() { return *body_; }
+Term* Abst::MutableBody() { return body_.get(); }
 
 const Term& Abst::Body() const { return *body_; }
 
@@ -28,11 +28,11 @@ Appl::Appl(const Appl& other)
 
 Appl& Appl::operator=(const Appl& other) { return *this = Appl(other); }
 
-Term& Appl::Func() { return *func_; }
+Term* Appl::MutableFunc() { return func_.get(); }
 
 const Term& Appl::Func() const { return *func_; }
 
-Term& Appl::Arg() { return *arg_; }
+Term* Appl::MutableArg() { return arg_.get(); }
 
 const Term& Appl::Arg() const { return *arg_; }
 

@@ -21,7 +21,7 @@ public:
   Abst& operator=(Abst&& other) noexcept = default;
 
   // Returns the lambda term representing the body of the function.
-  Term& Body();
+  Term* MutableBody();
 
   // Returns the lambda term representing the body of the function.
   const Term& Body() const;
@@ -41,13 +41,13 @@ public:
   Appl& operator=(Appl&& other) noexcept = default;
 
   // Returns the lambda term representing the function.
-  Term& Func();
+  Term* MutableFunc();
 
   // Returns the lambda term representing the function.
   const Term& Func() const;
 
   // Returns the lambda term representing the argument.
-  Term& Arg();
+  Term* MutableArg();
 
   // Returns the lambda term representing the argument.
   const Term& Arg() const;
