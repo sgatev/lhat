@@ -3,43 +3,37 @@
 namespace lhat {
 namespace nameless {
 namespace {
-Term ShiftFreeVarIndex(const Term& term, int c, int d) {
-  return term.Match(
-      [c, d](const Abst& abst) -> Term {
-        return Term(Abst(ShiftFreeVarIndex(abst.Body(), c + 1, d)));
+void ShiftFreeVarIndex(int c, int d, Term* term) {
+  return term->Match(
+      [c, d](Abst& abst) { ShiftFreeVarIndex(c + 1, d, &abst.Body()); },
+      [c, d](Appl& appl) {
+        ShiftFreeVarIndex(c, d, &appl.Func());
+        ShiftFreeVarIndex(c, d, &appl.Arg());
       },
-      [c, d](const Appl& appl) -> Term {
-        return Term(Appl(ShiftFreeVarIndex(appl.Func(), c, d),
-                         ShiftFreeVarIndex(appl.Arg(), c, d)));
-      },
-      [c, d](const Var& var) -> Term {
+      [c, d](Var& var) {
         if (var.Index() >= c) {
-          return Term(Var(var.Index() + d));
+          var.SetIndex(var.Index() + d);
         }
-        return Term(Var(var.Index()));
       });
 }
 }  // namespace
 
-Term ShiftFreeVarIndex(const Term& term, int d) {
-  return ShiftFreeVarIndex(term, 0, d);
-}
+void ShiftFreeVarIndex(int d, Term* term) { ShiftFreeVarIndex(0, d, term); }
 
-Term Sub(const Term& target, int idx, const Term& term) {
-  return target.Match(
-      [idx, &term](const Abst& abst) -> Term {
-        return Term(
-            Abst(Sub(abst.Body(), idx + 1, ShiftFreeVarIndex(term, 1))));
+void Sub(int idx, const Term& replacement, Term* target) {
+  target->Match(
+      [idx, replacement = replacement](Abst& abst) mutable {
+        ShiftFreeVarIndex(1, &replacement);
+        Sub(idx + 1, replacement, &abst.Body());
       },
-      [idx, &term](const Appl& appl) -> Term {
-        return Term(
-            Appl(Sub(appl.Func(), idx, term), Sub(appl.Arg(), idx, term)));
+      [idx, &replacement](Appl& appl) {
+        Sub(idx, replacement, &appl.Func());
+        Sub(idx, replacement, &appl.Arg());
       },
-      [idx, &term](const Var& var) -> Term {
+      [idx, &replacement, target](Var& var) {
         if (var.Index() == idx) {
-          return Term(term);
+          *target = replacement;
         }
-        return Term(var);
       });
 }
 }  // namespace nameless

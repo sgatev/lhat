@@ -12,20 +12,20 @@ using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(ShiftFreeVarIndex, Var) {
-  const Term term(Var(1));
+  Term term(Var(1));
+  ShiftFreeVarIndex(1, &term);
 
-  const Term shifted = ShiftFreeVarIndex(term, 1);
-  const auto result = shifted.Get<Var>();
+  const auto result = term.Get<Var>();
   ASSERT_THAT(result, NotNull());
 
   EXPECT_EQ(result->Index(), 2);
 }
 
 TEST(ShiftFreeVarIndex, Appl) {
-  const Term term(Appl(Term(Var(1)), Term(Var(2))));
+  Term term(Appl(Term(Var(1)), Term(Var(2))));
+  ShiftFreeVarIndex(1, &term);
 
-  const Term shifted = ShiftFreeVarIndex(term, 1);
-  const auto result = shifted.Get<Appl>();
+  const auto result = term.Get<Appl>();
   ASSERT_THAT(result, NotNull());
 
   const auto func_var = result->Func().Get<Var>();
@@ -38,10 +38,10 @@ TEST(ShiftFreeVarIndex, Appl) {
 }
 
 TEST(ShiftFreeVarIndex, AbstFreeVar) {
-  const Term term(Abst(Term(Var(1))));
+  Term term(Abst(Term(Var(1))));
+  ShiftFreeVarIndex(1, &term);
 
-  const Term shifted = ShiftFreeVarIndex(term, 1);
-  const auto result = shifted.Get<Abst>();
+  const auto result = term.Get<Abst>();
   ASSERT_THAT(result, NotNull());
 
   const auto body_var = result->Body().Get<Var>();
@@ -50,10 +50,10 @@ TEST(ShiftFreeVarIndex, AbstFreeVar) {
 }
 
 TEST(ShiftFreeVarIndex, AbstBoundVar) {
-  const Term term(Abst(Term(Var(0))));
+  Term term(Abst(Term(Var(0))));
+  ShiftFreeVarIndex(1, &term);
 
-  const Term shifted = ShiftFreeVarIndex(term, 1);
-  const auto result = shifted.Get<Abst>();
+  const auto result = term.Get<Abst>();
   ASSERT_THAT(result, NotNull());
 
   const auto body_var = result->Body().Get<Var>();
@@ -62,10 +62,10 @@ TEST(ShiftFreeVarIndex, AbstBoundVar) {
 }
 
 TEST(ShiftFreeVarIndex, Complex) {
-  const Term term(Abst(Term(Abst(Term(Appl(Term(Var(1)), Term(Var(2))))))));
+  Term term(Abst(Term(Abst(Term(Appl(Term(Var(1)), Term(Var(2))))))));
+  ShiftFreeVarIndex(1, &term);
 
-  const Term shifted = ShiftFreeVarIndex(term, 1);
-  const auto result = shifted.Get<Abst>();
+  const auto result = term.Get<Abst>();
   ASSERT_THAT(result, NotNull());
 
   const auto nested_abst = result->Body().Get<Abst>();
@@ -84,28 +84,28 @@ TEST(ShiftFreeVarIndex, Complex) {
 }
 
 TEST(Sub, SameVar) {
-  const Term target(Var(0));
-  const auto result = Sub(target, 0, Term(Var(1)));
+  Term target(Var(0));
+  Sub(0, Term(Var(1)), &target);
 
-  const auto var = result.Get<Var>();
+  const auto var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 1);
 }
 
 TEST(Sub, OtherVar) {
-  const Term target(Var(1));
-  const auto result = Sub(target, 0, Term(Var(2)));
+  Term target(Var(1));
+  Sub(0, Term(Var(2)), &target);
 
-  const auto var = result.Get<Var>();
+  const auto var = target.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 1);
 }
 
 TEST(Sub, AbstDistinctVar) {
-  const Term target(Abst(Term(Var(0))));
-  const auto result = Sub(target, 0, Term(Var(1)));
+  Term target(Abst(Term(Var(0))));
+  Sub(0, Term(Var(1)), &target);
 
-  const auto abst = result.Get<Abst>();
+  const auto abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   const auto body_var = abst->Body().Get<Var>();
@@ -114,10 +114,10 @@ TEST(Sub, AbstDistinctVar) {
 }
 
 TEST(Sub, AbstSameVar) {
-  const Term target(Abst(Term(Var(1))));
-  const auto result = Sub(target, 0, Term(Var(1)));
+  Term target(Abst(Term(Var(1))));
+  Sub(0, Term(Var(1)), &target);
 
-  const auto abst = result.Get<Abst>();
+  const auto abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
   const auto body_var = abst->Body().Get<Var>();

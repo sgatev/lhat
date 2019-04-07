@@ -70,6 +70,9 @@ public:
   // Returns the index of the variable.
   int Index() const;
 
+  // Sets the index of the variable.
+  void SetIndex(int idx);
+
 private:
   int idx_;
 };

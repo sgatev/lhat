@@ -6,10 +6,10 @@
 namespace lhat {
 namespace nameless {
 // ShiftFreeVarIndex shifts the indexes of the free variables in term by d.
-Term ShiftFreeVarIndex(const Term& term, int d);
+void ShiftFreeVarIndex(int d, Term* term);
 
-// Sub substitutes the occurrences of idx in target with term.
-Term Sub(const Term& target, int idx, const Term& term);
+// Sub substitutes the occurrences of idx in target with replacement.
+void Sub(int idx, const Term& replacement, Term* target);
 }  // namespace nameless
 }  // namespace lhat
 
