@@ -13,7 +13,6 @@ using ::testing::NotNull;
 
 TEST(Parser, Var) {
   const std::string expr = "21";
-
   const Term term = Parser::Parse(expr);
 
   const auto var = term.Get<Var>();
@@ -24,7 +23,6 @@ TEST(Parser, Var) {
 
 TEST(Parser, AbstBound) {
   const std::string expr = "(^ 0)";
-
   const Term term = Parser::Parse(expr);
 
   const auto abst = term.Get<Abst>();
@@ -37,7 +35,6 @@ TEST(Parser, AbstBound) {
 
 TEST(Parser, AbstFree) {
   const std::string expr = "(^ 2)";
-
   const Term term = Parser::Parse(expr);
 
   const auto abst = term.Get<Abst>();
@@ -50,7 +47,6 @@ TEST(Parser, AbstFree) {
 
 TEST(Parser, MultiAbstBound) {
   const std::string expr = "(^ (^ 1))";
-
   const Term term = Parser::Parse(expr);
 
   const auto abst = term.Get<Abst>();
@@ -66,7 +62,6 @@ TEST(Parser, MultiAbstBound) {
 
 TEST(Parser, Appl) {
   const std::string expr = "(1 2)";
-
   const Term term = Parser::Parse(expr);
 
   const auto appl = term.Get<Appl>();
@@ -83,7 +78,6 @@ TEST(Parser, Appl) {
 
 TEST(Parser, Complex) {
   const std::string expr = "((^ (0 1)) (2 0)";
-
   const Term term = Parser::Parse(expr);
 
   const auto appl = term.Get<Appl>();

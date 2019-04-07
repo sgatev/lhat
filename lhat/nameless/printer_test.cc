@@ -31,7 +31,7 @@ TEST(Printer, AbstBound) {
 }
 
 TEST(Printer, MultiAbstBound) {
-  const Term term(Abst(Term((Abst(Term(Var(-1)))))));
+  const Term term(Abst(Term(Abst(Term(Var(-1))))));
   std::string out;
   Printer::Print(term, &out);
   EXPECT_EQ(out, "(^ (^ 1))");
