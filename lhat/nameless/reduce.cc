@@ -6,31 +6,33 @@ namespace lhat {
 namespace nameless {
 namespace {
 bool IsBetaRedex(const Appl& appl) { return appl.Func().Type() == ABST; }
-}  // namespace
 
-void BetaReduce(Term* term) {
+void BetaReduce(int c, Term* term) {
   term->Match([](const Abst& abst) {},
-              [term](Appl& appl) {
+              [c, term](Appl& appl) {
                 if (IsBetaRedex(appl)) {
-                  ShiftFreeVarIndex(1, appl.MutableArg());
                   Term result = appl.Func().Get<Abst>()->Body();
-                  Sub(-1, appl.Arg(), &result);
-                  ShiftFreeVarIndex(-1, &result);
+                  Sub(-c, appl.Arg(), &result);
                   *term = result;
                 }
               },
               [](const Var& var) {});
 }
 
-void BetaReduceAll(Term* term) {
-  term->Match([](Abst& abst) { BetaReduceAll(abst.MutableBody()); },
-              [term](Appl& appl) {
-                BetaReduceAll(appl.MutableFunc());
-                BetaReduceAll(appl.MutableArg());
-                BetaReduce(term);
+void BetaReduceAll(int c, Term* term) {
+  term->Match([c](Abst& abst) { BetaReduceAll(c + 1, abst.MutableBody()); },
+              [c, term](Appl& appl) {
+                BetaReduceAll(c, appl.MutableFunc());
+                BetaReduceAll(c, appl.MutableArg());
+                BetaReduce(c, term);
               },
               [](const Var& var) {});
 }
+}  // namespace
+
+void BetaReduce(Term* term) { BetaReduce(1, term); }
+
+void BetaReduceAll(Term* term) { BetaReduceAll(1, term); }
 
 bool IsNormalForm(const Term& term) {
   return term.Match(

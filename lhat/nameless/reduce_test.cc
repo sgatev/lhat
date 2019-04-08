@@ -105,7 +105,7 @@ TEST(BetaReduceAll, ApplRedex) {
 }
 
 TEST(BetaReduceAll, Complex) {
-  Term term = Abst(Appl(Abst(Var(-1)), Var(2)));
+  Term term = Abst(Appl(Abst(Var(-2)), Var(0)));
   BetaReduceAll(&term);
 
   const Abst* abst = term.Get<Abst>();
@@ -113,7 +113,7 @@ TEST(BetaReduceAll, Complex) {
 
   const Var* var = abst->Body().Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->Index(), 2);
+  EXPECT_EQ(var->Index(), 0);
 }
 
 TEST(IsNormalForm, Var) {
