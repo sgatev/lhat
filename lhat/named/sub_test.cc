@@ -10,8 +10,8 @@ using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(Sub, SameVar) {
-  Term target(Var("x"));
-  const Term replacement(Var("y"));
+  Term target = Var("x");
+  const Term replacement = Var("y");
   Sub("x", replacement, &target);
 
   const Var* var = target.Get<Var>();
@@ -20,8 +20,8 @@ TEST(Sub, SameVar) {
 }
 
 TEST(Sub, OtherVar) {
-  Term target(Var("z"));
-  const Term replacement(Var("y"));
+  Term target = Var("z");
+  const Term replacement = Var("y");
   Sub("x", replacement, &target);
 
   const Var* var = target.Get<Var>();
@@ -30,8 +30,8 @@ TEST(Sub, OtherVar) {
 }
 
 TEST(Sub, AbstSameVar) {
-  Term target(Abst("x", Term(Var("x"))));
-  const Term replacement(Var("y"));
+  Term target = Abst("x", Var("x"));
+  const Term replacement = Var("y");
   Sub("x", replacement, &target);
 
   const Abst* abst = target.Get<Abst>();
@@ -45,8 +45,8 @@ TEST(Sub, AbstSameVar) {
 }
 
 TEST(Sub, AbstOtherVar) {
-  Term target(Abst("x", Term(Var("y"))));
-  const Term replacement(Var("z"));
+  Term target = Abst("x", Var("y"));
+  const Term replacement = Var("z");
   Sub("y", replacement, &target);
 
   const Abst* abst = target.Get<Abst>();
@@ -60,8 +60,8 @@ TEST(Sub, AbstOtherVar) {
 }
 
 TEST(Sub, Appl) {
-  Term target(Appl(Term(Var("x")), Term(Var("x"))));
-  const Term replacement(Var("y"));
+  Term target = Appl(Var("x"), Var("x"));
+  const Term replacement = Var("y");
   Sub("x", replacement, &target);
 
   const Appl* appl = target.Get<Appl>();
@@ -77,8 +77,8 @@ TEST(Sub, Appl) {
 }
 
 TEST(SafeSub, SameVar) {
-  Term target(Var("x"));
-  const Term replacement(Var("y"));
+  Term target = Var("x");
+  const Term replacement = Var("y");
   SafeSub("x", replacement, &target);
 
   const Var* var = target.Get<Var>();
@@ -87,8 +87,8 @@ TEST(SafeSub, SameVar) {
 }
 
 TEST(SafeSub, OtherVar) {
-  Term target(Var("z"));
-  const Term replacement(Var("y"));
+  Term target = Var("z");
+  const Term replacement = Var("y");
   SafeSub("x", replacement, &target);
 
   const Var* var = target.Get<Var>();
@@ -97,8 +97,8 @@ TEST(SafeSub, OtherVar) {
 }
 
 TEST(SafeSub, AbstSameVar) {
-  Term target(Abst("x", Term(Var("x"))));
-  const Term replacement(Var("y"));
+  Term target = Abst("x", Var("x"));
+  const Term replacement = Var("y");
   SafeSub("x", replacement, &target);
 
   const Abst* abst = target.Get<Abst>();
@@ -112,8 +112,8 @@ TEST(SafeSub, AbstSameVar) {
 }
 
 TEST(SafeSub, AbstOtherVar) {
-  Term target(Abst("x", Term(Var("y"))));
-  const Term replacement(Var("z"));
+  Term target = Abst("x", Var("y"));
+  const Term replacement = Var("z");
   SafeSub("y", replacement, &target);
 
   const Abst* abst = target.Get<Abst>();
@@ -127,8 +127,8 @@ TEST(SafeSub, AbstOtherVar) {
 }
 
 TEST(SafeSub, Appl) {
-  Term target(Appl(Term(Var("x")), Term(Var("x"))));
-  const Term replacement(Var("y"));
+  Term target = Appl(Var("x"), Var("x"));
+  const Term replacement = Var("y");
   SafeSub("x", replacement, &target);
 
   const Appl* appl = target.Get<Appl>();

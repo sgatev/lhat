@@ -13,7 +13,7 @@ using ::testing::IsEmpty;
 using ::testing::UnorderedElementsAre;
 
 TEST(InsertBoundVarNames, Var) {
-  const Term term(Var("x"));
+  const Term term = Var("x");
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -22,7 +22,7 @@ TEST(InsertBoundVarNames, Var) {
 }
 
 TEST(InsertBoundVarNames, Abst) {
-  const Term term(Abst("x", Term(Var("y"))));
+  const Term term = Abst("x", Var("y"));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -31,8 +31,7 @@ TEST(InsertBoundVarNames, Abst) {
 }
 
 TEST(InsertBoundVarNames, Appl) {
-  const Term term(
-      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
+  const Term term = Appl(Abst("x", Var("y")), Abst("u", Var("v")));
 
   std::unordered_set<std::string> var_names;
   InsertBoundVarNames(term, &var_names);
@@ -41,7 +40,7 @@ TEST(InsertBoundVarNames, Appl) {
 }
 
 TEST(InsertFreeVarNames, Var) {
-  const Term term(Var("x"));
+  const Term term = Var("x");
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -50,7 +49,7 @@ TEST(InsertFreeVarNames, Var) {
 }
 
 TEST(InsertFreeVarNames, Abst) {
-  const Term term(Abst("x", Term(Var("y"))));
+  const Term term = Abst("x", Var("y"));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -59,7 +58,7 @@ TEST(InsertFreeVarNames, Abst) {
 }
 
 TEST(InsertFreeVarNames, AbstAlreadyExists) {
-  const Term term(Abst("x", Term(Var("y"))));
+  const Term term = Abst("x", Var("y"));
 
   std::unordered_set<std::string> var_names = {"x"};
   InsertFreeVarNames(term, &var_names);
@@ -68,8 +67,7 @@ TEST(InsertFreeVarNames, AbstAlreadyExists) {
 }
 
 TEST(InsertFreeVarNames, Appl) {
-  const Term term(
-      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
+  const Term term = Appl(Abst("x", Var("y")), Abst("u", Var("v")));
 
   std::unordered_set<std::string> var_names;
   InsertFreeVarNames(term, &var_names);
@@ -78,7 +76,7 @@ TEST(InsertFreeVarNames, Appl) {
 }
 
 TEST(InsertVarNames, Var) {
-  const Term term(Var("x"));
+  const Term term = Var("x");
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -87,7 +85,7 @@ TEST(InsertVarNames, Var) {
 }
 
 TEST(InsertVarNames, Abst) {
-  const Term term(Abst("x", Term(Var("y"))));
+  const Term term = Abst("x", Var("y"));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -96,8 +94,7 @@ TEST(InsertVarNames, Abst) {
 }
 
 TEST(InsertVarNames, Appl) {
-  const Term term(
-      Appl(Term(Abst("x", Term(Var("y")))), Term(Abst("u", Term(Var("v"))))));
+  const Term term = Appl(Abst("x", Var("y")), Abst("u", Var("v")));
 
   std::unordered_set<std::string> var_names;
   InsertVarNames(term, &var_names);
@@ -121,7 +118,7 @@ TEST(NewVarName, Taken) {
 }
 
 TEST(NewVarName, AllSingleLetterTaken) {
-  std::unordered_set<std::string> var_names = {};
+  std::unordered_set<std::string> var_names;
   for (char c = 'a'; c <= 'z'; c++) {
     var_names.insert(std::string(1, c));
   }

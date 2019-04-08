@@ -12,7 +12,7 @@ using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(ShiftFreeVarIndex, Var) {
-  Term term(Var(1));
+  Term term = Var(1);
   ShiftFreeVarIndex(1, &term);
 
   const Var* var = term.Get<Var>();
@@ -22,7 +22,7 @@ TEST(ShiftFreeVarIndex, Var) {
 }
 
 TEST(ShiftFreeVarIndex, Appl) {
-  Term term(Appl(Term(Var(1)), Term(Var(2))));
+  Term term = Appl(Var(1), Var(2));
   ShiftFreeVarIndex(1, &term);
 
   const Appl* appl = term.Get<Appl>();
@@ -38,7 +38,7 @@ TEST(ShiftFreeVarIndex, Appl) {
 }
 
 TEST(ShiftFreeVarIndex, AbstFreeVar) {
-  Term term(Abst(Term(Var(1))));
+  Term term = Abst(Var(1));
   ShiftFreeVarIndex(1, &term);
 
   const Abst* abst = term.Get<Abst>();
@@ -50,7 +50,7 @@ TEST(ShiftFreeVarIndex, AbstFreeVar) {
 }
 
 TEST(ShiftFreeVarIndex, AbstBoundVar) {
-  Term term(Abst(Term(Var(0))));
+  Term term = Abst(Var(0));
   ShiftFreeVarIndex(1, &term);
 
   const Abst* abst = term.Get<Abst>();
@@ -62,7 +62,7 @@ TEST(ShiftFreeVarIndex, AbstBoundVar) {
 }
 
 TEST(ShiftFreeVarIndex, Complex) {
-  Term term(Abst(Term(Abst(Term(Appl(Term(Var(1)), Term(Var(2))))))));
+  Term term = Abst(Term(Abst(Appl(Var(1), Var(2)))));
   ShiftFreeVarIndex(1, &term);
 
   const Abst* abst = term.Get<Abst>();
@@ -84,7 +84,7 @@ TEST(ShiftFreeVarIndex, Complex) {
 }
 
 TEST(Sub, SameVar) {
-  Term term(Var(0));
+  Term term = Var(0);
   const Term replacement(Var(1));
   Sub(0, replacement, &term);
 
@@ -94,7 +94,7 @@ TEST(Sub, SameVar) {
 }
 
 TEST(Sub, OtherVar) {
-  Term term(Var(1));
+  Term term = Var(1);
   const Term replacement(Var(2));
   Sub(0, replacement, &term);
 
@@ -104,7 +104,7 @@ TEST(Sub, OtherVar) {
 }
 
 TEST(Sub, AbstDistinctVar) {
-  Term term(Abst(Term(Var(0))));
+  Term term = Abst(Var(0));
   const Term replacement(Var(1));
   Sub(0, replacement, &term);
 
@@ -117,7 +117,7 @@ TEST(Sub, AbstDistinctVar) {
 }
 
 TEST(Sub, AbstSameVar) {
-  Term term(Abst(Term(Var(1))));
+  Term term = Abst(Var(1));
   const Term replacement(Var(1));
   Sub(0, replacement, &term);
 
