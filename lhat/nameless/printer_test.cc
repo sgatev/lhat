@@ -1,6 +1,5 @@
 #include "printer.h"
 
-#include <memory>
 #include <string>
 
 #include "gmock/gmock.h"
