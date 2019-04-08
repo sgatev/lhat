@@ -10,9 +10,9 @@ namespace nameless {
 namespace {
 using ::testing::NotNull;
 
-TEST(BetaReduce, Var) {
+TEST(BetaReduceTerm, Var) {
   Term term = Var(1);
-  BetaReduce(&term);
+  BetaReduceTerm(&term);
 
   const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
@@ -20,9 +20,9 @@ TEST(BetaReduce, Var) {
   EXPECT_EQ(var->Index(), 1);
 }
 
-TEST(BetaReduce, Abst) {
+TEST(BetaReduceTerm, Abst) {
   Term term = Abst(Var(1));
-  BetaReduce(&term);
+  BetaReduceTerm(&term);
 
   const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -32,9 +32,9 @@ TEST(BetaReduce, Abst) {
   EXPECT_EQ(body_var->Index(), 1);
 }
 
-TEST(BetaReduce, ApplNonRedex) {
+TEST(BetaReduceTerm, ApplNonRedex) {
   Term term = Appl(Var(1), Var(2));
-  BetaReduce(&term);
+  BetaReduceTerm(&term);
 
   const Appl* appl = term.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
@@ -48,18 +48,18 @@ TEST(BetaReduce, ApplNonRedex) {
   EXPECT_EQ(arg_var->Index(), 2);
 }
 
-TEST(BetaReduce, ApplRedex) {
+TEST(BetaReduceTerm, ApplRedex) {
   Term term = Appl(Abst(Var(-1)), Var(2));
-  BetaReduce(&term);
+  BetaReduceTerm(&term);
 
   const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 2);
 }
 
-TEST(BetaReduceAll, Var) {
+TEST(BetaReduceSubTerms, Var) {
   Term term = Var(1);
-  BetaReduceAll(&term);
+  BetaReduceSubTerms(&term);
 
   const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
@@ -67,9 +67,9 @@ TEST(BetaReduceAll, Var) {
   EXPECT_EQ(var->Index(), 1);
 }
 
-TEST(BetaReduceAll, Abst) {
+TEST(BetaReduceSubTerms, Abst) {
   Term term = Abst(Var(1));
-  BetaReduceAll(&term);
+  BetaReduceSubTerms(&term);
 
   const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -79,9 +79,9 @@ TEST(BetaReduceAll, Abst) {
   EXPECT_EQ(body_var->Index(), 1);
 }
 
-TEST(BetaReduceAll, ApplNonRedex) {
+TEST(BetaReduceSubTerms, ApplNonRedex) {
   Term term = Appl(Var(1), Var(2));
-  BetaReduceAll(&term);
+  BetaReduceSubTerms(&term);
 
   const Appl* appl = term.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
@@ -95,18 +95,18 @@ TEST(BetaReduceAll, ApplNonRedex) {
   EXPECT_EQ(arg_var->Index(), 2);
 }
 
-TEST(BetaReduceAll, ApplRedex) {
+TEST(BetaReduceSubTerms, ApplRedex) {
   Term term = Appl(Abst(Var(-1)), Var(2));
-  BetaReduceAll(&term);
+  BetaReduceSubTerms(&term);
 
   const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 2);
 }
 
-TEST(BetaReduceAll, Complex) {
+TEST(BetaReduceSubTerms, Complex) {
   Term term = Abst(Appl(Abst(Var(-2)), Var(0)));
-  BetaReduceAll(&term);
+  BetaReduceSubTerms(&term);
 
   const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());

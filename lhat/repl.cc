@@ -38,7 +38,7 @@ void Run() {
     const named::Term input_term = named::Parser::Parse(input);
     nameless::Term term = StripNames(input_term);
     while (!nameless::IsNormalForm(term)) {
-      nameless::BetaReduceAll(&term);
+      nameless::BetaReduceSubTerms(&term);
     }
 
     std::string output;

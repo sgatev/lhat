@@ -7,7 +7,7 @@ namespace nameless {
 namespace {
 bool IsBetaRedex(const Appl& appl) { return appl.Func().Type() == ABST; }
 
-void BetaReduce(int c, Term* term) {
+void BetaReduceTerm(int c, Term* term) {
   term->Match([](const Abst& abst) {},
               [c, term](Appl& appl) {
                 if (IsBetaRedex(appl)) {
@@ -19,20 +19,21 @@ void BetaReduce(int c, Term* term) {
               [](const Var& var) {});
 }
 
-void BetaReduceAll(int c, Term* term) {
-  term->Match([c](Abst& abst) { BetaReduceAll(c + 1, abst.MutableBody()); },
-              [c, term](Appl& appl) {
-                BetaReduceAll(c, appl.MutableFunc());
-                BetaReduceAll(c, appl.MutableArg());
-                BetaReduce(c, term);
-              },
-              [](const Var& var) {});
+void BetaReduceSubTerms(int c, Term* term) {
+  term->Match(
+      [c](Abst& abst) { BetaReduceSubTerms(c + 1, abst.MutableBody()); },
+      [c, term](Appl& appl) {
+        BetaReduceSubTerms(c, appl.MutableFunc());
+        BetaReduceSubTerms(c, appl.MutableArg());
+        BetaReduceTerm(c, term);
+      },
+      [](const Var& var) {});
 }
 }  // namespace
 
-void BetaReduce(Term* term) { BetaReduce(1, term); }
+void BetaReduceTerm(Term* term) { BetaReduceTerm(1, term); }
 
-void BetaReduceAll(Term* term) { BetaReduceAll(1, term); }
+void BetaReduceSubTerms(Term* term) { BetaReduceSubTerms(1, term); }
 
 bool IsNormalForm(const Term& term) {
   return term.Match(
