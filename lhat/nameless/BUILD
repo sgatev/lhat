@@ -33,6 +33,35 @@ cc_test(
 )
 
 cc_library(
+    name = "reduce",
+    srcs = [
+        "reduce.cc",
+    ],
+    hdrs = [
+        "reduce.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ast",
+        ":sub",
+    ],
+)
+
+cc_test(
+    name = "reduce_test",
+    srcs = [
+        "reduce_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":ast",
+        ":reduce",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "sub",
     srcs = [
         "sub.cc",
