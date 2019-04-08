@@ -24,3 +24,16 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_binary(
+    name = "repl",
+    srcs = [
+        "repl.cc",
+    ],
+    deps = [
+		":names",
+		"//lhat/named:ast",
+		"//lhat/nameless:ast",
+		"//lhat/nameless:reduce",
+    ],
+)
