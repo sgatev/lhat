@@ -21,7 +21,11 @@ public:
   Abst& operator=(const Abst& other);
   Abst& operator=(Abst&& other) noexcept = default;
 
+  // Returns the variable name of the function.
   const std::string& VarName() const;
+
+  // Sets the variable name of the function.
+  void SetVarName(std::string var_name);
 
   // Returns the lambda term representing the body of the function.
   Term* MutableBody();

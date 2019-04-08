@@ -21,6 +21,8 @@ Abst& Abst::operator=(const Abst& other) { return *this = Abst(other); }
 
 const std::string& Abst::VarName() const { return var_name_; }
 
+void Abst::SetVarName(std::string var_name) { var_name_ = std::move(var_name); }
+
 Term* Abst::MutableBody() { return body_.get(); }
 
 const Term& Abst::Body() const { return *body_; }

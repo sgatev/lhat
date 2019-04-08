@@ -7,33 +7,46 @@
 namespace lhat {
 namespace named {
 namespace {
-Term RenameBoundVarInTerm(const Term& term, const std::string& from,
-                          const std::string& to) {
-  return term.Match(
-      [&from, &to](const Abst& abst) -> Term {
+void RenameBoundVar(const std::string& from, const std::string& to,
+                    Term* term) {
+  return term->Match(
+      [&from, &to](Abst& abst) {
         if (abst.VarName() == from) {
-          Term body = abst.Body();
-          Sub(from, Term(Var(to)), &body);
-          return Term(Abst(to, body));
+          abst.SetVarName(to);
+          Sub(from, Term(Var(to)), abst.MutableBody());
+          RenameBoundVar(from, to, abst.MutableBody());
         } else {
-          return Term(Abst(abst.VarName(),
-                           RenameBoundVarInTerm(abst.Body(), from, to)));
+          RenameBoundVar(from, to, abst.MutableBody());
         }
       },
-      [&from, &to](const Appl& appl) -> Term {
-        return Term(Appl(RenameBoundVarInTerm(appl.Func(), from, to),
-                         RenameBoundVarInTerm(appl.Arg(), from, to)));
+      [&from, &to](Appl& appl) {
+        RenameBoundVar(from, to, appl.MutableFunc());
+        RenameBoundVar(from, to, appl.MutableArg());
       },
-      [](const Var& var) -> Term { return Term(Var(var.Name())); });
+      [](const Var& var) {});
 }
 }  // namespace
 
 void SafeSub(const std::string& var_name, const Term& replacement,
              Term* target) {
-  std::unordered_set<std::string> var_names;
-  InsertBoundVarNames(*target, &var_names);
-  InsertFreeVarNames(replacement, &var_names);
-  std::string new_var_name = NewVarName(var_names);
+  std::unordered_set<std::string> bound_var_names;
+  InsertBoundVarNames(*target, &bound_var_names);
+
+  std::unordered_set<std::string> free_var_names;
+  InsertFreeVarNames(*target, &free_var_names);
+  InsertFreeVarNames(replacement, &free_var_names);
+
+  std::unordered_set<std::string> conflicting_var_names;
+  for (const std::string& var_name : free_var_names) {
+    if (bound_var_names.find(var_name) != bound_var_names.end()) {
+      conflicting_var_names.insert(var_name);
+    }
+  }
+
+  for (const std::string& conflicting_var_name : conflicting_var_names) {
+    RenameBoundVar(conflicting_var_name, NewVarName(free_var_names), target);
+  }
+
   return Sub(var_name, replacement, target);
 }
 
