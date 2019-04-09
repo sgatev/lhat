@@ -8,6 +8,7 @@ cc_library(
     ],
     deps = [
         "//lhat/named:ast",
+        "//lhat/named:vars",
         "//lhat/nameless:ast",
     ],
 )
@@ -31,9 +32,9 @@ cc_binary(
         "repl.cc",
     ],
     deps = [
-		":names",
-		"//lhat/named:ast",
-		"//lhat/nameless:ast",
-		"//lhat/nameless:reduce",
+        ":names",
+        "//lhat/named:ast",
+        "//lhat/nameless:ast",
+        "//lhat/nameless:reduce",
     ],
 )

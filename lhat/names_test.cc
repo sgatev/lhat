@@ -20,18 +20,18 @@ TEST(NameContext, AddAndGetNames) {
   EXPECT_EQ(nctx.GetNameForIndex(1), "bar");
 }
 
-TEST(StripNames, Var) {
+TEST(RemoveNames, Var) {
   const named::Term named_term = named::Var("x");
-  const nameless::Term nameless_term = StripNames(named_term);
+  const nameless::Term nameless_term = RemoveNames(named_term);
 
   const nameless::Var* var = nameless_term.Get<nameless::Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 0);
 }
 
-TEST(StripNames, AbstBound) {
+TEST(RemoveNames, AbstBound) {
   const named::Term named_term = named::Abst("x", named::Var("x"));
-  const nameless::Term nameless_term = StripNames(named_term);
+  const nameless::Term nameless_term = RemoveNames(named_term);
 
   const nameless::Abst* abst = nameless_term.Get<nameless::Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -41,9 +41,9 @@ TEST(StripNames, AbstBound) {
   EXPECT_EQ(var->Index(), -1);
 }
 
-TEST(StripNames, AbstFree) {
+TEST(RemoveNames, AbstFree) {
   const named::Term named_term = named::Abst("x", named::Var("y"));
-  const nameless::Term nameless_term = StripNames(named_term);
+  const nameless::Term nameless_term = RemoveNames(named_term);
 
   const nameless::Abst* abst = nameless_term.Get<nameless::Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -53,9 +53,9 @@ TEST(StripNames, AbstFree) {
   EXPECT_EQ(var->Index(), 0);
 }
 
-TEST(StripNames, Appl) {
+TEST(RemoveNames, Appl) {
   const named::Term named_term = named::Appl(named::Var("x"), named::Var("y"));
-  const nameless::Term nameless_term = StripNames(named_term);
+  const nameless::Term nameless_term = RemoveNames(named_term);
 
   const nameless::Appl* appl = nameless_term.Get<nameless::Appl>();
   ASSERT_THAT(appl, NotNull());
@@ -69,11 +69,11 @@ TEST(StripNames, Appl) {
   EXPECT_EQ(arg_var->Index(), 1);
 }
 
-TEST(StripNames, Complex) {
+TEST(RemoveNames, Complex) {
   const named::Term named_term =
       named::Appl(named::Abst("x", named::Var("y")),
                   named::Appl(named::Var("u"), named::Var("v")));
-  const nameless::Term nameless_term = StripNames(named_term);
+  const nameless::Term nameless_term = RemoveNames(named_term);
 
   const nameless::Appl* appl = nameless_term.Get<nameless::Appl>();
   ASSERT_THAT(appl, NotNull());
@@ -95,6 +95,83 @@ TEST(StripNames, Complex) {
   const nameless::Var* arg_arg_var = arg_appl->Arg().Get<nameless::Var>();
   ASSERT_THAT(arg_arg_var, NotNull());
   EXPECT_EQ(arg_arg_var->Index(), 2);
+}
+
+TEST(AddNames, Var) {
+  const nameless::Term nameless_term = nameless::Var(1);
+  const named::Term named_term = AddNames(nameless_term);
+
+  const named::Var* var = named_term.Get<named::Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Name(), "a");
+}
+
+TEST(AddNames, AbstFree) {
+  const nameless::Term nameless_term = nameless::Abst(nameless::Var(0));
+  const named::Term named_term = AddNames(nameless_term);
+
+  const named::Abst* abst = named_term.Get<named::Abst>();
+  ASSERT_THAT(abst, NotNull());
+  EXPECT_EQ(abst->VarName(), "a");
+
+  const named::Var* var = abst->Body().Get<named::Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Name(), "b");
+}
+
+TEST(AddNames, AbstBound) {
+  const nameless::Term nameless_term = nameless::Abst(nameless::Var(-1));
+  const named::Term named_term = AddNames(nameless_term);
+
+  const named::Abst* abst = named_term.Get<named::Abst>();
+  ASSERT_THAT(abst, NotNull());
+  EXPECT_EQ(abst->VarName(), "a");
+
+  const named::Var* var = abst->Body().Get<named::Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Name(), "a");
+}
+
+TEST(AddNames, Appl) {
+  const nameless::Term nameless_term =
+      nameless::Appl(nameless::Var(0), nameless::Var(1));
+  const named::Term named_term = AddNames(nameless_term);
+
+  const named::Appl* appl = named_term.Get<named::Appl>();
+  ASSERT_THAT(appl, NotNull());
+
+  const named::Var* func_var = appl->Func().Get<named::Var>();
+  ASSERT_THAT(func_var, NotNull());
+  EXPECT_EQ(func_var->Name(), "a");
+
+  const named::Var* arg_var = appl->Arg().Get<named::Var>();
+  ASSERT_THAT(arg_var, NotNull());
+  EXPECT_EQ(arg_var->Name(), "b");
+}
+
+TEST(AddNames, Complex) {
+  const nameless::Term nameless_term = nameless::Abst(
+      nameless::Appl(nameless::Abst(nameless::Var(-2)), nameless::Var(0)));
+  const named::Term named_term = AddNames(nameless_term);
+
+  const named::Abst* abst = named_term.Get<named::Abst>();
+  ASSERT_THAT(abst, NotNull());
+  EXPECT_EQ(abst->VarName(), "a");
+
+  const named::Appl* appl = abst->Body().Get<named::Appl>();
+  ASSERT_THAT(appl, NotNull());
+
+  const named::Abst* func_abst = appl->Func().Get<named::Abst>();
+  ASSERT_THAT(func_abst, NotNull());
+  EXPECT_EQ(func_abst->VarName(), "b");
+
+  const named::Var* func_abst_var = func_abst->Body().Get<named::Var>();
+  ASSERT_THAT(func_abst_var, NotNull());
+  EXPECT_EQ(func_abst_var->Name(), "a");
+
+  const named::Var* arg_var = appl->Arg().Get<named::Var>();
+  ASSERT_THAT(arg_var, NotNull());
+  EXPECT_EQ(arg_var->Name(), "c");
 }
 }  // namespace
 }  // namespace lhat

@@ -93,6 +93,7 @@ cc_library(
     hdrs = [
         "vars.h",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         ":ast",
     ],

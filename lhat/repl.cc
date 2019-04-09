@@ -5,8 +5,8 @@
 
 #include "named/ast.h"
 #include "named/parser.h"
+#include "named/printer.h"
 #include "nameless/ast.h"
-#include "nameless/printer.h"
 #include "nameless/reduce.h"
 #include "names.h"
 
@@ -36,13 +36,14 @@ void Run() {
     }
 
     const named::Term input_term = named::Parser::Parse(input);
-    nameless::Term term = StripNames(input_term);
+    nameless::Term term = RemoveNames(input_term);
     while (!nameless::IsNormalForm(term)) {
       nameless::BetaReduceSubTerms(&term);
     }
 
+    const named::Term output_term = AddNames(term);
     std::string output;
-    nameless::Printer::Print(term, &output);
+    named::Printer::Print(output_term, &output);
     std::cout << output << std::endl;
   }
 }

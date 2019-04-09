@@ -1,10 +1,52 @@
 #include "names.h"
 
+#include <unordered_set>
+
+#include "named/vars.h"
+
 namespace lhat {
 namespace {
-nameless::Term StripNamesFromTerm(
-    const named::Term& term, NameContext* nctx,
-    std::unordered_map<std::string, int>* abst_var_names, int abst_count) {
+named::Term AddNames(const nameless::Term& term, NameContext* free_nctx,
+                     NameContext* bound_nctx,
+                     std::unordered_set<std::string>* names, int abst_count) {
+  return term.Match(
+      [free_nctx, bound_nctx, names,
+       abst_count](const nameless::Abst& abst) -> named::Term {
+        if (!bound_nctx->HasIndex(abst_count)) {
+          std::string name = named::NewVarName(*names);
+          bound_nctx->SetName(name, abst_count);
+          names->insert(name);
+        }
+        return named::Abst(bound_nctx->GetNameForIndex(abst_count),
+                           AddNames(abst.Body(), free_nctx, bound_nctx, names,
+                                    abst_count + 1));
+      },
+      [free_nctx, bound_nctx, names,
+       abst_count](const nameless::Appl& appl) -> named::Term {
+        named::Term func =
+            AddNames(appl.Func(), free_nctx, bound_nctx, names, abst_count);
+        named::Term arg =
+            AddNames(appl.Arg(), free_nctx, bound_nctx, names, abst_count);
+        return named::Appl(func, arg);
+      },
+      [free_nctx, bound_nctx, names,
+       abst_count](const nameless::Var& var) -> named::Term {
+        if (var.Index() < 0) {
+          return named::Var(
+              bound_nctx->GetNameForIndex(-var.Index() - abst_count));
+        }
+        if (!free_nctx->HasIndex(var.Index())) {
+          std::string name = named::NewVarName(*names);
+          free_nctx->SetName(name, var.Index());
+          names->insert(name);
+        }
+        return named::Var(free_nctx->GetNameForIndex(var.Index()));
+      });
+}
+
+nameless::Term RemoveNames(const named::Term& term, NameContext* nctx,
+                           std::unordered_map<std::string, int>* abst_var_names,
+                           int abst_count) {
   return term.Match(
       [nctx, abst_var_names,
        abst_count](const named::Abst& abst) -> nameless::Term {
@@ -14,8 +56,8 @@ nameless::Term StripNamesFromTerm(
         }
         abst_var_names->insert({abst.VarName(), abst_count});
 
-        const nameless::Term body = StripNamesFromTerm(
-            abst.Body(), nctx, abst_var_names, abst_count + 1);
+        const nameless::Term body =
+            RemoveNames(abst.Body(), nctx, abst_var_names, abst_count + 1);
 
         if (old_abst_var_name_idx >= 0) {
           abst_var_names->at(abst.VarName()) = old_abst_var_name_idx;
@@ -28,8 +70,8 @@ nameless::Term StripNamesFromTerm(
       [nctx, abst_var_names,
        abst_count](const named::Appl& appl) -> nameless::Term {
         return nameless::Appl(
-            StripNamesFromTerm(appl.Func(), nctx, abst_var_names, abst_count),
-            StripNamesFromTerm(appl.Arg(), nctx, abst_var_names, abst_count));
+            RemoveNames(appl.Func(), nctx, abst_var_names, abst_count),
+            RemoveNames(appl.Arg(), nctx, abst_var_names, abst_count));
       },
       [nctx, abst_var_names](const named::Var& var) -> nameless::Term {
         if (abst_var_names->find(var.Name()) != abst_var_names->end()) {
@@ -43,6 +85,8 @@ nameless::Term StripNamesFromTerm(
 }
 }  // namespace
 
+NameContext::NameContext() : idx_(0) {}
+
 int NameContext::AddName(const std::string& name) {
   const auto name_idx = name_to_idx_.find(name);
   if (name_idx != name_to_idx_.end()) {
@@ -50,13 +94,19 @@ int NameContext::AddName(const std::string& name) {
     return name_idx->second;
   }
 
-  int idx = names_.size();
-  name_to_idx_[name] = idx;
-  names_.push_back(name);
-  return idx;
+  name_to_idx_[name] = idx_;
+  idx_to_name_[idx_] = name;
+  return idx_++;
 }
 
-std::string NameContext::GetNameForIndex(int idx) const { return names_[idx]; }
+void NameContext::SetName(const std::string& name, int idx) {
+  name_to_idx_[name] = idx;
+  idx_to_name_[idx] = name;
+}
+
+std::string NameContext::GetNameForIndex(int idx) const {
+  return idx_to_name_.at(idx);
+}
 
 int NameContext::GetIndexForName(const std::string& name) const {
   return name_to_idx_.at(name);
@@ -66,9 +116,19 @@ bool NameContext::HasName(const std::string& name) const {
   return name_to_idx_.find(name) != name_to_idx_.end();
 }
 
-nameless::Term StripNames(const named::Term& term) {
+bool NameContext::HasIndex(int idx) const {
+  return idx_to_name_.find(idx) != idx_to_name_.end();
+}
+
+named::Term AddNames(const nameless::Term& term) {
+  NameContext free_nctx, bound_nctx;
+  std::unordered_set<std::string> names;
+  return AddNames(term, &free_nctx, &bound_nctx, &names, 0);
+}
+
+nameless::Term RemoveNames(const named::Term& term) {
   NameContext nctx;
   std::unordered_map<std::string, int> abst_var_names;
-  return StripNamesFromTerm(term, &nctx, &abst_var_names, 0);
+  return RemoveNames(term, &nctx, &abst_var_names, 0);
 }
 }  // namespace lhat
