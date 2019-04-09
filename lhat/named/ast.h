@@ -85,6 +85,13 @@ private:
   std::string name_;
 };
 
+// Types of nameless lambda terms.
+enum TermType {
+  ABST,
+  APPL,
+  VAR,
+};
+
 // Term is a generic lambda term.
 class Term {
 public:
@@ -97,7 +104,8 @@ public:
   Term& operator=(const Term& other) = default;
   Term& operator=(Term&& other) noexcept = default;
 
-  int Type() const;
+  // Returns the type of the lambda term.
+  TermType Type() const;
 
   template <class T>
   constexpr auto Get() & -> decltype(auto) {

@@ -77,6 +77,7 @@ private:
   int idx_;
 };
 
+// Types of nameless lambda terms.
 enum TermType {
   ABST,
   APPL,
@@ -95,6 +96,7 @@ public:
   Term& operator=(const Term& other) = default;
   Term& operator=(Term&& other) noexcept = default;
 
+  // Returns the type of the lambda term.
   TermType Type() const;
 
   template <class T>

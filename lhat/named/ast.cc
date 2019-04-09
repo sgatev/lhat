@@ -8,7 +8,7 @@ Term::Term(Appl appl) : term_(std::move(appl)) {}
 
 Term::Term(Var var) : term_(std::move(var)) {}
 
-int Term::Type() const { return term_.index(); }
+TermType Term::Type() const { return static_cast<TermType>(term_.index()); }
 
 Abst::Abst(std::string var_name, Term body)
     : var_name_(std::move(var_name)),
