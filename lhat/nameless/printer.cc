@@ -2,6 +2,12 @@
 
 namespace lhat {
 namespace nameless {
+void Printer::Print(const Term& term, std::string* out) {
+  Printer printer;
+  printer.Print(term);
+  absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
+}
+
 Printer::Printer() : abst_count_(0) {}
 
 void Printer::Print(const Term& term) {

@@ -1,6 +1,7 @@
 #ifndef LHAT_NAMED_PRINTER_H
 #define LHAT_NAMED_PRINTER_H
 
+#include <string>
 #include <vector>
 
 #include "ast.h"
@@ -15,12 +16,7 @@ namespace named {
 class Printer {
 public:
   // Print returns the lambda expression corresponding to term.
-  template <class OutType>
-  static void Print(const Term& term, OutType out) {
-    Printer printer;
-    printer.Print(term);
-    absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
-  }
+  static void Print(const Term& term, std::string* out);
 
 private:
   void Print(const Term& term);

@@ -2,6 +2,12 @@
 
 namespace lhat {
 namespace named {
+void Printer::Print(const Term& term, std::string* out) {
+  Printer printer;
+  printer.Print(term);
+  absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
+}
+
 void Printer::Print(const Term& term) {
   term.Match([this](const auto& value) { this->Print(value); });
 }

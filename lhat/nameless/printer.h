@@ -15,12 +15,7 @@ namespace nameless {
 class Printer {
 public:
   // Print returns the lambda expression corresponding to term.
-  template <class OutType>
-  static void Print(const Term& term, OutType out) {
-    Printer printer;
-    printer.Print(term);
-    absl::StrAppend(out, absl::StrJoin(printer.result_pieces_, ""));
-  }
+  static void Print(const Term& term, std::string* out);
 
 private:
   Printer();
