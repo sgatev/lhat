@@ -1,2 +1,38 @@
 # Λ^
 An interpreter for lambda calculus.
+
+## Requires
+
+* C++ 17 compatible compiler
+* [Bazel](https://bazel.build)
+
+## Build
+
+To build all targets execute
+
+```bash
+$ bazel build ...
+```
+
+## Test
+
+To test all targets execute
+
+```bash
+$ bazel test ...
+```
+
+## Run
+
+To run the lambda calculus interpreter execute
+
+```bash
+$ bazel run //lhat:repl
+```
+
+The interpreter outputs the β-reduction of the input lambda term.
+
+```
+> ((^ x (x y)) z)
+(z y)
+```
