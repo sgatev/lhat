@@ -36,5 +36,6 @@ cc_binary(
         "//lhat/named:ast",
         "//lhat/nameless:ast",
         "//lhat/nameless:reduce",
+        "@absl//absl/strings",
     ],
 )
