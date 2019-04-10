@@ -6,18 +6,6 @@ namespace lhat {
 namespace nameless {
 namespace {
 bool IsBetaRedex(const Appl& appl) { return appl.Func().Type() == ABST; }
-
-bool BetaReduceAppl(int c, Term* term) {
-  return term->Match(
-      [c](Abst& abst) -> bool {
-        return BetaReduceAppl(c + 1, abst.MutableBody());
-      },
-      [c, term](Appl& appl) -> bool {
-        return BetaReduceAppl(c, appl.MutableFunc()) ||
-               BetaReduceAppl(c, appl.MutableArg()) || BetaReduceTerm(term);
-      },
-      [](const Var& var) -> bool { return false; });
-}
 }  // namespace
 
 bool BetaReduceTerm(Term* term) {
@@ -34,7 +22,19 @@ bool BetaReduceTerm(Term* term) {
                      [](const Var& var) -> bool { return false; });
 }
 
-bool BetaReduceAppl(Term* term) { return BetaReduceAppl(1, term); }
+bool BetaReduceAppl(Term* term) {
+  return term->Match(
+      [](Abst& abst) -> bool { return BetaReduceAppl(abst.MutableBody()); },
+      [term](Appl& appl) -> bool {
+        return BetaReduceAppl(appl.MutableFunc()) ||
+               BetaReduceAppl(appl.MutableArg()) || BetaReduceTerm(term);
+      },
+      [](const Var& var) -> bool { return false; });
+}
+
+bool IsBetaRedex(const Term& term) {
+  return term.Type() == APPL && IsBetaRedex(*term.Get<Appl>());
+}
 
 bool IsNormalForm(const Term& term) {
   return term.Match(

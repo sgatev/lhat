@@ -183,6 +183,31 @@ TEST(BetaReduceAppl, ArgBeforeAppl) {
   EXPECT_EQ(arg_body_var->Index(), 1);
 }
 
+TEST(IsBetaRedex, Var) {
+  const Term term = Var(1);
+  EXPECT_FALSE(IsBetaRedex(term));
+}
+
+TEST(IsBetaRedex, Abst) {
+  const Term term = Abst(Var(1));
+  EXPECT_FALSE(IsBetaRedex(term));
+}
+
+TEST(IsBetaRedex, ApplNonRedex) {
+  const Term term = Appl(Var(1), Var(2));
+  EXPECT_FALSE(IsBetaRedex(term));
+}
+
+TEST(IsBetaRedex, ApplRedex) {
+  const Term term = Appl(Abst(Var(-1)), Var(2));
+  EXPECT_TRUE(IsBetaRedex(term));
+}
+
+TEST(IsBetaRedex, NestedRedex) {
+  const Term term = Abst(Appl(Abst(Var(-1)), Var(2)));
+  EXPECT_FALSE(IsBetaRedex(term));
+}
+
 TEST(IsNormalForm, Var) {
   const Term term = Var(1);
   EXPECT_TRUE(IsNormalForm(term));
@@ -203,7 +228,7 @@ TEST(IsNormalForm, ApplRedex) {
   EXPECT_FALSE(IsNormalForm(term));
 }
 
-TEST(IsNormalForm, Complex) {
+TEST(IsNormalForm, NestedRedex) {
   const Term term = Abst(Appl(Abst(Var(-1)), Var(2)));
   EXPECT_FALSE(IsNormalForm(term));
 }

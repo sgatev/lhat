@@ -12,6 +12,9 @@ bool BetaReduceTerm(Term* term);
 // Performs applicative beta reduction on term and all of its subterms.
 bool BetaReduceAppl(Term* term);
 
+// Returns true if term is a beta redex.
+bool IsBetaRedex(const Term& term);
+
 // Returns true if there are no beta redexes in term.
 bool IsNormalForm(const Term& term);
 }  // namespace nameless
