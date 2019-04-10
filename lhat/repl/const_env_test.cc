@@ -43,10 +43,10 @@ TEST(ConstEnv, NestedConsts) {
   consts.Set({"M", "hello"});
   consts.Set({"N", "$M world"});
 
-  std::string s = "$N!";
+  std::string s = "$N";
   consts.Resolve(&s);
 
-  EXPECT_EQ(s, "hello world!");
+  EXPECT_EQ(s, "hello world");
 }
 
 TEST(ConstEnv, PrefixConst) {

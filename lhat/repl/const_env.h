@@ -18,7 +18,7 @@ public:
   void Resolve(std::string *s);
 
 private:
-  const std::regex name_regex_{R"(\$[a-zA-Z0-9]+)", std::regex::extended};
+  const std::regex name_regex_{R"(\$[a-zA-Z0-9*+-_!?]+)", std::regex::extended};
 
   std::unordered_map<std::string, std::string> vars_;
 };

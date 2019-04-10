@@ -48,6 +48,10 @@ by `$`.
 
 ```
 > def K (^ x (^ y x))
+> def I (^ x x)
+> def K* ($K $I)
 > ($K z)
 (^ a z)
+> ($K* z)
+(^ a a)
 ```
