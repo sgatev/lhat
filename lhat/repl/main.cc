@@ -53,7 +53,7 @@ void Run() {
             std::cout << std::boolalpha << nameless::IsNormalForm(*term)
                       << std::endl;
           });
-    } else if (command == "normalize-appl") {
+    } else if (command == "eval-appl") {
       with_input_term([](nameless::Term* term, NameContext* free_nctx) {
         while (nameless::BetaReduceAppl(term)) {
           // Normalize the term.
