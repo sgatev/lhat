@@ -36,3 +36,18 @@ The interpreter outputs the β-reduction of the input lambda term.
 > ((^ x (x y)) z)
 (z y)
 ```
+
+## Function
+
+### Defs
+
+The interpreter supports definition of constants via the `def` command. While
+reducing a lambda term it automatically substitutes the constants present in the
+term for their predefined values. To reference a constant in a term prefix its name
+by `$`.
+
+```
+> def K (^ x (^ y x))
+> ($K z)
+(^ a y)
+```
