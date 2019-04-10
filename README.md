@@ -44,14 +44,14 @@ The interpreter outputs the β-reduction of the input lambda term.
 The interpreter supports definition of constants via the `def` command. While
 reducing a lambda term it automatically substitutes the constants present in the
 term for their predefined values. To reference a constant in a term prefix its name
-by `$`.
+by `'`.
 
 ```
 > def K (^ x (^ y x))
 > def I (^ x x)
-> def K* ($K $I)
-> ($K z)
+> def K* ('K 'I)
+> ('K z)
 (^ a z)
-> ($K* z)
+> ('K* z)
 (^ a a)
 ```

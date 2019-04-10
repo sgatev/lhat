@@ -21,7 +21,7 @@ TEST(ConstEnv, SingleConst) {
   ConstEnv consts;
   consts.Set({"K", "hello"});
 
-  std::string s = "$K world";
+  std::string s = "'K world";
   consts.Resolve(&s);
 
   EXPECT_EQ(s, "hello world");
@@ -32,7 +32,7 @@ TEST(ConstEnv, MultipleConsts) {
   consts.Set({"M", "hello"});
   consts.Set({"N", "world"});
 
-  std::string s = "$M $N";
+  std::string s = "'M 'N";
   consts.Resolve(&s);
 
   EXPECT_EQ(s, "hello world");
@@ -41,9 +41,9 @@ TEST(ConstEnv, MultipleConsts) {
 TEST(ConstEnv, NestedConsts) {
   ConstEnv consts;
   consts.Set({"M", "hello"});
-  consts.Set({"N", "$M world"});
+  consts.Set({"N", "'M world"});
 
-  std::string s = "$N";
+  std::string s = "'N";
   consts.Resolve(&s);
 
   EXPECT_EQ(s, "hello world");
@@ -54,7 +54,7 @@ TEST(ConstEnv, PrefixConst) {
   consts.Set({"K", "hello"});
   consts.Set({"KK", "world"});
 
-  std::string s = "$KK";
+  std::string s = "'KK";
   consts.Resolve(&s);
 
   EXPECT_EQ(s, "world");
