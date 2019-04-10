@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "lhat/named/ast.h"
 #include "lhat/nameless/ast.h"
@@ -34,6 +35,9 @@ public:
   // in the context.
   bool HasIndex(int idx) const;
 
+  // Names returns the names registered in the context.
+  std::unordered_set<std::string> Names() const;
+
 private:
   std::unordered_map<int, std::string> idx_to_name_;
   std::unordered_map<std::string, int> name_to_idx_;
@@ -41,10 +45,10 @@ private:
 };
 
 // AddNames converts a nameless lambda term into a named lambda term.
-named::Term AddNames(const nameless::Term& term);
+named::Term AddNames(const nameless::Term& term, NameContext* free_nctx);
 
 // RemoveNames converts a named lambda term into a nameless lambda term.
-nameless::Term RemoveNames(const named::Term& term);
+nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx);
 }  // namespace lhat
 
 #endif  // LHAT_NAMES_H

@@ -1,7 +1,5 @@
 #include "lhat/names.h"
 
-#include <unordered_set>
-
 #include "lhat/named/vars.h"
 
 namespace lhat {
@@ -35,20 +33,20 @@ named::Term AddNames(const nameless::Term& term, NameContext* free_nctx,
           return named::Var(
               bound_nctx->GetNameForIndex(-var.Index() - abst_count));
         }
-        if (!free_nctx->HasIndex(var.Index())) {
+        if (!free_nctx->HasIndex(var.Index() - abst_count)) {
           std::string name = named::NewVarName(*names);
-          free_nctx->SetName(name, var.Index());
+          free_nctx->SetName(name, var.Index() - abst_count);
           names->insert(name);
         }
-        return named::Var(free_nctx->GetNameForIndex(var.Index()));
+        return named::Var(free_nctx->GetNameForIndex(var.Index() - abst_count));
       });
 }
 
-nameless::Term RemoveNames(const named::Term& term, NameContext* nctx,
+nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx,
                            std::unordered_map<std::string, int>* abst_var_names,
                            int abst_count) {
   return term.Match(
-      [nctx, abst_var_names,
+      [free_nctx, abst_var_names,
        abst_count](const named::Abst& abst) -> nameless::Term {
         int old_abst_var_name_idx = -1;
         if (abst_var_names->find(abst.VarName()) != abst_var_names->end()) {
@@ -57,7 +55,7 @@ nameless::Term RemoveNames(const named::Term& term, NameContext* nctx,
         abst_var_names->insert({abst.VarName(), abst_count});
 
         const nameless::Term body =
-            RemoveNames(abst.Body(), nctx, abst_var_names, abst_count + 1);
+            RemoveNames(abst.Body(), free_nctx, abst_var_names, abst_count + 1);
 
         if (old_abst_var_name_idx >= 0) {
           abst_var_names->at(abst.VarName()) = old_abst_var_name_idx;
@@ -67,21 +65,23 @@ nameless::Term RemoveNames(const named::Term& term, NameContext* nctx,
 
         return nameless::Abst(body);
       },
-      [nctx, abst_var_names,
+      [free_nctx, abst_var_names,
        abst_count](const named::Appl& appl) -> nameless::Term {
-        return nameless::Appl(
-            RemoveNames(appl.Func(), nctx, abst_var_names, abst_count),
-            RemoveNames(appl.Arg(), nctx, abst_var_names, abst_count));
+        nameless::Term func =
+            RemoveNames(appl.Func(), free_nctx, abst_var_names, abst_count);
+        nameless::Term arg =
+            RemoveNames(appl.Arg(), free_nctx, abst_var_names, abst_count);
+        return nameless::Appl(func, arg);
       },
-      [nctx, abst_var_names,
+      [free_nctx, abst_var_names,
        abst_count](const named::Var& var) -> nameless::Term {
         if (abst_var_names->find(var.Name()) != abst_var_names->end()) {
           return nameless::Var(-abst_var_names->at(var.Name()) - abst_count);
         }
-        if (!nctx->HasName(var.Name())) {
-          nctx->AddName(var.Name());
+        if (!free_nctx->HasName(var.Name())) {
+          free_nctx->AddName(var.Name());
         }
-        return nameless::Var(nctx->GetIndexForName(var.Name()));
+        return nameless::Var(free_nctx->GetIndexForName(var.Name()));
       });
 }
 }  // namespace
@@ -121,15 +121,22 @@ bool NameContext::HasIndex(int idx) const {
   return idx_to_name_.find(idx) != idx_to_name_.end();
 }
 
-named::Term AddNames(const nameless::Term& term) {
-  NameContext free_nctx, bound_nctx;
+std::unordered_set<std::string> NameContext::Names() const {
   std::unordered_set<std::string> names;
-  return AddNames(term, &free_nctx, &bound_nctx, &names, 0);
+  for (const auto& name_idx : name_to_idx_) {
+    names.insert(name_idx.first);
+  }
+  return names;
 }
 
-nameless::Term RemoveNames(const named::Term& term) {
-  NameContext nctx;
+named::Term AddNames(const nameless::Term& term, NameContext* free_nctx) {
+  NameContext bound_nctx;
+  std::unordered_set<std::string> names = free_nctx->Names();
+  return AddNames(term, free_nctx, &bound_nctx, &names, 0);
+}
+
+nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx) {
   std::unordered_map<std::string, int> abst_var_names;
-  return RemoveNames(term, &nctx, &abst_var_names, 0);
+  return RemoveNames(term, free_nctx, &abst_var_names, 0);
 }
 }  // namespace lhat

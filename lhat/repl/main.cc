@@ -31,14 +31,16 @@ void Run() {
       consts.Set(absl::StrSplit(input_parts[1], absl::MaxSplits(' ', 1)));
     } else {
       consts.Resolve(&input);
-
       const named::Term input_term = named::Parser::Parse(input);
-      nameless::Term term = RemoveNames(input_term);
+
+      NameContext free_nctx;
+      nameless::Term term = RemoveNames(input_term, &free_nctx);
+
       while (!nameless::IsNormalForm(term)) {
         nameless::BetaReduceSubTerms(&term);
       }
 
-      const named::Term output_term = AddNames(term);
+      const named::Term output_term = AddNames(term, &free_nctx);
       std::string output;
       named::Printer::Print(output_term, &output);
       std::cout << output << std::endl;
