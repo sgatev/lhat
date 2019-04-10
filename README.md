@@ -27,7 +27,7 @@ $ bazel test ...
 To run the lambda calculus interpreter execute
 
 ```bash
-$ bazel run //lhat:repl
+$ bazel run //lhat/repl:main
 ```
 
 The interpreter outputs the β-reduction of the input lambda term.

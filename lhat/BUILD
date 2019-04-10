@@ -1,30 +1,4 @@
 cc_library(
-    name = "const_env",
-    srcs = [
-        "const_env.cc",
-    ],
-    hdrs = [
-        "const_env.h",
-    ],
-    deps = [
-        "@absl//absl/strings",
-    ],
-)
-
-cc_test(
-    name = "const_env_test",
-    srcs = [
-        "const_env_test.cc",
-    ],
-    copts = ["-Iexternal/gtest/include"],
-    deps = [
-        ":const_env",
-        "@gtest",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_library(
     name = "names",
     srcs = [
         "names.cc",
@@ -32,6 +6,7 @@ cc_library(
     hdrs = [
         "names.h",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         "//lhat/named:ast",
         "//lhat/named:vars",
@@ -49,20 +24,5 @@ cc_test(
         ":names",
         "@gtest",
         "@gtest//:gtest_main",
-    ],
-)
-
-cc_binary(
-    name = "repl",
-    srcs = [
-        "repl.cc",
-    ],
-    deps = [
-        ":const_env",
-        ":names",
-        "//lhat/named:ast",
-        "//lhat/nameless:ast",
-        "//lhat/nameless:reduce",
-        "@absl//absl/strings",
     ],
 )

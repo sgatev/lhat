@@ -2,17 +2,18 @@
 #include <string>
 #include <vector>
 
-#include "const_env.h"
-#include "named/ast.h"
-#include "named/parser.h"
-#include "named/printer.h"
-#include "nameless/ast.h"
-#include "nameless/reduce.h"
-#include "names.h"
+#include "lhat/named/ast.h"
+#include "lhat/named/parser.h"
+#include "lhat/named/printer.h"
+#include "lhat/nameless/ast.h"
+#include "lhat/nameless/reduce.h"
+#include "lhat/names.h"
+#include "lhat/repl/const_env.h"
 
 #include "absl/strings/str_split.h"
 
 namespace lhat {
+namespace repl {
 namespace {
 void Run() {
   ConstEnv consts;
@@ -46,6 +47,7 @@ void Run() {
   }
 }
 }  // namespace
+}  // namespace repl
 }  // namespace lhat
 
-int main() { lhat::Run(); }
+int main() { lhat::repl::Run(); }

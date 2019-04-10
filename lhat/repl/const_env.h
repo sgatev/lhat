@@ -1,11 +1,12 @@
-#ifndef LHAT_CONST_ENV_H
-#define LHAT_CONST_ENV_H
+#ifndef LHAT_REPL_CONST_ENV_H
+#define LHAT_REPL_CONST_ENV_H
 
 #include <regex>
 #include <string>
 #include <unordered_map>
 
 namespace lhat {
+namespace repl {
 // Environment of constant definitions.
 class ConstEnv {
 public:
@@ -20,6 +21,7 @@ private:
 
   std::unordered_map<std::string, std::string> vars_;
 };
+}  // namespace repl
 }  // namespace lhat
 
-#endif  // LHAT_CONST_ENV_H
+#endif  // LHAT_REPL_CONST_ENV_H

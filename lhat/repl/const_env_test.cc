@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 namespace lhat {
+namespace repl {
 namespace {
 TEST(ConstEnv, NoConst) {
   ConstEnv consts;
@@ -48,4 +49,5 @@ TEST(ConstEnv, NestedConsts) {
   EXPECT_EQ(s, "hello world!");
 }
 }  // namespace
+}  // namespace repl
 }  // namespace lhat

@@ -1,0 +1,40 @@
+cc_library(
+    name = "const_env",
+    srcs = [
+        "const_env.cc",
+    ],
+    hdrs = [
+        "const_env.h",
+    ],
+    deps = [
+        "@absl//absl/strings",
+    ],
+)
+
+cc_test(
+    name = "const_env_test",
+    srcs = [
+        "const_env_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":const_env",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_binary(
+    name = "main",
+    srcs = [
+        "main.cc",
+    ],
+    deps = [
+        ":const_env",
+        "//lhat:names",
+        "//lhat/named:ast",
+        "//lhat/nameless:ast",
+        "//lhat/nameless:reduce",
+        "@absl//absl/strings",
+    ],
+)

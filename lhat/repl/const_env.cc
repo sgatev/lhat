@@ -6,6 +6,7 @@
 #include "absl/strings/string_view.h"
 
 namespace lhat {
+namespace repl {
 void ConstEnv::Set(std::string name, std::string value) {
   Resolve(&value);
   vars_.emplace(std::make_pair(name, value));
@@ -24,4 +25,5 @@ void ConstEnv::Resolve(std::string* s) {
 
   absl::StrReplaceAll(replacements, s);
 }
+}  // namespace repl
 }  // namespace lhat
