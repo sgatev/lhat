@@ -7,10 +7,10 @@ namespace lhat {
 namespace nameless {
 // Performs a beta reduction on term if term is a beta redex, that is term is an
 // application node and its function is an abstraction node.
-void BetaReduceTerm(Term* term);
+bool BetaReduceTerm(Term* term);
 
-// Performs beta reductions on term and all of its descendants.
-void BetaReduceSubTerms(Term* term);
+// Performs applicative beta reduction on term and all of its subterms.
+bool BetaReduceAppl(Term* term);
 
 // Returns true if there are no beta redexes in term.
 bool IsNormalForm(const Term& term);

@@ -36,8 +36,8 @@ void Run() {
       NameContext free_nctx;
       nameless::Term term = RemoveNames(input_term, &free_nctx);
 
-      while (!nameless::IsNormalForm(term)) {
-        nameless::BetaReduceSubTerms(&term);
+      while (nameless::BetaReduceAppl(&term)) {
+        // Reduce the term.
       }
 
       const named::Term output_term = AddNames(term, &free_nctx);
