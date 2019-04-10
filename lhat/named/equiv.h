@@ -1,7 +1,7 @@
 #ifndef LHAT_NAMED_EQUIV_H
 #define LHAT_NAMED_EQUIV_H
 
-#include "ast.h"
+#include "lhat/named/ast.h"
 
 namespace lhat {
 namespace named {

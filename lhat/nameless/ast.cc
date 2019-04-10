@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "lhat/nameless/ast.h"
 
 namespace lhat {
 namespace nameless {

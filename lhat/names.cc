@@ -1,8 +1,8 @@
-#include "names.h"
+#include "lhat/names.h"
 
 #include <unordered_set>
 
-#include "named/vars.h"
+#include "lhat/named/vars.h"
 
 namespace lhat {
 namespace {

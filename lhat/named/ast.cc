@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "lhat/named/ast.h"
 
 namespace lhat {
 namespace named {

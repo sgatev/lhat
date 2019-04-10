@@ -1,4 +1,4 @@
-#include "sub.h"
+#include "lhat/named/sub.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -6,7 +6,6 @@
 namespace lhat {
 namespace named {
 namespace {
-using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(Sub, SameVar) {

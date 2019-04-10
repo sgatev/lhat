@@ -1,7 +1,7 @@
 #ifndef LHAT_NAMELESS_REDUCE_H
 #define LHAT_NAMELESS_REDUCE_H
 
-#include "ast.h"
+#include "lhat/nameless/ast.h"
 
 namespace lhat {
 namespace nameless {

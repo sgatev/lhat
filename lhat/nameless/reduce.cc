@@ -1,6 +1,6 @@
-#include "reduce.h"
+#include "lhat/nameless/reduce.h"
 
-#include "sub.h"
+#include "lhat/nameless/sub.h"
 
 namespace lhat {
 namespace nameless {

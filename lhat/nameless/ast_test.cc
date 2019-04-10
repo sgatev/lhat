@@ -1,9 +1,8 @@
-#include "parser.h"
-#include "printer.h"
+#include "lhat/nameless/parser.h"
+#include "lhat/nameless/printer.h"
 
 #include <string>
 
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 namespace lhat {

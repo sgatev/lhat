@@ -1,6 +1,6 @@
-#include "sub.h"
+#include "lhat/nameless/sub.h"
 
-#include "ast.h"
+#include "lhat/nameless/ast.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -8,7 +8,6 @@
 namespace lhat {
 namespace nameless {
 namespace {
-using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(ShiftFreeVarIndex, Var) {

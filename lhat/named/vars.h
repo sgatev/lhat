@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_set>
 
-#include "ast.h"
+#include "lhat/named/ast.h"
 
 namespace lhat {
 namespace named {

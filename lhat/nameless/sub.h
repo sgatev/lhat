@@ -1,7 +1,7 @@
 #ifndef LHAT_NAMELESS_SUB_H
 #define LHAT_NAMELESS_SUB_H
 
-#include "ast.h"
+#include "lhat/nameless/ast.h"
 
 namespace lhat {
 namespace nameless {

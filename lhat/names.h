@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "named/ast.h"
-#include "nameless/ast.h"
+#include "lhat/named/ast.h"
+#include "lhat/nameless/ast.h"
 
 namespace lhat {
 // NameContext is a context of names of lambda variables.

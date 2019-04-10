@@ -1,4 +1,4 @@
-#include "names.h"
+#include "lhat/names.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"

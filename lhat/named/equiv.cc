@@ -1,6 +1,6 @@
-#include "equiv.h"
+#include "lhat/named/equiv.h"
 
-#include "sub.h"
+#include "lhat/named/sub.h"
 
 namespace lhat {
 namespace named {

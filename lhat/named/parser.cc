@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "lhat/named/parser.h"
 
 namespace lhat {
 namespace named {

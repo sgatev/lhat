@@ -1,6 +1,6 @@
-#include "reduce.h"
+#include "lhat/nameless/reduce.h"
 
-#include "ast.h"
+#include "lhat/nameless/ast.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"

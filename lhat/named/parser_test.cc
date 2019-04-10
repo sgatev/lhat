@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "lhat/named/parser.h"
 
 #include <string>
 
@@ -8,7 +8,6 @@
 namespace lhat {
 namespace named {
 namespace {
-using ::testing::IsNull;
 using ::testing::NotNull;
 
 TEST(Parser, Var) {

@@ -1,6 +1,5 @@
-#include "equiv.h"
+#include "lhat/named/equiv.h"
 
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 namespace lhat {
