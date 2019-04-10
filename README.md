@@ -30,16 +30,36 @@ To run the lambda calculus interpreter execute
 $ bazel run //lhat/repl:main
 ```
 
-The interpreter outputs the β-reduction of the input lambda term.
+## Commands
+
+### eval-appl
+
+Applicative β-normalization of lambda terms is performed using `eval-appl`.
 
 ```
-> ((^ x (x y)) z)
+> eval-appl ((^ x (x y)) z)
 (z y)
 ```
 
-## Function
+### beta-redex?
 
-### Defs
+To check if a term is a β-redex use `beta-redex?`.
+
+```
+> beta-redex? ((^ x x) z)
+true
+```
+
+### normal-form?
+
+To check if a term is in β-normal form use `normal-form?`.
+
+```
+> normal-form? (x ((^ y y) z))
+false
+```
+
+### def
 
 The interpreter supports definition of constants via the `def` command. While
 reducing a lambda term it automatically substitutes the constants present in the
@@ -50,8 +70,8 @@ by `'`.
 > def K (^ x (^ y x))
 > def I (^ x x)
 > def K* ('K 'I)
-> ('K z)
+> eval-appl ('K z)
 (^ a z)
-> ('K* z)
+> eval-appl ('K* z)
 (^ a a)
 ```
