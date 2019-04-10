@@ -7,9 +7,9 @@
 
 namespace lhat {
 namespace repl {
-void ConstEnv::Set(std::string name, std::string value) {
-  Resolve(&value);
-  vars_.emplace(std::make_pair(name, value));
+void ConstEnv::Set(std::pair<std::string, std::string> name_value) {
+  Resolve(&name_value.second);
+  vars_.emplace(name_value);
 }
 
 void ConstEnv::Resolve(std::string* s) {

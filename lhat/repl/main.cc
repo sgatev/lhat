@@ -28,8 +28,7 @@ void Run() {
     if (command == "exit") {
       break;
     } else if (command == "def") {
-      input_parts = absl::StrSplit(input_parts[1], absl::MaxSplits(' ', 1));
-      consts.Set(input_parts[0], input_parts[1]);
+      consts.Set(absl::StrSplit(input_parts[1], absl::MaxSplits(' ', 1)));
     } else {
       consts.Resolve(&input);
 
