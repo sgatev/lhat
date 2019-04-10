@@ -48,6 +48,17 @@ TEST(ConstEnv, NestedConsts) {
 
   EXPECT_EQ(s, "hello world!");
 }
+
+TEST(ConstEnv, PrefixConst) {
+  ConstEnv consts;
+  consts.Set({"K", "hello"});
+  consts.Set({"KK", "world"});
+
+  std::string s = "$KK";
+  consts.Resolve(&s);
+
+  EXPECT_EQ(s, "world");
+}
 }  // namespace
 }  // namespace repl
 }  // namespace lhat

@@ -21,7 +21,7 @@ void Run() {
   while (true) {
     std::getline(std::cin, input);
 
-    std::vector<std::string> input_parts =
+    const std::vector<std::string> input_parts =
         absl::StrSplit(input, absl::MaxSplits(' ', 1));
     const std::string& command = input_parts[0];
 
