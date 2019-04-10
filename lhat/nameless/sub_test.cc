@@ -128,6 +128,22 @@ TEST(Sub, AbstSameVar) {
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), 2);
 }
+
+TEST(Sub, BoundVar) {
+  Term term = Abst(Term(Abst(Var(-2))));
+  const Term replacement(Var(1));
+  Sub(-1, replacement, term.Get<Abst>()->MutableBody());
+
+  const auto abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const auto body_abst = abst->Body().Get<Abst>();
+  ASSERT_THAT(body_abst, NotNull());
+
+  const auto body_var = body_abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), 2);
+}
 }  // namespace
 }  // namespace nameless
 }  // namespace lhat

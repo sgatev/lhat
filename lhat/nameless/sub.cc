@@ -24,7 +24,15 @@ void Sub(int idx, const Term& replacement, Term* target) {
   target->Match(
       [idx, replacement = replacement](Abst& abst) mutable {
         ShiftFreeVarIndex(1, &replacement);
-        Sub(idx + 1, replacement, abst.MutableBody());
+        int next_idx;
+        if (idx < 0) {
+          // Substituting a bound var - index should decrease in abst.
+          next_idx = idx - 1;
+        } else {
+          // Substituting a free var - index should increase in abst.
+          next_idx = idx + 1;
+        }
+        Sub(next_idx, replacement, abst.MutableBody());
       },
       [idx, &replacement](Appl& appl) {
         Sub(idx, replacement, appl.MutableFunc());

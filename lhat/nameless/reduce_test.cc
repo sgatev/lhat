@@ -116,6 +116,18 @@ TEST(BetaReduceSubTerms, Complex) {
   EXPECT_EQ(var->Index(), 0);
 }
 
+TEST(BetaReduceSubTerms, BoundVarNestedAbst) {
+  Term term = Appl(Abst(Term(Abst(Var(-2)))), Var(0));
+  BetaReduceSubTerms(&term);
+
+  const Abst* abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const Var* var = abst->Body().Get<Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Index(), 1);
+}
+
 TEST(IsNormalForm, Var) {
   const Term term = Var(1);
   EXPECT_TRUE(IsNormalForm(term));
