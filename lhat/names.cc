@@ -73,9 +73,10 @@ nameless::Term RemoveNames(const named::Term& term, NameContext* nctx,
             RemoveNames(appl.Func(), nctx, abst_var_names, abst_count),
             RemoveNames(appl.Arg(), nctx, abst_var_names, abst_count));
       },
-      [nctx, abst_var_names](const named::Var& var) -> nameless::Term {
+      [nctx, abst_var_names,
+       abst_count](const named::Var& var) -> nameless::Term {
         if (abst_var_names->find(var.Name()) != abst_var_names->end()) {
-          return nameless::Var(-abst_var_names->at(var.Name()) - 1);
+          return nameless::Var(-abst_var_names->at(var.Name()) - abst_count);
         }
         if (!nctx->HasName(var.Name())) {
           nctx->AddName(var.Name());

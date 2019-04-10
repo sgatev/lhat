@@ -97,6 +97,29 @@ TEST(RemoveNames, Complex) {
   EXPECT_EQ(arg_arg_var->Index(), 2);
 }
 
+TEST(RemoveNames, NestedAbstTerms) {
+  const named::Term named_term = named::Appl(
+      named::Abst("x", named::Abst("y", named::Var("x"))), named::Var("z"));
+  const nameless::Term nameless_term = RemoveNames(named_term);
+
+  const nameless::Appl* appl = nameless_term.Get<nameless::Appl>();
+  ASSERT_THAT(appl, NotNull());
+
+  const nameless::Abst* func_abst = appl->Func().Get<nameless::Abst>();
+  ASSERT_THAT(func_abst, NotNull());
+
+  const nameless::Abst* body_abst = func_abst->Body().Get<nameless::Abst>();
+  ASSERT_THAT(body_abst, NotNull());
+
+  const nameless::Var* abst_var = body_abst->Body().Get<nameless::Var>();
+  ASSERT_THAT(abst_var, NotNull());
+  EXPECT_EQ(abst_var->Index(), -2);
+
+  const nameless::Var* arg_var = appl->Arg().Get<nameless::Var>();
+  ASSERT_THAT(arg_var, NotNull());
+  EXPECT_EQ(arg_var->Index(), 0);
+}
+
 TEST(AddNames, Var) {
   const nameless::Term nameless_term = nameless::Var(1);
   const named::Term named_term = AddNames(nameless_term);
