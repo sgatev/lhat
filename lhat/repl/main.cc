@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "lhat/named/ast.h"
@@ -29,6 +30,26 @@ void Run() {
       break;
     } else if (command == "def") {
       consts.Set(absl::StrSplit(input_parts[1], absl::MaxSplits(' ', 1)));
+    } else if (command == "beta-redex?") {
+      input = input_parts[1];
+
+      consts.Resolve(&input);
+      const named::Term input_term = named::Parser::Parse(input);
+
+      NameContext free_nctx;
+      nameless::Term term = RemoveNames(input_term, &free_nctx);
+
+      std::cout << std::boolalpha << nameless::IsBetaRedex(term) << std::endl;
+    } else if (command == "normal-form?") {
+      input = input_parts[1];
+
+      consts.Resolve(&input);
+      const named::Term input_term = named::Parser::Parse(input);
+
+      NameContext free_nctx;
+      nameless::Term term = RemoveNames(input_term, &free_nctx);
+
+      std::cout << std::boolalpha << nameless::IsNormalForm(term) << std::endl;
     } else {
       consts.Resolve(&input);
       const named::Term input_term = named::Parser::Parse(input);
