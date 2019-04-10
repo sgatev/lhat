@@ -16,7 +16,7 @@ bool BetaReduceAppl(Term* term);
 bool IsBetaRedex(const Term& term);
 
 // Returns true if there are no beta redexes in term.
-bool IsNormalForm(const Term& term);
+bool IsBetaNormalForm(const Term& term);
 }  // namespace nameless
 }  // namespace lhat
 

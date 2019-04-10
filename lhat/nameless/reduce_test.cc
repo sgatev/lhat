@@ -208,29 +208,29 @@ TEST(IsBetaRedex, NestedRedex) {
   EXPECT_FALSE(IsBetaRedex(term));
 }
 
-TEST(IsNormalForm, Var) {
+TEST(IsBetaNormalForm, Var) {
   const Term term = Var(1);
-  EXPECT_TRUE(IsNormalForm(term));
+  EXPECT_TRUE(IsBetaNormalForm(term));
 }
 
-TEST(IsNormalForm, Abst) {
+TEST(IsBetaNormalForm, Abst) {
   const Term term = Abst(Var(1));
-  EXPECT_TRUE(IsNormalForm(term));
+  EXPECT_TRUE(IsBetaNormalForm(term));
 }
 
-TEST(IsNormalForm, ApplNonRedex) {
+TEST(IsBetaNormalForm, ApplNonRedex) {
   const Term term = Appl(Var(1), Var(2));
-  EXPECT_TRUE(IsNormalForm(term));
+  EXPECT_TRUE(IsBetaNormalForm(term));
 }
 
-TEST(IsNormalForm, ApplRedex) {
+TEST(IsBetaNormalForm, ApplRedex) {
   const Term term = Appl(Abst(Var(-1)), Var(2));
-  EXPECT_FALSE(IsNormalForm(term));
+  EXPECT_FALSE(IsBetaNormalForm(term));
 }
 
-TEST(IsNormalForm, NestedRedex) {
+TEST(IsBetaNormalForm, NestedRedex) {
   const Term term = Abst(Appl(Abst(Var(-1)), Var(2)));
-  EXPECT_FALSE(IsNormalForm(term));
+  EXPECT_FALSE(IsBetaNormalForm(term));
 }
 }  // namespace
 }  // namespace nameless

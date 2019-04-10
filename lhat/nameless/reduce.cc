@@ -36,12 +36,12 @@ bool IsBetaRedex(const Term& term) {
   return term.Type() == APPL && IsBetaRedex(*term.Get<Appl>());
 }
 
-bool IsNormalForm(const Term& term) {
+bool IsBetaNormalForm(const Term& term) {
   return term.Match(
-      [](const Abst& abst) -> bool { return IsNormalForm(abst.Body()); },
+      [](const Abst& abst) -> bool { return IsBetaNormalForm(abst.Body()); },
       [](const Appl& appl) -> bool {
-        return !IsBetaRedex(appl) && IsNormalForm(appl.Func()) &&
-               IsNormalForm(appl.Arg());
+        return !IsBetaRedex(appl) && IsBetaNormalForm(appl.Func()) &&
+               IsBetaNormalForm(appl.Arg());
       },
       [](const Var& var) -> bool { return true; });
 }
