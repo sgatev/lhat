@@ -91,7 +91,7 @@ TEST(Parse, Complex) {
 }
 
 TEST(Parse, Whitespace) {
-  const std::string expr = "(  ( ^   x  y  )    (  u   v )  )";
+  const std::string expr = "  (  ( ^   x  y  )    (  u   v )  )";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());

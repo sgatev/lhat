@@ -32,13 +32,13 @@ $ bazel run //lhat/repl:main
 
 ## Commands
 
-### eval-appl
+### alpha-equiv?
 
-Applicative β-normalization of lambda terms is performed using `eval-appl`.
+To check if two terms are α-equivalent use `alpha-equiv?`.
 
 ```
-> eval-appl ((^ x (x y)) z)
-(z y)
+> alpha-equiv? ((^ x x) z) ((^ y y) z)
+true
 ```
 
 ### beta-redex?
@@ -57,6 +57,15 @@ To check if a term is in β-normal form use `beta-normal?`.
 ```
 > beta-normal? (x ((^ y y) z))
 false
+```
+
+### eval-appl
+
+Applicative β-normalization of lambda terms is performed using `eval-appl`.
+
+```
+> eval-appl ((^ x (x y)) z)
+(z y)
 ```
 
 ### def

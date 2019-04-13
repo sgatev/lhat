@@ -98,22 +98,24 @@ core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
 }  // namespace
 
 core::ParseResult<Term> Parse(const absl::string_view expr) {
-  if (expr.empty()) {
+  int idx = ParseWhitespace(expr);
+
+  if (expr.size() - idx == 0) {
     return core::ParseResult<Term>(
         0, core::ParseError("Failed to parse term: given expression is empty"));
   }
-  if (expr[0] != '(') {
+  if (expr[idx] != '(') {
     core::ParseResult<Var> var = ParseVar(expr);
     if (!var.Ok()) {
-      return core::ParseResult<Term>(var.ConsumedChars(), var.Error());
+      return core::ParseResult<Term>(idx + var.ConsumedChars(), var.Error());
     }
-    return core::ParseResult<Term>(var.ConsumedChars(), var.Value());
+    return core::ParseResult<Term>(idx + var.ConsumedChars(), var.Value());
   }
 
   // consume '('
-  int idx = 1;
+  idx++;
 
-  if (expr.size() < 2) {
+  if (expr.size() - idx < 1) {
     return core::ParseResult<Term>(
         idx, core::ParseError("Failed to parse term: ( is not closed"));
   }

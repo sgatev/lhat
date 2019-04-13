@@ -33,6 +33,7 @@ cc_binary(
         ":const_env",
         "//lhat:names",
         "//lhat/named:ast",
+        "//lhat/named:equiv",
         "//lhat/nameless:ast",
         "//lhat/nameless:reduce",
         "@absl//absl/strings",

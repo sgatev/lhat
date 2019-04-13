@@ -41,6 +41,7 @@ cc_library(
     hdrs = [
         "equiv.h",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         ":ast",
         ":sub",

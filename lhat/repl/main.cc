@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "lhat/named/ast.h"
+#include "lhat/named/equiv.h"
 #include "lhat/named/parse.h"
 #include "lhat/named/printer.h"
 #include "lhat/nameless/ast.h"
@@ -49,6 +50,30 @@ void Run() {
       break;
     } else if (command == "def") {
       consts.Set(absl::StrSplit(input, absl::MaxSplits(' ', 1)));
+    } else if (command == "alpha-equiv?") {
+      consts.Resolve(&input);
+
+      const core::ParseResult<named::Term> first_parse_result =
+          named::Parse(input);
+      if (!first_parse_result.Ok()) {
+        std::cout << "Failed to parse term: "
+                  << first_parse_result.Error().Message() << std::endl;
+        return;
+      }
+      const named::Term first_term = first_parse_result.Value();
+
+      input = input.substr(first_parse_result.ConsumedChars());
+      const core::ParseResult<named::Term> second_term_result =
+          named::Parse(input);
+      if (!second_term_result.Ok()) {
+        std::cout << "Failed to parse term: "
+                  << second_term_result.Error().Message() << std::endl;
+        return;
+      }
+      const named::Term second_term = second_term_result.Value();
+
+      std::cout << std::boolalpha << named::AlphaEquiv(first_term, second_term)
+                << std::endl;
     } else if (command == "beta-redex?") {
       with_input_term(
           [](const nameless::Term* term, const NameContext* free_nctx) {
