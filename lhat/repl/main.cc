@@ -49,13 +49,13 @@ void Run() {
       break;
     } else if (command == "def") {
       consts.Set(absl::StrSplit(input, absl::MaxSplits(' ', 1)));
-    } else if (command == "redex?") {
+    } else if (command == "beta-redex?") {
       with_input_term(
           [](const nameless::Term* term, const NameContext* free_nctx) {
             std::cout << std::boolalpha << nameless::IsBetaRedex(*term)
                       << std::endl;
           });
-    } else if (command == "normal-form?") {
+    } else if (command == "beta-normal?") {
       with_input_term(
           [](const nameless::Term* term, const NameContext* free_nctx) {
             std::cout << std::boolalpha << nameless::IsBetaNormalForm(*term)

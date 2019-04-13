@@ -43,19 +43,19 @@ Applicative β-normalization of lambda terms is performed using `eval-appl`.
 
 ### beta-redex?
 
-To check if a term is a β-redex use `redex?`.
+To check if a term is a β-redex use `beta-redex?`.
 
 ```
-> redex? ((^ x x) z)
+> beta-redex? ((^ x x) z)
 true
 ```
 
-### normal-form?
+### beta-normal?
 
-To check if a term is in β-normal form use `normal-form?`.
+To check if a term is in β-normal form use `beta-normal?`.
 
 ```
-> normal-form? (x ((^ y y) z))
+> beta-normal? (x ((^ y y) z))
 false
 ```
 
