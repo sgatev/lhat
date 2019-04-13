@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "lhat/named/ast.h"
-#include "lhat/named/parser.h"
+#include "lhat/named/parse.h"
 #include "lhat/named/printer.h"
 #include "lhat/nameless/ast.h"
 #include "lhat/nameless/reduce.h"

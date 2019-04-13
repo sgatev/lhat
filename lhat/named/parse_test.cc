@@ -1,4 +1,4 @@
-#include "lhat/named/parser.h"
+#include "lhat/named/parse.h"
 
 #include <string>
 
@@ -10,7 +10,7 @@ namespace named {
 namespace {
 using ::testing::NotNull;
 
-TEST(Parser, Var) {
+TEST(Parse, Var) {
   const std::string expr = "x";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
@@ -23,7 +23,7 @@ TEST(Parser, Var) {
   EXPECT_EQ(var->Name(), "x");
 }
 
-TEST(Parser, Abst) {
+TEST(Parse, Abst) {
   const std::string expr = "(^ x y)";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
@@ -40,7 +40,7 @@ TEST(Parser, Abst) {
   EXPECT_EQ(body_var->Name(), "y");
 }
 
-TEST(Parser, Appl) {
+TEST(Parse, Appl) {
   const std::string expr = "(x y)";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
@@ -59,7 +59,7 @@ TEST(Parser, Appl) {
   EXPECT_EQ(arg_var->Name(), "y");
 }
 
-TEST(Parser, Complex) {
+TEST(Parse, Complex) {
   const std::string expr = "((^ x y) (u v))";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
@@ -90,7 +90,7 @@ TEST(Parser, Complex) {
   EXPECT_EQ(arg_var->Name(), "v");
 }
 
-TEST(Parser, Whitespace) {
+TEST(Parse, Whitespace) {
   const std::string expr = "(  ( ^   x  y  )    (  u   v )  )";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_TRUE(parse_result.Ok());
@@ -121,7 +121,7 @@ TEST(Parser, Whitespace) {
   EXPECT_EQ(arg_var->Name(), "v");
 }
 
-TEST(Parser, EmptyExpr) {
+TEST(Parse, EmptyExpr) {
   const std::string expr = "";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_FALSE(parse_result.Ok());
@@ -130,7 +130,7 @@ TEST(Parser, EmptyExpr) {
             "Failed to parse term: given expression is empty");
 }
 
-TEST(Parser, IncompleteExpr) {
+TEST(Parse, IncompleteExpr) {
   const std::string expr = "(^ (";
   const core::ParseResult<Term> parse_result = Parse(expr);
   EXPECT_FALSE(parse_result.Ok());
