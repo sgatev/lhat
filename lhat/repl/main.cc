@@ -29,7 +29,15 @@ void Run() {
 
     auto with_input_term = [&consts, &input](auto&& handle_term) {
       consts.Resolve(&input);
-      const named::Term input_term = named::Parser::Parse(input);
+
+      const core::ParseResult<named::Term> input_parse_result =
+          named::Parse(input);
+      if (!input_parse_result.Ok()) {
+        std::cout << "Failed to parse term: "
+                  << input_parse_result.Error().Message() << std::endl;
+        return;
+      }
+      const named::Term input_term = input_parse_result.Value();
 
       NameContext free_nctx;
       nameless::Term term = RemoveNames(input_term, &free_nctx);

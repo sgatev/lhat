@@ -1,34 +1,15 @@
 #ifndef LHAT_NAMED_PARSER_H
 #define LHAT_NAMED_PARSER_H
 
-#include <string>
-
+#include "lhat/core/parse.h"
 #include "lhat/named/ast.h"
+
+#include "absl/strings/string_view.h"
 
 namespace lhat {
 namespace named {
-// Parser constructs ASTs from lambda terms.
-class Parser {
-public:
-  // Parse parses expr and returns the corresponding AST.
-  static Term Parse(const std::string& expr);
-
-private:
-  Parser(const std::string& expr);
-
-  Term ParseTerm();
-  Abst ParseAbst();
-  Appl ParseAppl();
-  Var ParseVar();
-  std::string ParseName();
-
-  char Peek();
-  void Next();
-
-  const std::string& expr_;
-  int idx_;
-  bool done_;
-};
+// Parse parses expr and returns the corresponding AST.
+core::ParseResult<Term> Parse(const absl::string_view expr);
 }  // namespace named
 }  // namespace lhat
 
