@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "absl/strings/str_replace.h"
-#include "absl/strings/string_view.h"
 
 namespace lhat {
 namespace repl {

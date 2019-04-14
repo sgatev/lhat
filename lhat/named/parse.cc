@@ -5,7 +5,7 @@ namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-int ParseWhitespace(const absl::string_view expr) {
+int ParseWhitespace(const std::string_view expr) {
   int idx = 0;
   while (idx < expr.size() && (expr[idx] == ' ' || expr[idx] == '\t')) {
     idx++;
@@ -13,7 +13,7 @@ int ParseWhitespace(const absl::string_view expr) {
   return idx;
 }
 
-core::ParseResult<std::string> ParseName(const absl::string_view expr) {
+core::ParseResult<std::string> ParseName(const std::string_view expr) {
   std::string name;
   int idx = 0;
   while (idx < expr.size() && !IsSpecial(expr[idx])) {
@@ -23,7 +23,7 @@ core::ParseResult<std::string> ParseName(const absl::string_view expr) {
   return core::ParseResult<std::string>(idx, name);
 }
 
-core::ParseResult<Var> ParseVar(const absl::string_view expr) {
+core::ParseResult<Var> ParseVar(const std::string_view expr) {
   core::ParseResult<std::string> var_name = ParseName(expr);
   if (!var_name.Ok()) {
     return core::ParseResult<Var>(var_name.ConsumedChars(), var_name.Error());
@@ -32,7 +32,7 @@ core::ParseResult<Var> ParseVar(const absl::string_view expr) {
                                 Var(var_name.Value()));
 }
 
-core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
+core::ParseResult<Abst> ParseAbst(const std::string_view expr) {
   // parse '^'
   int idx = 1;
 
@@ -63,7 +63,7 @@ core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
   return core::ParseResult<Abst>(idx, Abst(var_name.Value(), term.Value()));
 }
 
-core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
+core::ParseResult<Appl> ParseAppl(const std::string_view expr) {
   int idx = ParseWhitespace(expr);
 
   // parse func term
@@ -91,7 +91,7 @@ core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
 }
 }  // namespace
 
-core::ParseResult<Term> Parse(const absl::string_view expr) {
+core::ParseResult<Term> Parse(const std::string_view expr) {
   int idx = ParseWhitespace(expr);
 
   if (idx >= expr.size()) {

@@ -1,5 +1,8 @@
 #include "lhat/nameless/printer.h"
 
+#include "absl/strings/str_cat.h"
+#include "absl/strings/str_join.h"
+
 namespace lhat {
 namespace nameless {
 void Printer::Print(const Term& term, std::string* out) {

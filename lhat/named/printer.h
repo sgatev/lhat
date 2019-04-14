@@ -6,10 +6,6 @@
 
 #include "lhat/named/ast.h"
 
-#include "absl/strings/str_cat.h"
-#include "absl/strings/str_join.h"
-#include "absl/strings/string_view.h"
-
 namespace lhat {
 namespace named {
 // Parser constructs lambda expressions from ASTs.
@@ -24,7 +20,7 @@ private:
   void Print(const Abst& abst);
   void Print(const Appl& appl);
 
-  std::vector<absl::string_view> result_pieces_;
+  std::vector<std::string_view> result_pieces_;
 };
 }  // namespace named
 }  // namespace lhat

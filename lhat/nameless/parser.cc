@@ -6,11 +6,11 @@ namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 }  // namespace
 
-core::ParseResult<Term> Parser::Parse(const absl::string_view expr) {
+core::ParseResult<Term> Parser::Parse(const std::string_view expr) {
   return Parser(expr).ParseTerm();
 }
 
-Parser::Parser(const absl::string_view expr)
+Parser::Parser(const std::string_view expr)
     : expr_(expr), abst_count_(0), idx_(0), done_(false) {}
 
 core::ParseResult<Term> Parser::ParseTerm() {
