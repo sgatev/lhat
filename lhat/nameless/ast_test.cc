@@ -10,9 +10,10 @@ namespace nameless {
 namespace {
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ 0) (^ (0 ((^ 2) 1))))";
-  const Term term = Parser::Parse(expr);
+  const core::ParseResult<Term> term = Parser::Parse(expr);
+  EXPECT_TRUE(term.Ok());
   std::string out;
-  Printer::Print(term, &out);
+  Printer::Print(term.Value(), &out);
   EXPECT_EQ(out, expr);
 }
 }  // namespace

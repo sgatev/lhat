@@ -10,9 +10,10 @@ namespace named {
 namespace {
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ x y) (u v))";
-  const Term term = Parse(expr).Value();
+  const core::ParseResult<Term> term = Parse(expr);
+  EXPECT_TRUE(term.Ok());
   std::string out;
-  Printer::Print(term, &out);
+  Printer::Print(term.Value(), &out);
   EXPECT_EQ(out, expr);
 }
 }  // namespace

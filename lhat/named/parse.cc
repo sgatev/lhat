@@ -36,7 +36,6 @@ core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
   // parse '^'
   int idx = 1;
 
-  // parse ' '
   idx += ParseWhitespace(expr.substr(idx));
 
   // parse var name
@@ -47,7 +46,6 @@ core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
   }
   idx += var_name.ConsumedChars();
 
-  // parse ' '
   idx += ParseWhitespace(expr.substr(idx));
 
   // parse body term
@@ -57,7 +55,6 @@ core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
   }
   idx += term.ConsumedChars();
 
-  // parse ' '
   idx += ParseWhitespace(expr.substr(idx));
 
   // parse ')'
@@ -67,7 +64,6 @@ core::ParseResult<Abst> ParseAbst(const absl::string_view expr) {
 }
 
 core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
-  // parse ' '
   int idx = ParseWhitespace(expr);
 
   // parse func term
@@ -77,7 +73,6 @@ core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
   }
   idx = left.ConsumedChars();
 
-  // parse ' '
   idx += ParseWhitespace(expr.substr(idx));
 
   // parse arg term
@@ -87,7 +82,6 @@ core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
   }
   idx += right.ConsumedChars();
 
-  // parse ' '
   idx += ParseWhitespace(expr.substr(idx));
 
   // parse ')'
@@ -100,9 +94,10 @@ core::ParseResult<Appl> ParseAppl(const absl::string_view expr) {
 core::ParseResult<Term> Parse(const absl::string_view expr) {
   int idx = ParseWhitespace(expr);
 
-  if (expr.size() - idx == 0) {
+  if (idx >= expr.size()) {
     return core::ParseResult<Term>(
-        0, core::ParseError("Failed to parse term: given expression is empty"));
+        idx,
+        core::ParseError("Failed to parse term: given expression is empty"));
   }
   if (expr[idx] != '(') {
     core::ParseResult<Var> var = ParseVar(expr);
@@ -112,16 +107,15 @@ core::ParseResult<Term> Parse(const absl::string_view expr) {
     return core::ParseResult<Term>(idx + var.ConsumedChars(), var.Value());
   }
 
-  // consume '('
+  // parse '('
   idx++;
 
-  if (expr.size() - idx < 1) {
+  idx += ParseWhitespace(expr.substr(idx));
+
+  if (idx >= expr.size()) {
     return core::ParseResult<Term>(
         idx, core::ParseError("Failed to parse term: ( is not closed"));
   }
-
-  // parse ' '
-  idx += ParseWhitespace(expr.substr(idx));
 
   if (expr[idx] == '^') {
     core::ParseResult<Abst> abst = ParseAbst(expr.substr(idx));
