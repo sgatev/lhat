@@ -33,12 +33,12 @@ cc_test(
 )
 
 cc_library(
-    name = "reduce",
+    name = "beta",
     srcs = [
-        "reduce.cc",
+        "beta.cc",
     ],
     hdrs = [
-        "reduce.h",
+        "beta.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -48,14 +48,14 @@ cc_library(
 )
 
 cc_test(
-    name = "reduce_test",
+    name = "beta_test",
     srcs = [
-        "reduce_test.cc",
+        "beta_test.cc",
     ],
     copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
-        ":reduce",
+        ":beta",
         "@gtest",
         "@gtest//:gtest_main",
     ],

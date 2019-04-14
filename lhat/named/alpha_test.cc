@@ -1,68 +1,68 @@
-#include "lhat/named/equiv.h"
+#include "lhat/named/alpha.h"
 
 #include "gtest/gtest.h"
 
 namespace lhat {
 namespace named {
 namespace {
-TEST(AlphaEquiv, DistinctTypes) {
+TEST(IsAlphaEquiv, DistinctTypes) {
   const Term m = Var("x");
   const Term n = Abst("x", Var("y"));
-  EXPECT_FALSE(AlphaEquiv(m, n));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, DistinctFreeVars) {
+TEST(IsAlphaEquiv, DistinctFreeVars) {
   const Term m = Var("x");
   const Term n = Var("y");
-  EXPECT_FALSE(AlphaEquiv(m, n));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, SameFreeVars) {
+TEST(IsAlphaEquiv, SameFreeVars) {
   const Term m = Var("x");
   const Term n = Var("x");
-  EXPECT_TRUE(AlphaEquiv(m, n));
+  EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, AbstDistinctBoundVars) {
+TEST(IsAlphaEquiv, AbstDistinctBoundVars) {
   const Term m = Abst("x", Var("x"));
   const Term n = Abst("y", Var("y"));
-  EXPECT_TRUE(AlphaEquiv(m, n));
+  EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, AbstSameBoundVars) {
+TEST(IsAlphaEquiv, AbstSameBoundVars) {
   const Term m = Abst("x", Var("x"));
   const Term n = Abst("x", Var("x"));
-  EXPECT_TRUE(AlphaEquiv(m, n));
+  EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, AbstDistinctBodies) {
+TEST(IsAlphaEquiv, AbstDistinctBodies) {
   const Term m = Abst("x", Var("y"));
   const Term n = Abst("x", Var("z"));
-  EXPECT_FALSE(AlphaEquiv(m, n));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, ApplDistinctFuncs) {
+TEST(IsAlphaEquiv, ApplDistinctFuncs) {
   const Term m = Appl(Var("x"), Var("z"));
   const Term n = Appl(Var("y"), Var("z"));
-  EXPECT_FALSE(AlphaEquiv(m, n));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, ApplDistinctArgs) {
+TEST(IsAlphaEquiv, ApplDistinctArgs) {
   const Term m = Appl(Var("x"), Var("y"));
   const Term n = Appl(Var("x"), Var("z"));
-  EXPECT_FALSE(AlphaEquiv(m, n));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, ApplSameFuncsAndArgs) {
+TEST(IsAlphaEquiv, ApplSameFuncsAndArgs) {
   const Term m = Appl(Var("x"), Var("y"));
   const Term n = Appl(Var("x"), Var("y"));
-  EXPECT_TRUE(AlphaEquiv(m, n));
+  EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
 
-TEST(AlphaEquiv, Complex) {
+TEST(IsAlphaEquiv, Complex) {
   const Term m = Abst("u", Appl(Abst("x", Var("x")), Var("y")));
   const Term n = Abst("v", Appl(Abst("z", Var("z")), Var("y")));
-  EXPECT_TRUE(AlphaEquiv(m, n));
+  EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
 }  // namespace
 }  // namespace named

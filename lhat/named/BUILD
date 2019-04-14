@@ -34,12 +34,12 @@ cc_test(
 )
 
 cc_library(
-    name = "equiv",
+    name = "alpha",
     srcs = [
-        "equiv.cc",
+        "alpha.cc",
     ],
     hdrs = [
-        "equiv.h",
+        "alpha.h",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -49,13 +49,13 @@ cc_library(
 )
 
 cc_test(
-    name = "equiv_test",
+    name = "alpha_test",
     srcs = [
-        "equiv_test.cc",
+        "alpha_test.cc",
     ],
     copts = ["-Iexternal/gtest/include"],
     deps = [
-        ":equiv",
+        ":alpha",
         "@gtest",
         "@gtest//:gtest_main",
     ],

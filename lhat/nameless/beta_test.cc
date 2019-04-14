@@ -1,4 +1,4 @@
-#include "lhat/nameless/reduce.h"
+#include "lhat/nameless/beta.h"
 
 #include "lhat/nameless/ast.h"
 

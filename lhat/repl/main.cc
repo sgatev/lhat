@@ -3,12 +3,12 @@
 #include <tuple>
 #include <utility>
 
+#include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
-#include "lhat/named/equiv.h"
 #include "lhat/named/parse.h"
 #include "lhat/named/printer.h"
 #include "lhat/nameless/ast.h"
-#include "lhat/nameless/reduce.h"
+#include "lhat/nameless/beta.h"
 #include "lhat/names.h"
 #include "lhat/repl/const_env.h"
 
@@ -72,8 +72,8 @@ void Run() {
       }
       const named::Term second_term = second_term_result.Value();
 
-      std::cout << std::boolalpha << named::AlphaEquiv(first_term, second_term)
-                << std::endl;
+      std::cout << std::boolalpha
+                << named::IsAlphaEquiv(first_term, second_term) << std::endl;
     } else if (command == "beta-redex?") {
       with_input_term(
           [](const nameless::Term* term, const NameContext* free_nctx) {

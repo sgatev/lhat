@@ -1,5 +1,5 @@
-#ifndef LHAT_NAMELESS_REDUCE_H
-#define LHAT_NAMELESS_REDUCE_H
+#ifndef LHAT_NAMELESS_BETA_H
+#define LHAT_NAMELESS_BETA_H
 
 #include "lhat/nameless/ast.h"
 
@@ -20,4 +20,4 @@ bool IsBetaNormalForm(const Term& term);
 }  // namespace nameless
 }  // namespace lhat
 
-#endif  // LHAT_NAMELESS_REDUCE_H
+#endif  // LHAT_NAMELESS_BETA_H
