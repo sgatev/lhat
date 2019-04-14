@@ -11,14 +11,14 @@ void ConstEnv::Set(std::pair<std::string, std::string> name_value) {
   vars_.emplace(name_value);
 }
 
-void ConstEnv::Resolve(std::string* s) {
+void ConstEnv::Resolve(std::string* s) const {
   std::vector<std::pair<std::string, std::string>> replacements;
 
   std::smatch matches;
   std::string::const_iterator s_it(s->cbegin());
   while (std::regex_search(s_it, s->cend(), matches, name_regex_)) {
     std::string name(matches.str(0));
-    replacements.push_back({name, vars_[name.substr(1)]});
+    replacements.push_back({name, vars_.at(name.substr(1))});
     s_it = matches.suffix().first;
   }
 

@@ -15,7 +15,7 @@ public:
   void Set(std::pair<std::string, std::string> name_value);
 
   // Replaces the constants in s with their values.
-  void Resolve(std::string *s);
+  void Resolve(std::string *s) const;
 
 private:
   const std::regex name_regex_{R"('[a-zA-Z0-9*+-_!?]+)", std::regex::extended};
