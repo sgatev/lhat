@@ -1,23 +1,34 @@
 language: cpp
+dist: trusty
+script: script/travis/test.sh
+notifications:
+  email: false
 
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: false
-      compiler: gcc
-      env: BAZEL_OS=linux
-      script: script/travis/test.sh
-    - os: linux
-      dist: trusty
-      sudo: false
-      compiler: clang
-      env: BAZEL_OS=linux
-      script: script/travis/test.sh
-    - os: osx
-      env: BAZEL_OS=darwin
-      compiler: clang
-      script: script/travis/test.sh
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - BAZEL_OS=linux
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
-notifications:
-  email: false
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-7
+          packages:
+            - clang-7
+            - libstdc++-7-dev
+      env:
+        - BAZEL_OS=linux
+        - MATRIX_EVAL="CC=clang-7 && CXX=clang++-7"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
