@@ -16,10 +16,10 @@ class Abst {
 public:
   Abst(std::string var_name, Term body);
   Abst(const Abst& other);
-  Abst(Abst&& other) noexcept = default;
+  Abst(Abst&& other) = default;
 
   Abst& operator=(const Abst& other);
-  Abst& operator=(Abst&& other) noexcept = default;
+  Abst& operator=(Abst&& other) = default;
 
   // Returns the variable name of the function.
   const std::string& VarName() const;
@@ -43,10 +43,10 @@ class Appl {
 public:
   Appl(Term func, Term arg);
   Appl(const Appl& other);
-  Appl(Appl&& other) noexcept = default;
+  Appl(Appl&& other) = default;
 
   Appl& operator=(const Appl& other);
-  Appl& operator=(Appl&& other) noexcept = default;
+  Appl& operator=(Appl&& other) = default;
 
   // Returns the lambda term representing the function.
   Term* MutableFunc();
@@ -70,10 +70,10 @@ class Var {
 public:
   Var(std::string name);
   Var(const Var& other) = default;
-  Var(Var&& other) noexcept = default;
+  Var(Var&& other) = default;
 
   Var& operator=(const Var& other) = default;
-  Var& operator=(Var&& other) noexcept = default;
+  Var& operator=(Var&& other) = default;
 
   // Returns the name of the variable.
   const std::string& Name() const;
@@ -99,10 +99,10 @@ public:
   Term(Appl appl);
   Term(Var var);
   Term(const Term& term) = default;
-  Term(Term&& term) noexcept = default;
+  Term(Term&& term) = default;
 
   Term& operator=(const Term& other) = default;
-  Term& operator=(Term&& other) noexcept = default;
+  Term& operator=(Term&& other) = default;
 
   // Returns the type of the lambda term.
   TermType Type() const;
