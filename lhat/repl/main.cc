@@ -116,6 +116,23 @@ void EvalAppl(const ConstEnv& consts, std::string&& input) {
   std::cout << output << std::endl;
 }
 
+void ExecuteCommand(const std::string& command, ConstEnv* consts,
+                    std::string&& input) {
+  if (command == "def") {
+    Def(std::move(input), consts);
+  } else if (command == "alpha-equiv?") {
+    IsAlphaEquiv(*consts, std::move(input));
+  } else if (command == "beta-redex?") {
+    IsBetaRedex(*consts, std::move(input));
+  } else if (command == "beta-normal?") {
+    IsBetaNormal(*consts, std::move(input));
+  } else if (command == "eval-appl") {
+    EvalAppl(*consts, std::move(input));
+  } else {
+    std::cout << "Unknown command: " << command << std::endl;
+  }
+}
+
 void Run() {
   ConstEnv consts;
   std::string input, command;
@@ -131,19 +148,9 @@ void Run() {
     std::tie(command, input) = ReadCommand(std::move(input));
     if (command == "exit") {
       break;
-    } else if (command == "def") {
-      Def(std::move(input), &consts);
-    } else if (command == "alpha-equiv?") {
-      IsAlphaEquiv(consts, std::move(input));
-    } else if (command == "beta-redex?") {
-      IsBetaRedex(consts, std::move(input));
-    } else if (command == "beta-normal?") {
-      IsBetaNormal(consts, std::move(input));
-    } else if (command == "eval-appl") {
-      EvalAppl(consts, std::move(input));
-    } else {
-      std::cout << "Unknown command: " << command << std::endl;
     }
+
+    ExecuteCommand(command, &consts, std::move(input));
   }
 }
 }  // namespace
