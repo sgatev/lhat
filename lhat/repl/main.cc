@@ -1,5 +1,3 @@
-#include <algorithm>
-#include <cctype>
 #include <iostream>
 #include <string>
 #include <tuple>
@@ -14,17 +12,12 @@
 #include "lhat/names.h"
 #include "lhat/repl/const_env.h"
 
+#include "absl/strings/ascii.h"
 #include "absl/strings/str_split.h"
 
 namespace lhat {
 namespace repl {
 namespace {
-// Trim the prefix of spaces in s.
-void TrimPrefix(std::string* s) {
-  s->erase(s->begin(), std::find_if(s->begin(), s->end(),
-                                    [](int ch) { return !std::isspace(ch); }));
-}
-
 // Reads a pair of command and arguments string from input.
 std::pair<std::string, std::string> ReadCommand(std::string&& input) {
   return absl::StrSplit(input, absl::MaxSplits(' ', 1));
@@ -140,7 +133,7 @@ void Run() {
     std::cout << "> ";
 
     std::getline(std::cin, input);
-    TrimPrefix(&input);
+    absl::RemoveExtraAsciiWhitespace(&input);
     if (input.empty()) {
       continue;
     }
