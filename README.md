@@ -62,6 +62,15 @@ To check if a term is in β-normal form use `beta-normal?`.
 false
 ```
 
+### head-normal?
+
+To check if a term is in head normal form use `head-normal?`.
+
+```
+> head-normal? (^ x (^ y ((^ z (y z)) x)))
+false
+```
+
 ### eval-appl
 
 Applicative β-normalization of lambda terms is performed using `eval-appl`.
@@ -69,6 +78,15 @@ Applicative β-normalization of lambda terms is performed using `eval-appl`.
 ```
 > eval-appl ((^ x (x y)) z)
 (z y)
+```
+
+### eval-normal
+
+Normal β-normalization of lambda terms is performed using `eval-normal`.
+
+```
+> eval-normal ((^ x y) ((^ x (x x)) (^ x (x x))))
+y
 ```
 
 ### def

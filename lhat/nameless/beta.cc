@@ -32,6 +32,16 @@ bool BetaReduceAppl(Term* term) {
       [](const Var& var) -> bool { return false; });
 }
 
+bool BetaReduceNormal(Term* term) {
+  return term->Match(
+      [](Abst& abst) -> bool { return BetaReduceNormal(abst.MutableBody()); },
+      [term](Appl& appl) -> bool {
+        return BetaReduceTerm(term) || BetaReduceAppl(appl.MutableFunc()) ||
+               BetaReduceAppl(appl.MutableArg());
+      },
+      [](const Var& var) -> bool { return false; });
+}
+
 bool IsBetaRedex(const Term& term) {
   return term.Type() == APPL && IsBetaRedex(*term.Get<Appl>());
 }
@@ -43,6 +53,13 @@ bool IsBetaNormalForm(const Term& term) {
         return !IsBetaRedex(appl) && IsBetaNormalForm(appl.Func()) &&
                IsBetaNormalForm(appl.Arg());
       },
+      [](const Var& var) -> bool { return true; });
+}
+
+bool IsHeadNormalForm(const Term& term) {
+  return term.Match(
+      [](const Abst& abst) -> bool { return IsHeadNormalForm(abst.Body()); },
+      [](const Appl& appl) -> bool { return !IsBetaRedex(appl); },
       [](const Var& var) -> bool { return true; });
 }
 }  // namespace nameless

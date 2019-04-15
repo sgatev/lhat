@@ -12,11 +12,17 @@ bool BetaReduceTerm(Term* term);
 // Performs applicative beta reduction on term and all of its subterms.
 bool BetaReduceAppl(Term* term);
 
+// Performs normal beta reduction on term and all of its subterms.
+bool BetaReduceNormal(Term* term);
+
 // Returns true if term is a beta redex.
 bool IsBetaRedex(const Term& term);
 
 // Returns true if there are no beta redexes in term.
 bool IsBetaNormalForm(const Term& term);
+
+// Returns true if the head position in term is not a redex.
+bool IsHeadNormalForm(const Term& term);
 }  // namespace nameless
 }  // namespace lhat
 
