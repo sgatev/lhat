@@ -31,7 +31,7 @@ named::Term AddNames(const nameless::Term& term, NameContext* free_nctx,
        abst_count](const nameless::Var& var) -> named::Term {
         if (var.Index() < 0) {
           return named::Var(
-              bound_nctx->GetNameForIndex(-var.Index() - abst_count));
+              bound_nctx->GetNameForIndex(abst_count + var.Index()));
         }
         if (!free_nctx->HasIndex(var.Index() - abst_count)) {
           std::string name = named::NewVarName(*names);

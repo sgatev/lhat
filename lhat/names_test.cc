@@ -238,6 +238,29 @@ TEST(AddNames, Complex) {
   EXPECT_EQ(arg_var->Name(), "c");
 }
 
+TEST(AddNames, NestedAbst) {
+  const nameless::Term nameless_term = nameless::Abst(nameless::Term(
+      nameless::Abst(nameless::Term(nameless::Abst(nameless::Var(-2))))));
+  NameContext free_nctx;
+  const named::Term named_term = AddNames(nameless_term, &free_nctx);
+
+  const named::Abst* abst = named_term.Get<named::Abst>();
+  ASSERT_THAT(abst, NotNull());
+  EXPECT_EQ(abst->VarName(), "a");
+
+  const named::Abst* body_abst = abst->Body().Get<named::Abst>();
+  ASSERT_THAT(body_abst, NotNull());
+  EXPECT_EQ(body_abst->VarName(), "b");
+
+  const named::Abst* body_body_abst = body_abst->Body().Get<named::Abst>();
+  ASSERT_THAT(body_body_abst, NotNull());
+  EXPECT_EQ(body_body_abst->VarName(), "c");
+
+  const named::Var* var = body_body_abst->Body().Get<named::Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Name(), "b");
+}
+
 TEST(AddNames, PredefinedNames) {
   NameContext free_nctx;
   free_nctx.SetName("g", 0);
