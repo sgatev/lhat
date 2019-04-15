@@ -76,7 +76,7 @@ nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx,
       [free_nctx, abst_var_names,
        abst_count](const named::Var& var) -> nameless::Term {
         if (abst_var_names->find(var.Name()) != abst_var_names->end()) {
-          return nameless::Var(-abst_var_names->at(var.Name()) - abst_count);
+          return nameless::Var(abst_var_names->at(var.Name()) - abst_count);
         }
         if (!free_nctx->HasName(var.Name())) {
           free_nctx->AddName(var.Name());

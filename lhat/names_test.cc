@@ -131,29 +131,23 @@ TEST(RemoveNames, Complex) {
 TEST(RemoveNames, NestedAbstTerms) {
   NameContext nctx;
 
-  const named::Term named_term = named::Appl(
-      named::Abst("x", named::Abst("y", named::Var("x"))), named::Var("z"));
+  const named::Term named_term =
+      named::Abst("a", named::Abst("b", named::Abst("c", named::Var("b"))));
   const nameless::Term nameless_term = RemoveNames(named_term, &nctx);
 
-  const nameless::Appl* appl = nameless_term.Get<nameless::Appl>();
-  ASSERT_THAT(appl, NotNull());
+  const nameless::Abst* abst = nameless_term.Get<nameless::Abst>();
+  ASSERT_THAT(abst, NotNull());
 
-  const nameless::Abst* func_abst = appl->Func().Get<nameless::Abst>();
-  ASSERT_THAT(func_abst, NotNull());
-
-  const nameless::Abst* body_abst = func_abst->Body().Get<nameless::Abst>();
+  const nameless::Abst* body_abst = abst->Body().Get<nameless::Abst>();
   ASSERT_THAT(body_abst, NotNull());
 
-  const nameless::Var* abst_var = body_abst->Body().Get<nameless::Var>();
-  ASSERT_THAT(abst_var, NotNull());
-  EXPECT_EQ(abst_var->Index(), -2);
+  const nameless::Abst* body_body_abst =
+      body_abst->Body().Get<nameless::Abst>();
+  ASSERT_THAT(body_body_abst, NotNull());
 
-  const nameless::Var* arg_var = appl->Arg().Get<nameless::Var>();
-  ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->Index(), 0);
-
-  EXPECT_THAT(nctx.Names(), UnorderedElementsAre("z"));
-  EXPECT_EQ(nctx.GetIndexForName("z"), 0);
+  const nameless::Var* var = body_body_abst->Body().Get<nameless::Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Index(), -2);
 }
 
 TEST(AddNames, Var) {
