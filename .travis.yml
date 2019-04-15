@@ -1,6 +1,10 @@
 language: cpp
 dist: trusty
-script: script/travis/test.sh
+
+env:
+  global:
+    - BAZEL_VERSION=0.24.1
+
 notifications:
   email: false
 
@@ -32,3 +36,10 @@ matrix:
 
 before_install:
     - eval "${MATRIX_EVAL}"
+    - wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh
+    - chmod +x bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh
+    - ./bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh --user
+
+script:
+  - bazel build ...
+  - bazel test ...
