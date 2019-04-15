@@ -3,7 +3,7 @@
 
 namespace lhat {
 namespace core {
-// Overloaded combines multiple expressions in a single overload set.
+// Combines multiple expressions in a single overload set.
 template <class... Ts>
 struct Overloaded;
 
@@ -22,7 +22,7 @@ struct Overloaded<T, Ts...> : T, Overloaded<Ts...> {
   using Overloaded<Ts...>::operator();
 };
 
-// Overload creates an overload set from the provided expressions.
+// Creates an overload set from the provided expressions.
 template <class... Ts>
 auto Overload(Ts&&... ts) {
   return Overloaded<Ts...>(std::forward<Ts>(ts)...);

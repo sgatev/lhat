@@ -8,7 +8,7 @@
 
 namespace lhat {
 namespace named {
-// Parse parses expr and returns the corresponding AST.
+// Parses expr and returns the corresponding AST.
 core::ParseResult<Term> Parse(const std::string_view expr);
 }  // namespace named
 }  // namespace lhat

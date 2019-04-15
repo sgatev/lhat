@@ -11,7 +11,7 @@ namespace lhat {
 namespace named {
 class Term;
 
-// Abst is a lambda term that represents function abstraction.
+// Lambda term that represents function abstraction.
 class Abst {
 public:
   Abst(std::string var_name, Term body);
@@ -38,7 +38,7 @@ private:
   std::unique_ptr<Term> body_;
 };
 
-// Appl is a lambda term that represents function application.
+// Lambda term that represents function application.
 class Appl {
 public:
   Appl(Term func, Term arg);
@@ -65,7 +65,7 @@ private:
   std::unique_ptr<Term> arg_;
 };
 
-// Var is a lambda term that represents a variable.
+// Lambda term that represents a variable.
 class Var {
 public:
   Var(std::string name);
@@ -92,7 +92,7 @@ enum TermType {
   VAR,
 };
 
-// Term is a generic lambda term.
+// Generic lambda term.
 class Term {
 public:
   Term(Abst abst);
@@ -107,21 +107,27 @@ public:
   // Returns the type of the lambda term.
   TermType Type() const;
 
+  // Returns the concrete instance of the lambda term.
   template <class T>
   constexpr auto Get() & -> decltype(auto) {
     return std::get_if<T>(&term_);
   }
 
+  // Returns the concrete instance of the lambda term.
   template <class T>
   constexpr auto Get() const& -> decltype(auto) {
     return std::get_if<T>(&term_);
   }
 
+  // Passes the term to a set of type-based matchers and executes the one that
+  // matches.
   template <class... M>
   constexpr auto Match(M&&... matchers) & -> decltype(auto) {
     return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
   }
 
+  // Passes the term to a set of type-based matchers and executes the one that
+  // matches.
   template <class... M>
   constexpr auto Match(M&&... matchers) const& -> decltype(auto) {
     return std::visit(core::Overload(std::forward<M>(matchers)...), term_);

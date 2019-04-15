@@ -6,7 +6,7 @@
 
 namespace lhat {
 namespace core {
-// ParseError represents an error that has occurred during parsing.
+// Represents an error that has occurred during parsing.
 class ParseError {
 public:
   explicit ParseError(std::string message) : message_(std::move(message)) {}
@@ -24,8 +24,8 @@ private:
   std::string message_;
 };
 
-// ParseResult is the result of parsing an expression. It is either an object or
-// an error if any occurred.
+// The result of parsing an expression. Could be either an object or an error if
+// any occurred during parsing.
 template <class T>
 class ParseResult {
 public:
@@ -43,21 +43,21 @@ public:
   ParseResult& operator=(const ParseResult& other) = default;
   ParseResult& operator=(ParseResult&& other) = default;
 
-  // ConsumedChars returns the number of characters consumed from the expression
-  // during parsing.
+  // Returns the number of characters consumed from the expression during
+  // parsing.
   int ConsumedChars() const { return consumed_chars_count_; }
 
-  // Value returns the result of a successful parsing.
+  // Returns the result of a successful parsing.
   const T& Value() const { return std::get<T>(result_); }
 
-  // ReleaseValue releases the result of a successful parsing. The ParseResult
-  // should not be used after invoking this method.
+  // Releases the result of a successful parsing. The ParseResult should not be
+  // used after invoking this method.
   T&& ReleaseValue() { return std::get<T>(result_); }
 
-  // Error returns the error that has occurred during parsing.
+  // Returns the error that has occurred during parsing.
   ParseError Error() const { return std::get<ParseError>(result_); }
 
-  // Ok returns true if no error has occurred during parsing.
+  // Returns true if no error has occurred during parsing.
   bool Ok() const { return std::holds_alternative<T>(result_); }
 
 private:

@@ -8,10 +8,10 @@
 
 namespace lhat {
 namespace nameless {
-// Parser constructs lambda expressions from ASTs.
+// Constructs lambda expressions from ASTs.
 class Printer {
 public:
-  // Print returns the lambda expression corresponding to term.
+  // Outputs the lambda expression corresponding to term in out.
   static void Print(const Term& term, std::string* out);
 
 private:

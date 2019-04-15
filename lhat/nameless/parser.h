@@ -8,10 +8,10 @@
 
 namespace lhat {
 namespace nameless {
-// Parser constructs ASTs from lambda terms.
+// Constructs ASTs from lambda terms.
 class Parser {
 public:
-  // Parse parses expr and returns the corresponding AST.
+  // Parses expr and returns the corresponding AST.
   static core::ParseResult<Term> Parse(const std::string_view expr);
 
 private:
