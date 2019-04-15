@@ -71,6 +71,15 @@ To check if a term is in head normal form use `head-normal?`.
 false
 ```
 
+### beta-reduce
+
+β-reduction of lambda terms is performed using `beta-reduce`.
+
+```
+> beta-reduce ((^ x x) ((^ y y) z))
+((^ a a) z)
+```
+
 ### eval-appl
 
 Applicative β-normalization of lambda terms is performed using `eval-appl`.

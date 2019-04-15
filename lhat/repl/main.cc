@@ -102,6 +102,28 @@ void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
   std::cout << std::boolalpha << nameless::IsHeadNormalForm(term) << std::endl;
 }
 
+void BetaReduce(const ConstEnv& consts, std::string&& input) {
+  consts.Resolve(&input);
+
+  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  if (!input_parse_result.Ok()) {
+    std::cout << "Failed to parse term: "
+              << input_parse_result.Error().Message() << std::endl;
+    return;
+  }
+  const named::Term input_term = input_parse_result.Value();
+
+  NameContext free_nctx;
+  nameless::Term term = RemoveNames(input_term, &free_nctx);
+
+  nameless::BetaReduceTerm(&term);
+
+  const named::Term output_term = AddNames(term, &free_nctx);
+  std::string output;
+  named::Printer::Print(output_term, &output);
+  std::cout << output << std::endl;
+}
+
 void EvalAppl(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
@@ -162,6 +184,8 @@ void ExecuteCommand(const std::string& command, ConstEnv* consts,
     IsBetaNormal(*consts, std::move(input));
   } else if (command == "head-normal?") {
     IsHeadNormal(*consts, std::move(input));
+  } else if (command == "beta-reduce") {
+    BetaReduce(*consts, std::move(input));
   } else if (command == "eval-appl") {
     EvalAppl(*consts, std::move(input));
   } else if (command == "eval-normal") {
