@@ -31,11 +31,11 @@ cc_binary(
     ],
     deps = [
         ":const_env",
-        "//lhat:names",
         "//lhat/named:alpha",
         "//lhat/named:ast",
         "//lhat/nameless:ast",
         "//lhat/nameless:beta",
+        "//lhat/transform:names",
         "@absl//absl/strings",
     ],
 )

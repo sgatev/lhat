@@ -1,5 +1,5 @@
-#ifndef LHAT_NAMES_H
-#define LHAT_NAMES_H
+#ifndef LHAT_TRANSFORM_NAMES_H
+#define LHAT_TRANSFORM_NAMES_H
 
 #include <string>
 #include <unordered_map>
@@ -9,6 +9,7 @@
 #include "lhat/nameless/ast.h"
 
 namespace lhat {
+namespace transform {
 // A context of names of lambda variables.
 class NameContext {
 public:
@@ -51,6 +52,7 @@ named::Term AddNames(const nameless::Term& term, NameContext* free_nctx);
 // Converts a named lambda term into a nameless lambda term. Additionally,
 // registers the names of term's free vars in free_nctx.
 nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx);
+}  // namespace transform
 }  // namespace lhat
 
-#endif  // LHAT_NAMES_H
+#endif  // LHAT_TRANSFORM_NAMES_H

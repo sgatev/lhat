@@ -1,8 +1,9 @@
-#include "lhat/names.h"
+#include "lhat/transform/names.h"
 
 #include "lhat/named/vars.h"
 
 namespace lhat {
+namespace transform {
 namespace {
 named::Term AddNames(const nameless::Term& term, NameContext* free_nctx,
                      NameContext* bound_nctx,
@@ -139,4 +140,5 @@ nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx) {
   std::unordered_map<std::string, int> abst_var_names;
   return RemoveNames(term, free_nctx, &abst_var_names, 0);
 }
+}  // namespace transform
 }  // namespace lhat

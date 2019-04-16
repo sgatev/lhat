@@ -9,8 +9,8 @@
 #include "lhat/named/printer.h"
 #include "lhat/nameless/ast.h"
 #include "lhat/nameless/beta.h"
-#include "lhat/names.h"
 #include "lhat/repl/const_env.h"
+#include "lhat/transform/names.h"
 
 #include "absl/strings/ascii.h"
 #include "absl/strings/str_split.h"
@@ -62,8 +62,8 @@ void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsBetaRedex(term) << std::endl;
 }
@@ -79,8 +79,8 @@ void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsBetaNormalForm(term) << std::endl;
 }
@@ -96,8 +96,8 @@ void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsHeadNormalForm(term) << std::endl;
 }
@@ -113,12 +113,12 @@ void BetaReduce(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   nameless::BetaReduceTerm(&term);
 
-  const named::Term output_term = AddNames(term, &free_nctx);
+  const named::Term output_term = transform::AddNames(term, &free_nctx);
   std::string output;
   named::Printer::Print(output_term, &output);
   std::cout << output << std::endl;
@@ -135,14 +135,14 @@ void EvalAppl(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   while (nameless::BetaReduceAppl(&term)) {
     // Normalize the term.
   }
 
-  const named::Term output_term = AddNames(term, &free_nctx);
+  const named::Term output_term = transform::AddNames(term, &free_nctx);
   std::string output;
   named::Printer::Print(output_term, &output);
   std::cout << output << std::endl;
@@ -159,14 +159,14 @@ void EvalNormal(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term input_term = input_parse_result.Value();
 
-  NameContext free_nctx;
-  nameless::Term term = RemoveNames(input_term, &free_nctx);
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
 
   while (nameless::BetaReduceNormal(&term)) {
     // Normalize the term.
   }
 
-  const named::Term output_term = AddNames(term, &free_nctx);
+  const named::Term output_term = transform::AddNames(term, &free_nctx);
   std::string output;
   named::Printer::Print(output_term, &output);
   std::cout << output << std::endl;

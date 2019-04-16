@@ -1,9 +1,10 @@
-#include "lhat/names.h"
+#include "lhat/transform/names.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 namespace lhat {
+namespace transform {
 namespace {
 using ::testing::IsEmpty;
 using ::testing::NotNull;
@@ -271,4 +272,5 @@ TEST(AddNames, PredefinedNames) {
   EXPECT_EQ(body_var->Name(), "g");
 }
 }  // namespace
+}  // namespace transform
 }  // namespace lhat
