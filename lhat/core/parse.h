@@ -8,7 +8,7 @@ namespace lhat {
 namespace core {
 // Represents an error that has occurred during parsing.
 class ParseError {
-public:
+ public:
   explicit ParseError(std::string message) : message_(std::move(message)) {}
 
   ~ParseError() = default;
@@ -20,7 +20,7 @@ public:
   // Message returns the error message.
   std::string Message() const { return message_; }
 
-private:
+ private:
   std::string message_;
 };
 
@@ -28,7 +28,7 @@ private:
 // any occurred during parsing.
 template <class T>
 class ParseResult {
-public:
+ public:
   explicit ParseResult(int consumed_chars_count, T result)
       : consumed_chars_count_(consumed_chars_count),
         result_(std::move(result)) {}
@@ -60,7 +60,7 @@ public:
   // Returns true if no error has occurred during parsing.
   bool Ok() const { return std::holds_alternative<T>(result_); }
 
-private:
+ private:
   int consumed_chars_count_;
   std::variant<T, ParseError> result_;
 };

@@ -10,14 +10,14 @@ namespace lhat {
 namespace repl {
 // Environment of constant definitions.
 class ConstEnv {
-public:
+ public:
   // Sets the constant with the specified name to value.
   void Set(std::pair<std::string, std::string> name_value);
 
   // Replaces the constants in s with their values.
   void Resolve(std::string *s) const;
 
-private:
+ private:
   const std::regex name_regex_{R"('[a-zA-Z0-9*+-_!?]+)", std::regex::extended};
 
   std::unordered_map<std::string, std::string> vars_;

@@ -10,11 +10,11 @@ namespace lhat {
 namespace named {
 // Constructs lambda expressions from ASTs.
 class Printer {
-public:
+ public:
   // Outputs the lambda expression corresponding to term in out.
   static void Print(const Term& term, std::string* out);
 
-private:
+ private:
   void Print(const Term& term);
   void Print(const Var& var);
   void Print(const Abst& abst);

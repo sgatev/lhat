@@ -13,7 +13,7 @@ class Term;
 
 // Lambda term that represents function abstraction.
 class Abst {
-public:
+ public:
   Abst(std::string var_name, Term body);
   Abst(const Abst& other);
   Abst(Abst&& other) = default;
@@ -33,14 +33,14 @@ public:
   // Returns the lambda term representing the body of the function.
   const Term& Body() const;
 
-private:
+ private:
   std::string var_name_;
   std::unique_ptr<Term> body_;
 };
 
 // Lambda term that represents function application.
 class Appl {
-public:
+ public:
   Appl(Term func, Term arg);
   Appl(const Appl& other);
   Appl(Appl&& other) = default;
@@ -60,14 +60,14 @@ public:
   // Returns the lambda term representing the argument.
   const Term& Arg() const;
 
-private:
+ private:
   std::unique_ptr<Term> func_;
   std::unique_ptr<Term> arg_;
 };
 
 // Lambda term that represents a variable.
 class Var {
-public:
+ public:
   Var(std::string name);
   Var(const Var& other) = default;
   Var(Var&& other) = default;
@@ -81,7 +81,7 @@ public:
   // Sets the name of the variable.
   void SetName(std::string name);
 
-private:
+ private:
   std::string name_;
 };
 
@@ -94,7 +94,7 @@ enum TermType {
 
 // Generic lambda term.
 class Term {
-public:
+ public:
   Term(Abst abst);
   Term(Appl appl);
   Term(Var var);
@@ -133,7 +133,7 @@ public:
     return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
   }
 
-private:
+ private:
   std::variant<Abst, Appl, Var> term_;
 };
 }  // namespace named

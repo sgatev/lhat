@@ -12,7 +12,7 @@ namespace lhat {
 namespace transform {
 // A context of names of lambda variables.
 class NameContext {
-public:
+ public:
   NameContext();
 
   // Adds name to the context and returns its index. If name is already present
@@ -39,7 +39,7 @@ public:
   // Returns the names registered in the context.
   std::unordered_set<std::string> Names() const;
 
-private:
+ private:
   std::unordered_map<int, std::string> idx_to_name_;
   std::unordered_map<std::string, int> name_to_idx_;
   int idx_;
