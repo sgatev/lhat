@@ -1,0 +1,11 @@
+def K (^ x (^ y x))
+def I (^ x x)
+def K* ('K 'I)
+def S (^ x (^ y (^ z ((x y) (y z)))))
+def O ((^ x (x x)) (^ x (x x)))
+
+def True 'K
+def False 'K*
+def Neg (^ x ((x 'False) 'True))
+def And (^ x (^ y ((x y) x)))
+def Or (^ x (x x))

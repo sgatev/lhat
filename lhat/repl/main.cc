@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <tuple>
@@ -195,8 +196,43 @@ void ExecuteCommand(const std::string& command, ConstEnv* consts,
   }
 }
 
-void Run() {
+void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
+  std::ifstream file(file_name, std::ios::in);
+  if (!file.is_open()) {
+    return;
+  }
+
+  std::string line, command;
+  while (std::getline(file, line)) {
+    absl::RemoveExtraAsciiWhitespace(&line);
+    if (line.empty()) {
+      continue;
+    }
+    if (line[0] == '#') {
+      continue;
+    }
+
+    std::tie(command, line) = ReadCommand(std::move(line));
+    ExecuteCommand(command, consts, std::move(line));
+  }
+  file.close();
+}
+
+void Run(int argc, char* argv[]) {
   ConstEnv consts;
+
+  for (int i = 1; i < argc; i += 2) {
+    if (std::strcmp(argv[i], "--exec") == 0) {
+      if (i + 1 >= argc) {
+        std::cout << "Expected path to file" << std::endl;
+      } else {
+        LoadConstsFromFile(argv[i + 1], &consts);
+      }
+    } else {
+      std::cout << "Unknown flag: " << argv[i] << std::endl;
+    }
+  }
+
   std::string input, command;
   while (true) {
     std::cout << "> ";
@@ -219,4 +255,4 @@ void Run() {
 }  // namespace repl
 }  // namespace lhat
 
-int main() { lhat::repl::Run(); }
+int main(int argc, char* argv[]) { lhat::repl::Run(argc, argv); }

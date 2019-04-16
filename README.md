@@ -114,3 +114,20 @@ by `'`.
 > eval-appl ('K* z)
 (^ a a)
 ```
+
+## Flags
+
+The behavior of the interpreter can be controlled using the following command-line
+flags.
+
+### --exec
+
+The interpreter could execute a list of commands specified in a file before
+becoming interactive. Pass the path to the file as an argument to the `--exec`
+flag. Multiple `--exec` flags could be provided in a single run of the interpreter.
+
+```
+$ bazel run //lhat/repl:main -- --exec /git/lhat/examples/combinators.sh
+> eval-appl ('K z)
+(^ a z)
+```
