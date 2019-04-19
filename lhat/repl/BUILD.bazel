@@ -31,11 +31,38 @@ cc_binary(
     ],
     deps = [
         ":const_env",
+        ":parse",
         "//lhat/named:alpha",
         "//lhat/named:ast",
         "//lhat/nameless:ast",
         "//lhat/nameless:beta",
         "//lhat/transform:names",
         "@absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "parse",
+    srcs = [
+        "parse.cc",
+    ],
+    hdrs = [
+        "parse.h",
+    ],
+    deps = [
+        "//lhat/core:parse",
+    ],
+)
+
+cc_test(
+    name = "parse_test",
+    srcs = [
+        "parse_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":parse",
+        "@gtest",
+        "@gtest//:gtest_main",
     ],
 )

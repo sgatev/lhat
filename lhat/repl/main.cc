@@ -11,6 +11,7 @@
 #include "lhat/nameless/ast.h"
 #include "lhat/nameless/beta.h"
 #include "lhat/repl/const_env.h"
+#include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
 
 #include "absl/strings/ascii.h"
@@ -19,13 +20,9 @@
 namespace lhat {
 namespace repl {
 namespace {
-// Reads a pair of command and arguments string from input.
-std::pair<std::string, std::string> ReadCommand(std::string&& input) {
-  return absl::StrSplit(input, absl::MaxSplits(' ', 1));
-}
-
 void Def(std::string&& input, ConstEnv* consts) {
-  consts->Set(absl::StrSplit(input, absl::MaxSplits(' ', 1)));
+  consts->Set(absl::StrSplit(absl::StripAsciiWhitespace(input),
+                             absl::MaxSplits(' ', 1)));
 }
 
 void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
@@ -202,7 +199,7 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
     return;
   }
 
-  std::string line, command;
+  std::string line;
   while (std::getline(file, line)) {
     absl::RemoveExtraAsciiWhitespace(&line);
     if (line.empty()) {
@@ -212,8 +209,15 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
       continue;
     }
 
-    std::tie(command, line) = ReadCommand(std::move(line));
-    ExecuteCommand(command, consts, std::move(line));
+    const core::ParseResult<std::string> command = ParseCommand(line);
+    if (!command.Ok()) {
+      std::cout << "Failed to parse command: " << command.Error().Message()
+                << std::endl;
+      continue;
+    }
+    line = line.substr(command.ConsumedChars());
+
+    ExecuteCommand(command.Value(), consts, std::move(line));
   }
   file.close();
 }
@@ -233,7 +237,7 @@ void Run(int argc, char* argv[]) {
     }
   }
 
-  std::string input, command;
+  std::string input;
   while (true) {
     std::cout << "> ";
 
@@ -243,12 +247,19 @@ void Run(int argc, char* argv[]) {
       continue;
     }
 
-    std::tie(command, input) = ReadCommand(std::move(input));
-    if (command == "exit") {
+    const core::ParseResult<std::string> command = ParseCommand(input);
+    if (!command.Ok()) {
+      std::cout << "Failed to parse command: " << command.Error().Message()
+                << std::endl;
+      continue;
+    }
+    input = input.substr(command.ConsumedChars());
+
+    if (command.Value() == "exit") {
       break;
     }
 
-    ExecuteCommand(command, &consts, std::move(input));
+    ExecuteCommand(command.Value(), &consts, std::move(input));
   }
 }
 }  // namespace
