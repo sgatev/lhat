@@ -17,6 +17,8 @@ void CharReader::Next() {
 
 char CharReader::Peek() const { return line_[idx_]; }
 
-bool CharReader::Empty() const { return false; }
+bool CharReader::Empty() const {
+  return idx_ >= line_.size() && stream_->eof();
+}
 }  // namespace io
 }  // namespace lhat

@@ -5,26 +5,30 @@ namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-int ParseWhitespace(const std::string_view expr) {
+bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
+
+int ParseWhitespace(io::CharReader* reader) {
   int idx = 0;
-  while (idx < expr.size() && (expr[idx] == ' ' || expr[idx] == '\t')) {
+  while (!reader->Empty() && IsWhitespace(reader->Peek())) {
+    reader->Next();
     idx++;
   }
   return idx;
 }
 
-core::ParseResult<std::string> ParseName(const std::string_view expr) {
+core::ParseResult<std::string> ParseName(io::CharReader* reader) {
   std::string name;
   int idx = 0;
-  while (idx < expr.size() && !IsSpecial(expr[idx])) {
-    name.push_back(expr[idx]);
+  while (!reader->Empty() && !IsSpecial(reader->Peek())) {
+    name.push_back(reader->Peek());
+    reader->Next();
     idx++;
   }
   return core::ParseResult<std::string>(idx, name);
 }
 
-core::ParseResult<Var> ParseVar(const std::string_view expr) {
-  core::ParseResult<std::string> var_name = ParseName(expr);
+core::ParseResult<Var> ParseVar(io::CharReader* reader) {
+  core::ParseResult<std::string> var_name = ParseName(reader);
   if (!var_name.Ok()) {
     return core::ParseResult<Var>(var_name.ConsumedChars(), var_name.Error());
   }
@@ -32,75 +36,78 @@ core::ParseResult<Var> ParseVar(const std::string_view expr) {
                                 Var(var_name.Value()));
 }
 
-core::ParseResult<Abst> ParseAbst(const std::string_view expr) {
+core::ParseResult<Abst> ParseAbst(io::CharReader* reader) {
   // parse '^'
   int idx = 1;
+  reader->Next();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
   // parse var name
-  core::ParseResult<std::string> var_name = ParseName(expr.substr(idx));
+  core::ParseResult<std::string> var_name = ParseName(reader);
   if (!var_name.Ok()) {
     return core::ParseResult<Abst>(idx + var_name.ConsumedChars(),
                                    var_name.Error());
   }
   idx += var_name.ConsumedChars();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
   // parse body term
-  core::ParseResult<Term> term = Parse(expr.substr(idx));
+  core::ParseResult<Term> term = Parse(reader);
   if (!term.Ok()) {
     return core::ParseResult<Abst>(idx + term.ConsumedChars(), term.Error());
   }
   idx += term.ConsumedChars();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
   // parse ')'
   idx++;
+  reader->Next();
 
   return core::ParseResult<Abst>(idx, Abst(var_name.Value(), term.Value()));
 }
 
-core::ParseResult<Appl> ParseAppl(const std::string_view expr) {
-  int idx = ParseWhitespace(expr);
+core::ParseResult<Appl> ParseAppl(io::CharReader* reader) {
+  int idx = ParseWhitespace(reader);
 
   // parse func term
-  core::ParseResult<Term> left = Parse(expr.substr(idx));
+  core::ParseResult<Term> left = Parse(reader);
   if (!left.Ok()) {
     return core::ParseResult<Appl>(idx + left.ConsumedChars(), left.Error());
   }
   idx = left.ConsumedChars();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
   // parse arg term
-  core::ParseResult<Term> right = Parse(expr.substr(idx));
+  core::ParseResult<Term> right = Parse(reader);
   if (!right.Ok()) {
     return core::ParseResult<Appl>(idx + right.ConsumedChars(), right.Error());
   }
   idx += right.ConsumedChars();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
   // parse ')'
   idx++;
+  reader->Next();
 
   return core::ParseResult<Appl>(idx, Appl(left.Value(), right.Value()));
 }
 }  // namespace
 
-core::ParseResult<Term> Parse(const std::string_view expr) {
-  int idx = ParseWhitespace(expr);
+core::ParseResult<Term> Parse(io::CharReader* reader) {
+  int idx = ParseWhitespace(reader);
 
-  if (idx >= expr.size()) {
+  if (reader->Empty()) {
     return core::ParseResult<Term>(
         idx,
         core::ParseError("Failed to parse term: given expression is empty"));
   }
-  if (expr[idx] != '(') {
-    core::ParseResult<Var> var = ParseVar(expr);
+  if (reader->Peek() != '(') {
+    core::ParseResult<Var> var = ParseVar(reader);
     if (!var.Ok()) {
       return core::ParseResult<Term>(idx + var.ConsumedChars(), var.Error());
     }
@@ -109,16 +116,17 @@ core::ParseResult<Term> Parse(const std::string_view expr) {
 
   // parse '('
   idx++;
+  reader->Next();
 
-  idx += ParseWhitespace(expr.substr(idx));
+  idx += ParseWhitespace(reader);
 
-  if (idx >= expr.size()) {
+  if (reader->Empty()) {
     return core::ParseResult<Term>(
         idx, core::ParseError("Failed to parse term: ( is not closed"));
   }
 
-  if (expr[idx] == '^') {
-    core::ParseResult<Abst> abst = ParseAbst(expr.substr(idx));
+  if (reader->Peek() == '^') {
+    core::ParseResult<Abst> abst = ParseAbst(reader);
     idx += abst.ConsumedChars();
     if (!abst.Ok()) {
       return core::ParseResult<Term>(idx, abst.Error());
@@ -126,7 +134,7 @@ core::ParseResult<Term> Parse(const std::string_view expr) {
     return core::ParseResult<Term>(idx, abst.Value());
   }
 
-  core::ParseResult<Appl> appl = ParseAppl(expr.substr(idx));
+  core::ParseResult<Appl> appl = ParseAppl(reader);
   idx += appl.ConsumedChars();
   if (!appl.Ok()) {
     return core::ParseResult<Term>(appl.ConsumedChars(), appl.Error());

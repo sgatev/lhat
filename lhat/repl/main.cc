@@ -30,7 +30,10 @@ void Def(std::string&& input, ConstEnv* consts) {
 void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> first_parse_result = named::Parse(input);
+  std::istringstream first_input_stream(input);
+  io::CharReader first_input_reader(&first_input_stream);
+  const core::ParseResult<named::Term> first_parse_result =
+      named::Parse(&first_input_reader);
   if (!first_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << first_parse_result.Error().Message() << std::endl;
@@ -39,7 +42,10 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
   const named::Term first_term = first_parse_result.Value();
 
   input = input.substr(first_parse_result.ConsumedChars());
-  const core::ParseResult<named::Term> second_term_result = named::Parse(input);
+  std::istringstream second_input_stream(input);
+  io::CharReader second_input_reader(&second_input_stream);
+  const core::ParseResult<named::Term> second_term_result =
+      named::Parse(&second_input_reader);
   if (!second_term_result.Ok()) {
     std::cout << "Failed to parse term: "
               << second_term_result.Error().Message() << std::endl;
@@ -54,7 +60,10 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
 void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -71,7 +80,10 @@ void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
 void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -88,7 +100,10 @@ void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
 void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -105,7 +120,10 @@ void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
 void BetaReduce(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -127,7 +145,10 @@ void BetaReduce(const ConstEnv& consts, std::string&& input) {
 void EvalAppl(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -151,7 +172,10 @@ void EvalAppl(const ConstEnv& consts, std::string&& input) {
 void EvalNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
-  const core::ParseResult<named::Term> input_parse_result = named::Parse(input);
+  std::istringstream input_stream(input);
+  io::CharReader input_reader(&input_stream);
+  const core::ParseResult<named::Term> input_parse_result =
+      named::Parse(&input_reader);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
