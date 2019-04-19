@@ -1,6 +1,9 @@
 #include "lhat/nameless/parser.h"
 
+#include <sstream>
 #include <string>
+
+#include "lhat/io/char_reader.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -12,7 +15,9 @@ using ::testing::NotNull;
 
 TEST(Parser, Var) {
   const std::string expr = "21";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -25,7 +30,9 @@ TEST(Parser, Var) {
 
 TEST(Parser, AbstBound) {
   const std::string expr = "(^ 0)";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -40,7 +47,9 @@ TEST(Parser, AbstBound) {
 
 TEST(Parser, AbstFree) {
   const std::string expr = "(^ 2)";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -55,7 +64,9 @@ TEST(Parser, AbstFree) {
 
 TEST(Parser, MultiAbstBound) {
   const std::string expr = "(^ (^ 1))";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -73,7 +84,9 @@ TEST(Parser, MultiAbstBound) {
 
 TEST(Parser, Appl) {
   const std::string expr = "(1 2)";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -92,7 +105,9 @@ TEST(Parser, Appl) {
 
 TEST(Parser, Whitespace) {
   const std::string expr = "  (  (  ^ (  0   1 )  )  ( 2   0 )  )";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -128,7 +143,9 @@ TEST(Parser, Whitespace) {
 
 TEST(Parser, Complex) {
   const std::string expr = "((^ (0 1)) (2 0))";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -164,7 +181,9 @@ TEST(Parser, Complex) {
 
 TEST(Parser, EmptyExpr) {
   const std::string expr = "";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), 0);
   EXPECT_EQ(parse_result.Error().Message(),
@@ -173,7 +192,9 @@ TEST(Parser, EmptyExpr) {
 
 TEST(Parser, IncompleteExpr) {
   const std::string expr = "(^ (";
-  const core::ParseResult<Term> parse_result = Parser::Parse(expr);
+  std::istringstream expr_stream(expr);
+  io::CharReader expr_reader(&expr_stream);
+  const core::ParseResult<Term> parse_result = Parser::Parse(&expr_reader);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), 4);
   EXPECT_EQ(parse_result.Error().Message(),

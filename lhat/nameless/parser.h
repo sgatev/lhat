@@ -1,9 +1,8 @@
 #ifndef LHAT_NAMELESS_PARSER_H
 #define LHAT_NAMELESS_PARSER_H
 
-#include <string>
-
 #include "lhat/core/parse.h"
+#include "lhat/io/char_reader.h"
 #include "lhat/nameless/ast.h"
 
 namespace lhat {
@@ -12,10 +11,10 @@ namespace nameless {
 class Parser {
  public:
   // Parses expr and returns the corresponding AST.
-  static core::ParseResult<Term> Parse(const std::string_view expr);
+  static core::ParseResult<Term> Parse(io::CharReader* reader);
 
  private:
-  Parser(const std::string_view expr);
+  Parser(io::CharReader* reader);
 
   core::ParseResult<Term> ParseTerm();
   core::ParseResult<Abst> ParseAbst();
@@ -26,10 +25,9 @@ class Parser {
   char Peek();
   void Next();
 
-  const std::string_view expr_;
+  io::CharReader* reader_;
   int abst_count_;
   int idx_;
-  bool done_;
 };
 }  // namespace nameless
 }  // namespace lhat
