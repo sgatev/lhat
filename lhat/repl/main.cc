@@ -1,9 +1,11 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <tuple>
 #include <utility>
 
+#include "lhat/io/char_reader.h"
 #include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
 #include "lhat/named/parse.h"
@@ -209,7 +211,9 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
       continue;
     }
 
-    const core::ParseResult<std::string> command = ParseCommand(line);
+    std::istringstream line_stream(line);
+    io::CharReader line_reader(&line_stream);
+    const core::ParseResult<std::string> command = ParseCommand(&line_reader);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
@@ -247,7 +251,9 @@ void Run(int argc, char* argv[]) {
       continue;
     }
 
-    const core::ParseResult<std::string> command = ParseCommand(input);
+    std::istringstream input_stream(input);
+    io::CharReader input_reader(&input_stream);
+    const core::ParseResult<std::string> command = ParseCommand(&input_reader);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;

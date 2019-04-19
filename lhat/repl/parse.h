@@ -4,11 +4,12 @@
 #include <string>
 
 #include "lhat/core/parse.h"
+#include "lhat/io/char_reader.h"
 
 namespace lhat {
 namespace repl {
 // Parses expr and returns the corresponding command name.
-core::ParseResult<std::string> ParseCommand(const std::string_view expr);
+core::ParseResult<std::string> ParseCommand(io::CharReader* reader);
 }  // namespace repl
 }  // namespace lhat
 

@@ -1,0 +1,10 @@
+cc_library(
+    name = "char_reader",
+    srcs = [
+        "char_reader.cc",
+    ],
+    hdrs = [
+        "char_reader.h",
+    ],
+    visibility = ["//visibility:public"],
+)

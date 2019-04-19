@@ -5,23 +5,30 @@
 namespace lhat {
 namespace repl {
 namespace {
-int ParseWhitespace(const std::string_view expr) {
+bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
+
+bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
+
+int ParseWhitespace(io::CharReader* reader) {
   int idx = 0;
-  while (idx < expr.size() && (expr[idx] == ' ' || expr[idx] == '\t')) {
+  while (!reader->Empty() && IsWhitespace(reader->Peek())) {
+    reader->Next();
     idx++;
   }
   return idx;
 }
 }  // namespace
 
-core::ParseResult<std::string> ParseCommand(const std::string_view expr) {
-  int idx = ParseWhitespace(expr);
+core::ParseResult<std::string> ParseCommand(io::CharReader* reader) {
+  int idx = ParseWhitespace(reader);
+
   std::string name;
-  while (idx < expr.size() &&
-         (std::isalnum(expr[idx]) || expr[idx] == '-' || expr[idx] == '?')) {
-    name.push_back(expr[idx]);
+  while (!reader->Empty() && IsCommandChar(reader->Peek())) {
+    name.push_back(reader->Peek());
+    reader->Next();
     idx++;
   }
+
   return core::ParseResult<std::string>(idx, name);
 }
 }  // namespace repl
