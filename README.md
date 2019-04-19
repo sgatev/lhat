@@ -127,7 +127,7 @@ becoming interactive. Pass the path to the file as an argument to the `--exec`
 flag. Multiple `--exec` flags could be provided in a single run of the interpreter.
 
 ```
-$ bazel run //lhat/repl:main -- --exec /git/lhat/examples/combinators.sh
+$ bazel run //lhat/repl:main -- --exec /git/lhat/examples/combinators.lh
 > eval-appl ('K z)
 (^ a z)
 ```
