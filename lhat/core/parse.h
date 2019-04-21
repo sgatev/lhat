@@ -29,23 +29,14 @@ class ParseError {
 template <class T>
 class ParseResult {
  public:
-  explicit ParseResult(int consumed_chars_count, T result)
-      : consumed_chars_count_(consumed_chars_count),
-        result_(std::move(result)) {}
-
-  explicit ParseResult(int consumed_chars_count, ParseError error)
-      : consumed_chars_count_(consumed_chars_count),
-        result_(std::move(error)) {}
+  ParseResult(T result) : result_(std::move(result)) {}
+  ParseResult(ParseError error) : result_(std::move(error)) {}
 
   ~ParseResult() = default;
   ParseResult(const ParseResult& other) = default;
   ParseResult(ParseResult&& other) = default;
   ParseResult& operator=(const ParseResult& other) = default;
   ParseResult& operator=(ParseResult&& other) = default;
-
-  // Returns the number of characters consumed from the expression during
-  // parsing.
-  int ConsumedChars() const { return consumed_chars_count_; }
 
   // Returns the result of a successful parsing.
   const T& Value() const { return std::get<T>(result_); }
@@ -61,7 +52,6 @@ class ParseResult {
   bool Ok() const { return std::holds_alternative<T>(result_); }
 
  private:
-  int consumed_chars_count_;
   std::variant<T, ParseError> result_;
 };
 }  // namespace core

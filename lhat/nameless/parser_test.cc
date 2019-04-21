@@ -16,7 +16,6 @@ TEST(Parser, Var) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto var = term.Get<Var>();
@@ -30,7 +29,6 @@ TEST(Parser, AbstBound) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto abst = term.Get<Abst>();
@@ -46,7 +44,6 @@ TEST(Parser, AbstFree) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto abst = term.Get<Abst>();
@@ -62,7 +59,6 @@ TEST(Parser, MultiAbstBound) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto abst = term.Get<Abst>();
@@ -81,7 +77,6 @@ TEST(Parser, Appl) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto appl = term.Get<Appl>();
@@ -101,7 +96,6 @@ TEST(Parser, Whitespace) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto appl = term.Get<Appl>();
@@ -138,7 +132,6 @@ TEST(Parser, Complex) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const auto appl = term.Get<Appl>();
@@ -175,7 +168,6 @@ TEST(Parser, EmptyExpr) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), 0);
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: given expression is empty");
 }
@@ -185,7 +177,6 @@ TEST(Parser, IncompleteExpr) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), 4);
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: ( is not closed");
 }

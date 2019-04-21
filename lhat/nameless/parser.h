@@ -23,12 +23,8 @@ class Parser {
   core::ParseResult<Var> ParseVar();
   void ParseWhitespace();
 
-  char Peek();
-  void Next();
-
   std::istream* input_;
   int abst_count_;
-  int idx_;
 };
 }  // namespace nameless
 }  // namespace lhat

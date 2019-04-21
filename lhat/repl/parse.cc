@@ -11,38 +11,33 @@ bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
 
-int ParseWhitespace(std::istream* input) {
-  int idx = 0;
+void ParseWhitespace(std::istream* input) {
   while (!input->eof() && IsWhitespace(input->peek())) {
     input->get();
-    idx++;
   }
-  return idx;
 }
 }  // namespace
 
 core::ParseResult<std::string> ParseCommand(std::istream* input) {
-  int idx = ParseWhitespace(input);
+  ParseWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsCommandChar(input->peek())) {
     name.push_back(input->get());
-    idx++;
   }
 
-  return core::ParseResult<std::string>(idx, name);
+  return name;
 }
 
 core::ParseResult<std::string> ParseConstName(std::istream* input) {
-  int idx = ParseWhitespace(input);
+  ParseWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsConstNameChar(input->peek())) {
     name.push_back(input->get());
-    idx++;
   }
 
-  return core::ParseResult<std::string>(idx, name);
+  return name;
 }
 }  // namespace repl
 }  // namespace lhat

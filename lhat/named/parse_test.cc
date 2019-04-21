@@ -16,7 +16,6 @@ TEST(Parse, Var) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const Var* var = term.Get<Var>();
@@ -30,7 +29,6 @@ TEST(Parse, Abst) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const Abst* abst = term.Get<Abst>();
@@ -48,7 +46,6 @@ TEST(Parse, Appl) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const Appl* appl = term.Get<Appl>();
@@ -68,7 +65,6 @@ TEST(Parse, Complex) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const Appl* appl = term.Get<Appl>();
@@ -100,7 +96,6 @@ TEST(Parse, Whitespace) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
   const Term term = parse_result.Value();
   const Appl* appl = term.Get<Appl>();
@@ -133,7 +128,6 @@ TEST(Parse, EmptyExpr) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), 0);
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: given expression is empty");
 }
@@ -143,7 +137,6 @@ TEST(Parse, IncompleteExpr) {
   std::istringstream expr_stream(expr);
   const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
-  EXPECT_EQ(parse_result.ConsumedChars(), 4);
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: ( is not closed");
 }
