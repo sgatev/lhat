@@ -3,8 +3,6 @@
 #include <sstream>
 #include <string>
 
-#include "lhat/io/char_reader.h"
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -16,8 +14,7 @@ using ::testing::NotNull;
 TEST(Parse, Var) {
   const std::string expr = "x";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -31,8 +28,7 @@ TEST(Parse, Var) {
 TEST(Parse, Abst) {
   const std::string expr = "(^ x y)";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -50,8 +46,7 @@ TEST(Parse, Abst) {
 TEST(Parse, Appl) {
   const std::string expr = "(x y)";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -71,8 +66,7 @@ TEST(Parse, Appl) {
 TEST(Parse, Complex) {
   const std::string expr = "((^ x y) (u v))";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -104,8 +98,7 @@ TEST(Parse, Complex) {
 TEST(Parse, Whitespace) {
   const std::string expr = "  (  ( ^   x  y  )    (  u   v )  )";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), expr.size());
 
@@ -138,8 +131,7 @@ TEST(Parse, EmptyExpr) {
   const std::string expr = "";
 
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), 0);
   EXPECT_EQ(parse_result.Error().Message(),
@@ -149,8 +141,7 @@ TEST(Parse, EmptyExpr) {
 TEST(Parse, IncompleteExpr) {
   const std::string expr = "(^ (";
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<Term> parse_result = Parse(&expr_reader);
+  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.ConsumedChars(), 4);
   EXPECT_EQ(parse_result.Error().Message(),

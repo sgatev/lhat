@@ -9,23 +9,22 @@ bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
 
 bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 
-int ParseWhitespace(io::CharReader* reader) {
+int ParseWhitespace(std::istream* input) {
   int idx = 0;
-  while (!reader->Empty() && IsWhitespace(reader->Peek())) {
-    reader->Next();
+  while (!input->eof() && IsWhitespace(input->peek())) {
+    input->get();
     idx++;
   }
   return idx;
 }
 }  // namespace
 
-core::ParseResult<std::string> ParseCommand(io::CharReader* reader) {
-  int idx = ParseWhitespace(reader);
+core::ParseResult<std::string> ParseCommand(std::istream* input) {
+  int idx = ParseWhitespace(input);
 
   std::string name;
-  while (!reader->Empty() && IsCommandChar(reader->Peek())) {
-    name.push_back(reader->Peek());
-    reader->Next();
+  while (!input->eof() && IsCommandChar(input->peek())) {
+    name.push_back(input->get());
     idx++;
   }
 

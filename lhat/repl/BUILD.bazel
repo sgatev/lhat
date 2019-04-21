@@ -32,7 +32,6 @@ cc_binary(
     deps = [
         ":const_env",
         ":parse",
-        "//lhat/io:char_reader",
         "//lhat/named:alpha",
         "//lhat/named:ast",
         "//lhat/nameless:ast",
@@ -52,7 +51,6 @@ cc_library(
     ],
     deps = [
         "//lhat/core:parse",
-        "//lhat/io:char_reader",
     ],
 )
 

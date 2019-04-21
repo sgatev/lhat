@@ -14,7 +14,6 @@ cc_library(
     deps = [
         "//lhat/core:overloaded",
         "//lhat/core:parse",
-        "//lhat/io:char_reader",
         "@absl//absl/strings",
     ],
 )
@@ -29,7 +28,6 @@ cc_test(
     copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
-        "//lhat/io:char_reader",
         "@gtest",
         "@gtest//:gtest_main",
     ],

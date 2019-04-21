@@ -5,7 +5,6 @@
 #include <tuple>
 #include <utility>
 
-#include "lhat/io/char_reader.h"
 #include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
 #include "lhat/named/parse.h"
@@ -31,9 +30,8 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream first_input_stream(input);
-  io::CharReader first_input_reader(&first_input_stream);
   const core::ParseResult<named::Term> first_parse_result =
-      named::Parse(&first_input_reader);
+      named::Parse(&first_input_stream);
   if (!first_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << first_parse_result.Error().Message() << std::endl;
@@ -43,9 +41,8 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
 
   input = input.substr(first_parse_result.ConsumedChars());
   std::istringstream second_input_stream(input);
-  io::CharReader second_input_reader(&second_input_stream);
   const core::ParseResult<named::Term> second_term_result =
-      named::Parse(&second_input_reader);
+      named::Parse(&second_input_stream);
   if (!second_term_result.Ok()) {
     std::cout << "Failed to parse term: "
               << second_term_result.Error().Message() << std::endl;
@@ -61,9 +58,8 @@ void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -81,9 +77,8 @@ void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -101,9 +96,8 @@ void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -121,9 +115,8 @@ void BetaReduce(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -146,9 +139,8 @@ void EvalAppl(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -173,9 +165,8 @@ void EvalNormal(const ConstEnv& consts, std::string&& input) {
   consts.Resolve(&input);
 
   std::istringstream input_stream(input);
-  io::CharReader input_reader(&input_stream);
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_reader);
+      named::Parse(&input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -236,8 +227,7 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
     }
 
     std::istringstream line_stream(line);
-    io::CharReader line_reader(&line_stream);
-    const core::ParseResult<std::string> command = ParseCommand(&line_reader);
+    const core::ParseResult<std::string> command = ParseCommand(&line_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
@@ -276,8 +266,7 @@ void Run(int argc, char* argv[]) {
     }
 
     std::istringstream input_stream(input);
-    io::CharReader input_reader(&input_stream);
-    const core::ParseResult<std::string> command = ParseCommand(&input_reader);
+    const core::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;

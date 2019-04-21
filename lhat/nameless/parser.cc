@@ -8,17 +8,16 @@ bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
 }  // namespace
 
-core::ParseResult<Term> Parser::Parse(io::CharReader* reader) {
-  return Parser(reader).ParseTerm();
+core::ParseResult<Term> Parser::Parse(std::istream* input) {
+  return Parser(input).ParseTerm();
 }
 
-Parser::Parser(io::CharReader* reader)
-    : reader_(reader), abst_count_(0), idx_(0) {}
+Parser::Parser(std::istream* input) : input_(input), abst_count_(0), idx_(0) {}
 
 core::ParseResult<Term> Parser::ParseTerm() {
   ParseWhitespace();
 
-  if (reader_->Empty()) {
+  if (input_->eof()) {
     return core::ParseResult<Term>(
         idx_,
         core::ParseError("Failed to parse term: given expression is empty"));
@@ -37,7 +36,7 @@ core::ParseResult<Term> Parser::ParseTerm() {
 
   ParseWhitespace();
 
-  if (reader_->Empty()) {
+  if (input_->eof()) {
     return core::ParseResult<Term>(
         idx_, core::ParseError("Failed to parse term: ( is not closed"));
   }
@@ -108,7 +107,7 @@ core::ParseResult<Appl> Parser::ParseAppl() {
 
 core::ParseResult<Var> Parser::ParseVar() {
   std::string idx;
-  while (!reader_->Empty() && !IsSpecial(Peek())) {
+  while (!input_->eof() && input_->peek() >= 0 && !IsSpecial(Peek())) {
     idx.push_back(Peek());
     Next();
   }
@@ -116,17 +115,17 @@ core::ParseResult<Var> Parser::ParseVar() {
 }
 
 void Parser::ParseWhitespace() {
-  while (!reader_->Empty() && IsWhitespace(reader_->Peek())) {
+  while (!input_->eof() && IsWhitespace(input_->peek())) {
+    input_->get();
     idx_++;
-    reader_->Next();
   }
 }
 
-char Parser::Peek() { return reader_->Peek(); }
+char Parser::Peek() { return input_->peek(); }
 
 void Parser::Next() {
   idx_++;
-  reader_->Next();
+  input_->get();
 }
 }  // namespace nameless
 }  // namespace lhat

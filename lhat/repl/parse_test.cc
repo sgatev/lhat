@@ -3,8 +3,6 @@
 #include <sstream>
 #include <string>
 
-#include "lhat/io/char_reader.h"
-
 #include "gtest/gtest.h"
 
 namespace lhat {
@@ -14,8 +12,7 @@ TEST(ParseCommand, Empty) {
   const std::string expr = "";
 
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<std::string> command = ParseCommand(&expr_reader);
+  const core::ParseResult<std::string> command = ParseCommand(&expr_stream);
   EXPECT_TRUE(command.Ok());
   EXPECT_EQ(command.ConsumedChars(), expr.size());
 
@@ -26,8 +23,7 @@ TEST(ParseCommand, SkipsWhitespacePrefix) {
   const std::string expr = "   foo";
 
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<std::string> command = ParseCommand(&expr_reader);
+  const core::ParseResult<std::string> command = ParseCommand(&expr_stream);
   EXPECT_TRUE(command.Ok());
   EXPECT_EQ(command.ConsumedChars(), expr.size());
 
@@ -38,8 +34,7 @@ TEST(ParseCommand, ParsesUntilWhitespace) {
   const std::string expr = "   foo ";
 
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<std::string> command = ParseCommand(&expr_reader);
+  const core::ParseResult<std::string> command = ParseCommand(&expr_stream);
   EXPECT_TRUE(command.Ok());
   EXPECT_EQ(command.ConsumedChars(), 6);
 
@@ -50,8 +45,7 @@ TEST(ParseCommand, PermitsSpecialChars) {
   const std::string expr = "foo-bar?";
 
   std::istringstream expr_stream(expr);
-  io::CharReader expr_reader(&expr_stream);
-  const core::ParseResult<std::string> command = ParseCommand(&expr_reader);
+  const core::ParseResult<std::string> command = ParseCommand(&expr_stream);
   EXPECT_TRUE(command.Ok());
   EXPECT_EQ(command.ConsumedChars(), expr.size());
 
