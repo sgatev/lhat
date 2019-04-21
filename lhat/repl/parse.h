@@ -8,8 +8,11 @@
 
 namespace lhat {
 namespace repl {
-// Parses expr and returns the corresponding command name.
+// Parses input and returns the corresponding command name.
 core::ParseResult<std::string> ParseCommand(std::istream* input);
+
+// Parses input and returns the corresponding constant name.
+core::ParseResult<std::string> ParseConstName(std::istream* input);
 }  // namespace repl
 }  // namespace lhat
 

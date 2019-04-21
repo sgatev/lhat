@@ -5,7 +5,7 @@ namespace nameless {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
+bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
 }  // namespace
 
 core::ParseResult<Term> Parser::Parse(std::istream* input) {

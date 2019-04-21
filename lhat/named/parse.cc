@@ -5,7 +5,7 @@ namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
+bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
 
 int ParseWhitespace(std::istream* input) {
   int idx = 0;

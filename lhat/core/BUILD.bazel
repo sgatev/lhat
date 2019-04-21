@@ -1,4 +1,28 @@
 cc_library(
+    name = "line_transform_buf",
+    hdrs = [
+        "line_transform_buf.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@absl//absl/strings",
+    ],
+)
+
+cc_test(
+    name = "line_transform_buf_test",
+    srcs = [
+        "line_transform_buf_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":line_transform_buf",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "overloaded",
     hdrs = [
         "overloaded.h",

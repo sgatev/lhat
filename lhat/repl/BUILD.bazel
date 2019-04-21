@@ -32,6 +32,7 @@ cc_binary(
     deps = [
         ":const_env",
         ":parse",
+        "//lhat/core:line_transform_buf",
         "//lhat/named:alpha",
         "//lhat/named:ast",
         "//lhat/nameless:ast",

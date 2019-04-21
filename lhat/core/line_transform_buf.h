@@ -1,0 +1,41 @@
+#ifndef LHAT_CORE_LINE_TRANSFORM_BUF_H
+#define LHAT_CORE_LINE_TRANSFORM_BUF_H
+
+#include <istream>
+#include <streambuf>
+#include <string>
+
+namespace lhat {
+namespace core {
+// A stream buffer that transforms each line of the underlying input stream.
+template <class LineTransformer>
+class LineTransformBuf : public std::streambuf {
+ public:
+  LineTransformBuf(std::istream* input, LineTransformer transform)
+      : input_(input), transform_(transform){};
+
+  std::streambuf::int_type underflow() override {
+    if (input_->eof()) {
+      return traits_type::eof();
+    }
+
+    std::getline(*input_, line_);
+    transform_(&line_);
+
+    if (!input_->eof()) {
+      line_.push_back('\n');
+    }
+
+    setg(line_.data(), line_.data(), line_.data() + line_.size());
+    return traits_type::to_int_type(*gptr());
+  }
+
+ private:
+  std::istream* input_;
+  std::string line_;
+  LineTransformer transform_;
+};
+}  // namespace core
+}  // namespace lhat
+
+#endif  // LHAT_CORE_LINE_TRANSFORM_BUF_H

@@ -1,10 +1,10 @@
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <tuple>
 #include <utility>
 
+#include "lhat/core/line_transform_buf.h"
 #include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
 #include "lhat/named/parse.h"
@@ -21,17 +21,30 @@
 namespace lhat {
 namespace repl {
 namespace {
-void Def(std::string&& input, ConstEnv* consts) {
-  consts->Set(absl::StrSplit(absl::StripAsciiWhitespace(input),
-                             absl::MaxSplits(' ', 1)));
+void Def(ConstEnv* consts, std::istream* input_stream) {
+  const core::ParseResult<std::string> const_name =
+      ParseConstName(input_stream);
+  if (!const_name.Ok()) {
+    std::cout << "Failed to parse const name: " << const_name.Error().Message()
+              << std::endl;
+    return;
+  }
+
+  const core::ParseResult<named::Term> term = named::Parse(input_stream);
+  if (!term.Ok()) {
+    std::cout << "Failed to parse term: " << term.Error().Message()
+              << std::endl;
+    return;
+  }
+
+  std::string term_str;
+  named::Printer::Print(term.Value(), &term_str);
+  consts->Set(std::make_pair(const_name.Value(), term_str));
 }
 
-void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream first_input_stream(input);
+void IsAlphaEquiv(std::istream* input_stream) {
   const core::ParseResult<named::Term> first_parse_result =
-      named::Parse(&first_input_stream);
+      named::Parse(input_stream);
   if (!first_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << first_parse_result.Error().Message() << std::endl;
@@ -39,10 +52,8 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
   }
   const named::Term first_term = first_parse_result.Value();
 
-  input = input.substr(first_parse_result.ConsumedChars());
-  std::istringstream second_input_stream(input);
   const core::ParseResult<named::Term> second_term_result =
-      named::Parse(&second_input_stream);
+      named::Parse(input_stream);
   if (!second_term_result.Ok()) {
     std::cout << "Failed to parse term: "
               << second_term_result.Error().Message() << std::endl;
@@ -54,12 +65,9 @@ void IsAlphaEquiv(const ConstEnv& consts, std::string&& input) {
             << std::endl;
 }
 
-void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void IsBetaRedex(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -73,12 +81,9 @@ void IsBetaRedex(const ConstEnv& consts, std::string&& input) {
   std::cout << std::boolalpha << nameless::IsBetaRedex(term) << std::endl;
 }
 
-void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void IsBetaNormal(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -92,12 +97,9 @@ void IsBetaNormal(const ConstEnv& consts, std::string&& input) {
   std::cout << std::boolalpha << nameless::IsBetaNormalForm(term) << std::endl;
 }
 
-void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void IsHeadNormal(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -111,12 +113,9 @@ void IsHeadNormal(const ConstEnv& consts, std::string&& input) {
   std::cout << std::boolalpha << nameless::IsHeadNormalForm(term) << std::endl;
 }
 
-void BetaReduce(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void BetaReduce(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -135,12 +134,9 @@ void BetaReduce(const ConstEnv& consts, std::string&& input) {
   std::cout << output << std::endl;
 }
 
-void EvalAppl(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void EvalAppl(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -161,12 +157,9 @@ void EvalAppl(const ConstEnv& consts, std::string&& input) {
   std::cout << output << std::endl;
 }
 
-void EvalNormal(const ConstEnv& consts, std::string&& input) {
-  consts.Resolve(&input);
-
-  std::istringstream input_stream(input);
+void EvalNormal(std::istream* input_stream) {
   const core::ParseResult<named::Term> input_parse_result =
-      named::Parse(&input_stream);
+      named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
               << input_parse_result.Error().Message() << std::endl;
@@ -188,23 +181,23 @@ void EvalNormal(const ConstEnv& consts, std::string&& input) {
 }
 
 void ExecuteCommand(const std::string& command, ConstEnv* consts,
-                    std::string&& input) {
+                    std::istream* input_stream) {
   if (command == "def") {
-    Def(std::move(input), consts);
+    Def(consts, input_stream);
   } else if (command == "alpha-equiv?") {
-    IsAlphaEquiv(*consts, std::move(input));
+    IsAlphaEquiv(input_stream);
   } else if (command == "beta-redex?") {
-    IsBetaRedex(*consts, std::move(input));
+    IsBetaRedex(input_stream);
   } else if (command == "beta-normal?") {
-    IsBetaNormal(*consts, std::move(input));
+    IsBetaNormal(input_stream);
   } else if (command == "head-normal?") {
-    IsHeadNormal(*consts, std::move(input));
+    IsHeadNormal(input_stream);
   } else if (command == "beta-reduce") {
-    BetaReduce(*consts, std::move(input));
+    BetaReduce(input_stream);
   } else if (command == "eval-appl") {
-    EvalAppl(*consts, std::move(input));
+    EvalAppl(input_stream);
   } else if (command == "eval-normal") {
-    EvalNormal(*consts, std::move(input));
+    EvalNormal(input_stream);
   } else {
     std::cout << "Unknown command: " << command << std::endl;
   }
@@ -216,26 +209,19 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
     return;
   }
 
-  std::string line;
-  while (std::getline(file, line)) {
-    absl::RemoveExtraAsciiWhitespace(&line);
-    if (line.empty()) {
-      continue;
-    }
-    if (line[0] == '#') {
-      continue;
-    }
+  core::LineTransformBuf const_resolve_buf(
+      &file, [consts](std::string* line) { consts->Resolve(line); });
+  std::istream input_stream(&const_resolve_buf);
 
-    std::istringstream line_stream(line);
-    const core::ParseResult<std::string> command = ParseCommand(&line_stream);
+  while (!input_stream.eof()) {
+    const core::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
       continue;
     }
-    line = line.substr(command.ConsumedChars());
 
-    ExecuteCommand(command.Value(), consts, std::move(line));
+    ExecuteCommand(command.Value(), consts, &input_stream);
   }
   file.close();
 }
@@ -255,30 +241,21 @@ void Run(int argc, char* argv[]) {
     }
   }
 
-  std::string input;
+  core::LineTransformBuf const_resolve_buf(
+      &std::cin, [&consts](std::string* line) { consts.Resolve(line); });
+  std::istream input_stream(&const_resolve_buf);
+
   while (true) {
     std::cout << "> ";
 
-    std::getline(std::cin, input);
-    absl::RemoveExtraAsciiWhitespace(&input);
-    if (input.empty()) {
-      continue;
-    }
-
-    std::istringstream input_stream(input);
     const core::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
       continue;
     }
-    input = input.substr(command.ConsumedChars());
 
-    if (command.Value() == "exit") {
-      break;
-    }
-
-    ExecuteCommand(command.Value(), &consts, std::move(input));
+    ExecuteCommand(command.Value(), &consts, &input_stream);
   }
 }
 }  // namespace
