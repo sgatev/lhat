@@ -4,8 +4,6 @@ namespace lhat {
 namespace nameless {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
-
-bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
 }  // namespace
 
 core::ParseResult<Term> Parser::Parse(std::istream* input) {
@@ -15,93 +13,91 @@ core::ParseResult<Term> Parser::Parse(std::istream* input) {
 Parser::Parser(std::istream* input) : input_(input), abst_count_(0) {}
 
 core::ParseResult<Term> Parser::ParseTerm() {
-  ParseWhitespace();
+  core::ConsumeWhitespace(input_);
 
   if (input_->eof()) {
-    return core::ParseResult<Term>(
-        core::ParseError("Failed to parse term: given expression is empty"));
+    return core::ParseError("Failed to parse term: given expression is empty");
   }
 
   if (input_->peek() != '(') {
     core::ParseResult<Var> var = ParseVar();
     if (!var.Ok()) {
-      return core::ParseResult<Term>(var.Error());
+      return var.Error();
     }
-    return core::ParseResult<Term>(Term(var.Value()));
+    return Term(var.Value());
   }
 
-  // parse '('
+  // consume '('
   input_->get();
 
-  ParseWhitespace();
+  core::ConsumeWhitespace(input_);
 
   if (input_->eof()) {
-    return core::ParseResult<Term>(
-        core::ParseError("Failed to parse term: ( is not closed"));
+    return core::ParseError("Failed to parse term: ( is not closed");
   }
 
   if (input_->peek() == '^') {
     core::ParseResult<Abst> abst = ParseAbst();
     if (!abst.Ok()) {
-      return core::ParseResult<Term>(abst.Error());
+      return abst.Error();
     }
-    return core::ParseResult<Term>(Term(abst.Value()));
+    return Term(abst.Value());
   }
 
   core::ParseResult<Appl> appl = ParseAppl();
   if (!appl.Ok()) {
-    return core::ParseResult<Term>(appl.Error());
+    return appl.Error();
   }
-  return core::ParseResult<Term>(Term(appl.Value()));
+  return Term(appl.Value());
 }
 
 core::ParseResult<Abst> Parser::ParseAbst() {
   abst_count_++;
 
-  // parse '^'
+  // consume '^'
   input_->get();
 
-  ParseWhitespace();
+  core::ConsumeWhitespace(input_);
 
   // parse body term
   const core::ParseResult<Term> body = ParseTerm();
   if (!body.Ok()) {
-    return core::ParseResult<Abst>(body.Error());
+    return body.Error();
   }
 
-  ParseWhitespace();
-
-  // parse ')'
-  input_->get();
-
-  abst_count_--;
-
-  return core::ParseResult<Abst>(Abst(body.Value()));
-}
-
-core::ParseResult<Appl> Parser::ParseAppl() {
-  ParseWhitespace();
-
-  // parse func term
-  const core::ParseResult<Term> func = ParseTerm();
-  if (!func.Ok()) {
-    return core::ParseResult<Appl>(func.Error());
-  }
-
-  ParseWhitespace();
-
-  // parse arg term
-  const core::ParseResult<Term> arg = ParseTerm();
-  if (!arg.Ok()) {
-    return core::ParseResult<Appl>(arg.Error());
-  }
-
-  ParseWhitespace();
+  core::ConsumeWhitespace(input_);
 
   // consume ')'
   input_->get();
 
-  return core::ParseResult<Appl>(Appl(func.Value(), arg.Value()));
+  abst_count_--;
+
+  return Abst(body.Value());
+}
+
+core::ParseResult<Appl> Parser::ParseAppl() {
+  core::ConsumeWhitespace(input_);
+
+  // parse func term
+  const core::ParseResult<Term> func = ParseTerm();
+  if (!func.Ok()) {
+    return func.Error();
+  }
+
+  core::ConsumeWhitespace(input_);
+
+  // parse arg term
+  const core::ParseResult<Term> arg = ParseTerm();
+  if (!arg.Ok()) {
+    return arg.Error();
+  }
+
+  core::ConsumeWhitespace(input_);
+
+  // consume ')'
+  input_->get();
+
+  return Appl(func.Value(), arg.Value());
 }
 
 core::ParseResult<Var> Parser::ParseVar() {
@@ -109,13 +105,7 @@ core::ParseResult<Var> Parser::ParseVar() {
   while (!input_->eof() && input_->peek() >= 0 && !IsSpecial(input_->peek())) {
     idx.push_back(input_->get());
   }
-  return core::ParseResult<Var>(Var(std::stoi(idx) - abst_count_));
-}
-
-void Parser::ParseWhitespace() {
-  while (!input_->eof() && IsWhitespace(input_->peek())) {
-    input_->get();
-  }
+  return Var(std::stoi(idx) - abst_count_);
 }
 }  // namespace nameless
 }  // namespace lhat

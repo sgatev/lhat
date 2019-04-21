@@ -21,7 +21,6 @@ class Parser {
   core::ParseResult<Abst> ParseAbst();
   core::ParseResult<Appl> ParseAppl();
   core::ParseResult<Var> ParseVar();
-  void ParseWhitespace();
 
   std::istream* input_;
   int abst_count_;

@@ -5,14 +5,6 @@ namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
-
-void ParseWhitespace(std::istream* input) {
-  while (!input->eof() && IsWhitespace(input->peek())) {
-    input->get();
-  }
-}
-
 core::ParseResult<std::string> ParseName(std::istream* input) {
   std::string name;
   while (!input->eof() && input->peek() >= 0 && !IsSpecial(input->peek())) {
@@ -30,10 +22,10 @@ core::ParseResult<Var> ParseVar(std::istream* input) {
 }
 
 core::ParseResult<Abst> ParseAbst(std::istream* input) {
-  // parse '^'
+  // consume '^'
   input->get();
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   // parse var name
   core::ParseResult<std::string> var_name = ParseName(input);
@@ -41,7 +33,7 @@ core::ParseResult<Abst> ParseAbst(std::istream* input) {
     return var_name.Error();
   }
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   // parse body term
   core::ParseResult<Term> term = Parse(input);
@@ -49,16 +41,16 @@ core::ParseResult<Abst> ParseAbst(std::istream* input) {
     return term.Error();
   }
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
-  // parse ')'
+  // consume ')'
   input->get();
 
   return Abst(var_name.Value(), term.Value());
 }
 
 core::ParseResult<Appl> ParseAppl(std::istream* input) {
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   // parse func term
   core::ParseResult<Term> left = Parse(input);
@@ -66,7 +58,7 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
     return left.Error();
   }
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   // parse arg term
   core::ParseResult<Term> right = Parse(input);
@@ -74,9 +66,9 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
     return right.Error();
   }
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
-  // parse ')'
+  // consume ')'
   input->get();
 
   return Appl(left.Value(), right.Value());
@@ -84,7 +76,7 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
 }  // namespace
 
 core::ParseResult<Term> Parse(std::istream* input) {
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   if (input->eof()) {
     return core::ParseError("Failed to parse term: given expression is empty");
@@ -97,10 +89,10 @@ core::ParseResult<Term> Parse(std::istream* input) {
     return Term(var.Value());
   }
 
-  // parse '('
+  // consume '('
   input->get();
 
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   if (input->eof()) {
     return core::ParseError("Failed to parse term: ( is not closed");

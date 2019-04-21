@@ -1,6 +1,7 @@
 #ifndef LHAT_CORE_PARSE_H
 #define LHAT_CORE_PARSE_H
 
+#include <istream>
 #include <string>
 #include <variant>
 
@@ -54,6 +55,9 @@ class ParseResult {
  private:
   std::variant<T, ParseError> result_;
 };
+
+// Consumes all starting whitespaces from input.
+void ConsumeWhitespace(std::istream* input);
 }  // namespace core
 }  // namespace lhat
 

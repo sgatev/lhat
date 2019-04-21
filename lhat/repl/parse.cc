@@ -5,21 +5,13 @@
 namespace lhat {
 namespace repl {
 namespace {
-bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
-
 bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
-
-void ParseWhitespace(std::istream* input) {
-  while (!input->eof() && IsWhitespace(input->peek())) {
-    input->get();
-  }
-}
 }  // namespace
 
 core::ParseResult<std::string> ParseCommand(std::istream* input) {
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsCommandChar(input->peek())) {
@@ -30,7 +22,7 @@ core::ParseResult<std::string> ParseCommand(std::istream* input) {
 }
 
 core::ParseResult<std::string> ParseConstName(std::istream* input) {
-  ParseWhitespace(input);
+  core::ConsumeWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsConstNameChar(input->peek())) {
