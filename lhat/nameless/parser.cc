@@ -13,7 +13,7 @@ core::ParseResult<Term> Parser::Parse(std::istream* input) {
 Parser::Parser(std::istream* input) : input_(input), abst_count_(0) {}
 
 core::ParseResult<Term> Parser::ParseTerm() {
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
   if (input_->eof()) {
     return core::ParseError("Failed to parse term: given expression is empty");
@@ -27,10 +27,10 @@ core::ParseResult<Term> Parser::ParseTerm() {
     return Term(var.Value());
   }
 
-  // consume '('
+  // discard '('
   input_->get();
 
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
   if (input_->eof()) {
     return core::ParseError("Failed to parse term: ( is not closed");
@@ -54,10 +54,10 @@ core::ParseResult<Term> Parser::ParseTerm() {
 core::ParseResult<Abst> Parser::ParseAbst() {
   abst_count_++;
 
-  // consume '^'
+  // discard '^'
   input_->get();
 
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
   // parse body term
   const core::ParseResult<Term> body = ParseTerm();
@@ -65,9 +65,9 @@ core::ParseResult<Abst> Parser::ParseAbst() {
     return body.Error();
   }
 
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
-  // consume ')'
+  // discard ')'
   input_->get();
 
   abst_count_--;
@@ -76,7 +76,7 @@ core::ParseResult<Abst> Parser::ParseAbst() {
 }
 
 core::ParseResult<Appl> Parser::ParseAppl() {
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
   // parse func term
   const core::ParseResult<Term> func = ParseTerm();
@@ -84,7 +84,7 @@ core::ParseResult<Appl> Parser::ParseAppl() {
     return func.Error();
   }
 
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
   // parse arg term
   const core::ParseResult<Term> arg = ParseTerm();
@@ -92,9 +92,9 @@ core::ParseResult<Appl> Parser::ParseAppl() {
     return arg.Error();
   }
 
-  core::ConsumeWhitespace(input_);
+  core::DiscardWhitespace(input_);
 
-  // consume ')'
+  // discard ')'
   input_->get();
 
   return Appl(func.Value(), arg.Value());

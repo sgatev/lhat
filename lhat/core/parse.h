@@ -56,8 +56,8 @@ class ParseResult {
   std::variant<T, ParseError> result_;
 };
 
-// Consumes all starting whitespaces from input.
-void ConsumeWhitespace(std::istream* input);
+// Discards all starting whitespaces from input.
+void DiscardWhitespace(std::istream* input);
 }  // namespace core
 }  // namespace lhat
 

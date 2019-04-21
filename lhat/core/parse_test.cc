@@ -5,9 +5,9 @@
 namespace lhat {
 namespace core {
 namespace {
-TEST(ConsumeWhitespace, RemovesStartingWhitespace) {
+TEST(DiscardWhitespace, DiscardsStartingWhitespace) {
   std::istringstream stream("  \t \n foo  \t \n");
-  ConsumeWhitespace(&stream);
+  DiscardWhitespace(&stream);
   const std::string result(std::istreambuf_iterator<char>(stream), {});
   EXPECT_EQ(result, "foo  \t \n");
 }

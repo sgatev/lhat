@@ -22,10 +22,10 @@ core::ParseResult<Var> ParseVar(std::istream* input) {
 }
 
 core::ParseResult<Abst> ParseAbst(std::istream* input) {
-  // consume '^'
+  // discard '^'
   input->get();
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   // parse var name
   core::ParseResult<std::string> var_name = ParseName(input);
@@ -33,7 +33,7 @@ core::ParseResult<Abst> ParseAbst(std::istream* input) {
     return var_name.Error();
   }
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   // parse body term
   core::ParseResult<Term> term = Parse(input);
@@ -41,16 +41,16 @@ core::ParseResult<Abst> ParseAbst(std::istream* input) {
     return term.Error();
   }
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
-  // consume ')'
+  // discard ')'
   input->get();
 
   return Abst(var_name.Value(), term.Value());
 }
 
 core::ParseResult<Appl> ParseAppl(std::istream* input) {
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   // parse func term
   core::ParseResult<Term> left = Parse(input);
@@ -58,7 +58,7 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
     return left.Error();
   }
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   // parse arg term
   core::ParseResult<Term> right = Parse(input);
@@ -66,9 +66,9 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
     return right.Error();
   }
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
-  // consume ')'
+  // discard ')'
   input->get();
 
   return Appl(left.Value(), right.Value());
@@ -76,7 +76,7 @@ core::ParseResult<Appl> ParseAppl(std::istream* input) {
 }  // namespace
 
 core::ParseResult<Term> Parse(std::istream* input) {
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   if (input->eof()) {
     return core::ParseError("Failed to parse term: given expression is empty");
@@ -89,10 +89,10 @@ core::ParseResult<Term> Parse(std::istream* input) {
     return Term(var.Value());
   }
 
-  // consume '('
+  // discard '('
   input->get();
 
-  core::ConsumeWhitespace(input);
+  core::DiscardWhitespace(input);
 
   if (input->eof()) {
     return core::ParseError("Failed to parse term: ( is not closed");
