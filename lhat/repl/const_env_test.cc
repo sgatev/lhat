@@ -9,7 +9,7 @@ namespace repl {
 namespace {
 TEST(ConstEnv, NoConst) {
   ConstEnv consts;
-  consts.Set({"K", "hello"});
+  consts.Set("K", "hello");
 
   std::string s = "world";
   consts.Resolve(&s);
@@ -19,7 +19,7 @@ TEST(ConstEnv, NoConst) {
 
 TEST(ConstEnv, SingleConst) {
   ConstEnv consts;
-  consts.Set({"K", "hello"});
+  consts.Set("K", "hello");
 
   std::string s = "'K world";
   consts.Resolve(&s);
@@ -29,8 +29,8 @@ TEST(ConstEnv, SingleConst) {
 
 TEST(ConstEnv, MultipleConsts) {
   ConstEnv consts;
-  consts.Set({"M", "hello"});
-  consts.Set({"N", "world"});
+  consts.Set("M", "hello");
+  consts.Set("N", "world");
 
   std::string s = "'M 'N";
   consts.Resolve(&s);
@@ -40,8 +40,8 @@ TEST(ConstEnv, MultipleConsts) {
 
 TEST(ConstEnv, NestedConsts) {
   ConstEnv consts;
-  consts.Set({"M", "hello"});
-  consts.Set({"N", "'M world"});
+  consts.Set("M", "hello");
+  consts.Set("N", "'M world");
 
   std::string s = "'N";
   consts.Resolve(&s);
@@ -51,8 +51,8 @@ TEST(ConstEnv, NestedConsts) {
 
 TEST(ConstEnv, PrefixConst) {
   ConstEnv consts;
-  consts.Set({"K", "hello"});
-  consts.Set({"KK", "world"});
+  consts.Set("K", "hello");
+  consts.Set("KK", "world");
 
   std::string s = "'KK";
   consts.Resolve(&s);

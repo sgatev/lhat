@@ -4,7 +4,6 @@
 #include <regex>
 #include <string>
 #include <unordered_map>
-#include <utility>
 
 namespace lhat {
 namespace repl {
@@ -12,7 +11,7 @@ namespace repl {
 class ConstEnv {
  public:
   // Sets the constant with the specified name to value.
-  void Set(std::pair<std::string, std::string> name_value);
+  void Set(std::string name, std::string value);
 
   // Replaces the constants in s with their values.
   void Resolve(std::string *s) const;

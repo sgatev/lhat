@@ -1,8 +1,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <tuple>
-#include <utility>
 
 #include "lhat/core/line_transform_buf.h"
 #include "lhat/named/alpha.h"
@@ -14,9 +12,6 @@
 #include "lhat/repl/const_env.h"
 #include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
-
-#include "absl/strings/ascii.h"
-#include "absl/strings/str_split.h"
 
 namespace lhat {
 namespace repl {
@@ -39,7 +34,7 @@ void Def(ConstEnv* consts, std::istream* input_stream) {
 
   std::string term_str;
   named::Printer::Print(term.Value(), &term_str);
-  consts->Set(std::make_pair(const_name.Value(), term_str));
+  consts->Set(const_name.Value(), term_str);
 }
 
 void IsAlphaEquiv(std::istream* input_stream) {
@@ -182,6 +177,10 @@ void EvalNormal(std::istream* input_stream) {
 
 void ExecuteCommand(const std::string& command, ConstEnv* consts,
                     std::istream* input_stream) {
+  if (command.empty()) {
+    return;
+  }
+
   if (command == "def") {
     Def(consts, input_stream);
   } else if (command == "alpha-equiv?") {
@@ -206,14 +205,15 @@ void ExecuteCommand(const std::string& command, ConstEnv* consts,
 void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
   std::ifstream file(file_name, std::ios::in);
   if (!file.is_open()) {
+    std::cout << "Failed to open file: " << file_name << std::endl;
     return;
   }
 
-  core::LineTransformBuf const_resolve_buf(
-      &file, [consts](std::string* line) { consts->Resolve(line); });
-  std::istream input_stream(&const_resolve_buf);
+  while (!file.eof()) {
+    core::LineTransformBuf const_resolve_buf(
+        &file, [consts](std::string* line) { consts->Resolve(line); });
+    std::istream input_stream(&const_resolve_buf);
 
-  while (!input_stream.eof()) {
     const core::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
@@ -223,7 +223,6 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
 
     ExecuteCommand(command.Value(), consts, &input_stream);
   }
-  file.close();
 }
 
 void Run(int argc, char* argv[]) {
@@ -241,18 +240,22 @@ void Run(int argc, char* argv[]) {
     }
   }
 
-  core::LineTransformBuf const_resolve_buf(
-      &std::cin, [&consts](std::string* line) { consts.Resolve(line); });
-  std::istream input_stream(&const_resolve_buf);
-
   while (true) {
     std::cout << "> ";
+
+    core::LineTransformBuf const_resolve_buf(
+        &std::cin, [&consts](std::string* line) { consts.Resolve(line); });
+    std::istream input_stream(&const_resolve_buf);
 
     const core::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
       continue;
+    }
+
+    if (command.Value() == "exit") {
+      break;
     }
 
     ExecuteCommand(command.Value(), &consts, &input_stream);
