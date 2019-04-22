@@ -12,8 +12,8 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//lhat/core:overloaded",
-        "//lhat/core:parse",
+        "//lhat/util:overloaded",
+        "//lhat/util:parse",
         "@absl//absl/strings",
     ],
 )

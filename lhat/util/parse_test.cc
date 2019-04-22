@@ -1,9 +1,9 @@
-#include "lhat/core/parse.h"
+#include "lhat/util/parse.h"
 
 #include "gtest/gtest.h"
 
 namespace lhat {
-namespace core {
+namespace util {
 namespace {
 TEST(DiscardWhitespace, DiscardsStartingWhitespace) {
   std::istringstream stream("  \t \n foo  \t \n");
@@ -13,5 +13,5 @@ TEST(DiscardWhitespace, DiscardsStartingWhitespace) {
 }
 
 }  // namespace
-}  // namespace core
+}  // namespace util
 }  // namespace lhat

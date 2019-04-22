@@ -14,7 +14,7 @@ using ::testing::NotNull;
 TEST(Parse, Var) {
   const std::string expr = "x";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
 
   const Term term = parse_result.Value();
@@ -27,7 +27,7 @@ TEST(Parse, Var) {
 TEST(Parse, Abst) {
   const std::string expr = "(^ x y)";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
 
   const Term term = parse_result.Value();
@@ -44,7 +44,7 @@ TEST(Parse, Abst) {
 TEST(Parse, Appl) {
   const std::string expr = "(x y)";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
 
   const Term term = parse_result.Value();
@@ -63,7 +63,7 @@ TEST(Parse, Appl) {
 TEST(Parse, Complex) {
   const std::string expr = "((^ x y) (u v))";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
 
   const Term term = parse_result.Value();
@@ -94,7 +94,7 @@ TEST(Parse, Complex) {
 TEST(Parse, Whitespace) {
   const std::string expr = "  (  ( ^   x  y  )    (  u   v )  )";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());
 
   const Term term = parse_result.Value();
@@ -126,7 +126,7 @@ TEST(Parse, EmptyExpr) {
   const std::string expr = "";
 
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: given expression is empty");
@@ -135,7 +135,7 @@ TEST(Parse, EmptyExpr) {
 TEST(Parse, IncompleteExpr) {
   const std::string expr = "(^ (";
   std::istringstream expr_stream(expr);
-  const core::ParseResult<Term> parse_result = Parse(&expr_stream);
+  const util::ParseResult<Term> parse_result = Parse(&expr_stream);
   EXPECT_FALSE(parse_result.Ok());
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: ( is not closed");

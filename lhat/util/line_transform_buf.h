@@ -1,12 +1,12 @@
-#ifndef LHAT_CORE_LINE_TRANSFORM_BUF_H
-#define LHAT_CORE_LINE_TRANSFORM_BUF_H
+#ifndef LHAT_UTIL_LINE_TRANSFORM_BUF_H
+#define LHAT_UTIL_LINE_TRANSFORM_BUF_H
 
 #include <istream>
 #include <streambuf>
 #include <string>
 
 namespace lhat {
-namespace core {
+namespace util {
 // A stream buffer that transforms each line of the underlying input stream.
 template <class LineTransformer>
 class LineTransformBuf : public std::streambuf {
@@ -35,7 +35,7 @@ class LineTransformBuf : public std::streambuf {
   std::string line_;
   LineTransformer transform_;
 };
-}  // namespace core
+}  // namespace util
 }  // namespace lhat
 
-#endif  // LHAT_CORE_LINE_TRANSFORM_BUF_H
+#endif  // LHAT_UTIL_LINE_TRANSFORM_BUF_H

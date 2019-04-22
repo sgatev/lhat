@@ -1,4 +1,4 @@
-#include "lhat/core/line_transform_buf.h"
+#include "lhat/util/line_transform_buf.h"
 
 #include <istream>
 #include <sstream>
@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 namespace lhat {
-namespace core {
+namespace util {
 namespace {
 TEST(LineTransformBuf, TransformsLines) {
   std::istringstream stream("foo\nbar");
@@ -32,5 +32,5 @@ TEST(LineTransformBuf, TransformsLines) {
 }
 
 }  // namespace
-}  // namespace core
+}  // namespace util
 }  // namespace lhat

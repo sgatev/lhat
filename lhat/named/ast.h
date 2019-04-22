@@ -5,7 +5,7 @@
 #include <string>
 #include <variant>
 
-#include "lhat/core/overloaded.h"
+#include "lhat/util/overloaded.h"
 
 namespace lhat {
 namespace named {
@@ -123,14 +123,14 @@ class Term {
   // matches.
   template <class... M>
   constexpr auto Match(M&&... matchers) & -> decltype(auto) {
-    return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
+    return std::visit(util::Overload(std::forward<M>(matchers)...), term_);
   }
 
   // Passes the term to a set of type-based matchers and executes the one that
   // matches.
   template <class... M>
   constexpr auto Match(M&&... matchers) const& -> decltype(auto) {
-    return std::visit(core::Overload(std::forward<M>(matchers)...), term_);
+    return std::visit(util::Overload(std::forward<M>(matchers)...), term_);
   }
 
  private:

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 
-#include "lhat/core/line_transform_buf.h"
 #include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
 #include "lhat/named/parse.h"
@@ -12,12 +11,13 @@
 #include "lhat/repl/const_env.h"
 #include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
+#include "lhat/util/line_transform_buf.h"
 
 namespace lhat {
 namespace repl {
 namespace {
 void Def(ConstEnv* consts, std::istream* input_stream) {
-  const core::ParseResult<std::string> const_name =
+  const util::ParseResult<std::string> const_name =
       ParseConstName(input_stream);
   if (!const_name.Ok()) {
     std::cout << "Failed to parse const name: " << const_name.Error().Message()
@@ -25,7 +25,7 @@ void Def(ConstEnv* consts, std::istream* input_stream) {
     return;
   }
 
-  const core::ParseResult<named::Term> term = named::Parse(input_stream);
+  const util::ParseResult<named::Term> term = named::Parse(input_stream);
   if (!term.Ok()) {
     std::cout << "Failed to parse term: " << term.Error().Message()
               << std::endl;
@@ -38,7 +38,7 @@ void Def(ConstEnv* consts, std::istream* input_stream) {
 }
 
 void IsAlphaEquiv(std::istream* input_stream) {
-  const core::ParseResult<named::Term> first_parse_result =
+  const util::ParseResult<named::Term> first_parse_result =
       named::Parse(input_stream);
   if (!first_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -47,7 +47,7 @@ void IsAlphaEquiv(std::istream* input_stream) {
   }
   const named::Term first_term = first_parse_result.Value();
 
-  const core::ParseResult<named::Term> second_term_result =
+  const util::ParseResult<named::Term> second_term_result =
       named::Parse(input_stream);
   if (!second_term_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -61,7 +61,7 @@ void IsAlphaEquiv(std::istream* input_stream) {
 }
 
 void IsBetaRedex(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -77,7 +77,7 @@ void IsBetaRedex(std::istream* input_stream) {
 }
 
 void IsBetaNormal(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -93,7 +93,7 @@ void IsBetaNormal(std::istream* input_stream) {
 }
 
 void IsHeadNormal(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -109,7 +109,7 @@ void IsHeadNormal(std::istream* input_stream) {
 }
 
 void BetaReduce(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -130,7 +130,7 @@ void BetaReduce(std::istream* input_stream) {
 }
 
 void EvalAppl(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -153,7 +153,7 @@ void EvalAppl(std::istream* input_stream) {
 }
 
 void EvalNormal(std::istream* input_stream) {
-  const core::ParseResult<named::Term> input_parse_result =
+  const util::ParseResult<named::Term> input_parse_result =
       named::Parse(input_stream);
   if (!input_parse_result.Ok()) {
     std::cout << "Failed to parse term: "
@@ -210,11 +210,11 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
   }
 
   while (!file.eof()) {
-    core::LineTransformBuf const_resolve_buf(
+    util::LineTransformBuf const_resolve_buf(
         &file, [consts](std::string* line) { consts->Resolve(line); });
     std::istream input_stream(&const_resolve_buf);
 
-    const core::ParseResult<std::string> command = ParseCommand(&input_stream);
+    const util::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;
@@ -243,11 +243,11 @@ void Run(int argc, char* argv[]) {
   while (true) {
     std::cout << "> ";
 
-    core::LineTransformBuf const_resolve_buf(
+    util::LineTransformBuf const_resolve_buf(
         &std::cin, [&consts](std::string* line) { consts.Resolve(line); });
     std::istream input_stream(&const_resolve_buf);
 
-    const core::ParseResult<std::string> command = ParseCommand(&input_stream);
+    const util::ParseResult<std::string> command = ParseCommand(&input_stream);
     if (!command.Ok()) {
       std::cout << "Failed to parse command: " << command.Error().Message()
                 << std::endl;

@@ -4,15 +4,15 @@
 #include <istream>
 #include <string>
 
-#include "lhat/core/parse.h"
+#include "lhat/util/parse.h"
 
 namespace lhat {
 namespace repl {
 // Parses input and returns the corresponding command name.
-core::ParseResult<std::string> ParseCommand(std::istream* input);
+util::ParseResult<std::string> ParseCommand(std::istream* input);
 
 // Parses input and returns the corresponding constant name.
-core::ParseResult<std::string> ParseConstName(std::istream* input);
+util::ParseResult<std::string> ParseConstName(std::istream* input);
 }  // namespace repl
 }  // namespace lhat
 

@@ -3,13 +3,13 @@
 
 #include <istream>
 
-#include "lhat/core/parse.h"
 #include "lhat/named/ast.h"
+#include "lhat/util/parse.h"
 
 namespace lhat {
 namespace named {
 // Parses expr and returns the corresponding AST.
-core::ParseResult<Term> Parse(std::istream* input);
+util::ParseResult<Term> Parse(std::istream* input);
 }  // namespace named
 }  // namespace lhat
 

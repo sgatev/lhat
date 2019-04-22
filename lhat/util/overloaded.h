@@ -1,8 +1,8 @@
-#ifndef LHAT_CORE_OVERLOADED_H
-#define LHAT_CORE_OVERLOADED_H
+#ifndef LHAT_UTIL_OVERLOADED_H
+#define LHAT_UTIL_OVERLOADED_H
 
 namespace lhat {
-namespace core {
+namespace util {
 // Combines multiple expressions in a single overload set.
 template <class... Ts>
 struct Overloaded;
@@ -27,7 +27,7 @@ template <class... Ts>
 auto Overload(Ts&&... ts) {
   return Overloaded<Ts...>(std::forward<Ts>(ts)...);
 }
-}  // namespace core
+}  // namespace util
 }  // namespace lhat
 
-#endif  // LHAT_CORE_OVERLOADED_H
+#endif  // LHAT_UTIL_OVERLOADED_H

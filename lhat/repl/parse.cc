@@ -10,8 +10,8 @@ bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
 }  // namespace
 
-core::ParseResult<std::string> ParseCommand(std::istream* input) {
-  core::DiscardWhitespace(input);
+util::ParseResult<std::string> ParseCommand(std::istream* input) {
+  util::DiscardWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsCommandChar(input->peek())) {
@@ -21,8 +21,8 @@ core::ParseResult<std::string> ParseCommand(std::istream* input) {
   return name;
 }
 
-core::ParseResult<std::string> ParseConstName(std::istream* input) {
-  core::DiscardWhitespace(input);
+util::ParseResult<std::string> ParseConstName(std::istream* input) {
+  util::DiscardWhitespace(input);
 
   std::string name;
   while (!input->eof() && IsConstNameChar(input->peek())) {

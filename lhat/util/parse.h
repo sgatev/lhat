@@ -1,12 +1,12 @@
-#ifndef LHAT_CORE_PARSE_H
-#define LHAT_CORE_PARSE_H
+#ifndef LHAT_UTIL_PARSE_H
+#define LHAT_UTIL_PARSE_H
 
 #include <istream>
 #include <string>
 #include <variant>
 
 namespace lhat {
-namespace core {
+namespace util {
 // Represents an error that has occurred during parsing.
 class ParseError {
  public:
@@ -58,7 +58,7 @@ class ParseResult {
 
 // Discards all starting whitespaces from input.
 void DiscardWhitespace(std::istream* input);
-}  // namespace core
+}  // namespace util
 }  // namespace lhat
 
-#endif  // LHAT_CORE_PARSE_H
+#endif  // LHAT_UTIL_PARSE_H

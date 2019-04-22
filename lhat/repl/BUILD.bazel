@@ -32,12 +32,12 @@ cc_binary(
     deps = [
         ":const_env",
         ":parse",
-        "//lhat/core:line_transform_buf",
         "//lhat/named:alpha",
         "//lhat/named:ast",
         "//lhat/nameless:ast",
         "//lhat/nameless:beta",
         "//lhat/transform:names",
+        "//lhat/util:line_transform_buf",
     ],
 )
 
@@ -50,7 +50,7 @@ cc_library(
         "parse.h",
     ],
     deps = [
-        "//lhat/core:parse",
+        "//lhat/util:parse",
     ],
 )
 

@@ -1,7 +1,7 @@
-#include "lhat/core/parse.h"
+#include "lhat/util/parse.h"
 
 namespace lhat {
-namespace core {
+namespace util {
 namespace {
 bool IsWhitespace(char c) { return c == ' ' || c == '\t' || c == '\n'; }
 }  // namespace
@@ -11,5 +11,5 @@ void DiscardWhitespace(std::istream* input) {
     input->get();
   }
 }
-}  // namespace core
+}  // namespace util
 }  // namespace lhat
