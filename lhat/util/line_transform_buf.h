@@ -14,6 +14,9 @@ class LineTransformBuf : public std::streambuf {
   LineTransformBuf(std::istream* input, LineTransformer transform)
       : input_(input), transform_(transform){};
 
+  LineTransformBuf(const LineTransformBuf&) = delete;
+  LineTransformBuf& operator=(const LineTransformBuf&) = delete;
+
   std::streambuf::int_type underflow() override {
     if (input_->eof()) {
       return traits_type::eof();
