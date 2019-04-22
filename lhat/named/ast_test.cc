@@ -12,7 +12,7 @@ namespace {
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ x y) (u v))";
   std::istringstream expr_stream(expr);
-  const util::ParseResult<Term> term = Parse(&expr_stream);
+  const util::ErrorOr<Term> term = Parse(&expr_stream);
   EXPECT_TRUE(term.Ok());
   std::string out;
   Printer::Print(term.Value(), &out);

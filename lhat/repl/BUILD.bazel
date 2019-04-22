@@ -50,6 +50,7 @@ cc_library(
         "parse.h",
     ],
     deps = [
+        "//lhat/util:error",
         "//lhat/util:parse",
     ],
 )

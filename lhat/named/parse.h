@@ -4,12 +4,12 @@
 #include <istream>
 
 #include "lhat/named/ast.h"
-#include "lhat/util/parse.h"
+#include "lhat/util/error.h"
 
 namespace lhat {
 namespace named {
 // Parses expr and returns the corresponding AST.
-util::ParseResult<Term> Parse(std::istream* input);
+util::ErrorOr<Term> Parse(std::istream* input);
 }  // namespace named
 }  // namespace lhat
 

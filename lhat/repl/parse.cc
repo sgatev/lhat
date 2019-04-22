@@ -2,6 +2,8 @@
 
 #include <cctype>
 
+#include "lhat/util/parse.h"
+
 namespace lhat {
 namespace repl {
 namespace {
@@ -10,7 +12,7 @@ bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
 }  // namespace
 
-util::ParseResult<std::string> ParseCommand(std::istream* input) {
+util::ErrorOr<std::string> ParseCommand(std::istream* input) {
   util::DiscardWhitespace(input);
 
   std::string name;
@@ -21,7 +23,7 @@ util::ParseResult<std::string> ParseCommand(std::istream* input) {
   return name;
 }
 
-util::ParseResult<std::string> ParseConstName(std::istream* input) {
+util::ErrorOr<std::string> ParseConstName(std::istream* input) {
   util::DiscardWhitespace(input);
 
   std::string name;

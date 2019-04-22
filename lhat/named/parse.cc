@@ -1,11 +1,13 @@
 #include "lhat/named/parse.h"
 
+#include "lhat/util/parse.h"
+
 namespace lhat {
 namespace named {
 namespace {
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
 
-util::ParseResult<std::string> ParseName(std::istream* input) {
+util::ErrorOr<std::string> ParseName(std::istream* input) {
   std::string name;
   while (!input->eof() && input->peek() >= 0 && !IsSpecial(input->peek())) {
     name.push_back(input->get());
@@ -13,22 +15,22 @@ util::ParseResult<std::string> ParseName(std::istream* input) {
   return name;
 }
 
-util::ParseResult<Var> ParseVar(std::istream* input) {
-  util::ParseResult<std::string> var_name = ParseName(input);
+util::ErrorOr<Var> ParseVar(std::istream* input) {
+  util::ErrorOr<std::string> var_name = ParseName(input);
   if (!var_name.Ok()) {
     return var_name.Error();
   }
   return Var(var_name.Value());
 }
 
-util::ParseResult<Abst> ParseAbst(std::istream* input) {
+util::ErrorOr<Abst> ParseAbst(std::istream* input) {
   // discard '^'
   input->get();
 
   util::DiscardWhitespace(input);
 
   // parse var name
-  util::ParseResult<std::string> var_name = ParseName(input);
+  util::ErrorOr<std::string> var_name = ParseName(input);
   if (!var_name.Ok()) {
     return var_name.Error();
   }
@@ -36,7 +38,7 @@ util::ParseResult<Abst> ParseAbst(std::istream* input) {
   util::DiscardWhitespace(input);
 
   // parse body term
-  util::ParseResult<Term> term = Parse(input);
+  util::ErrorOr<Term> term = Parse(input);
   if (!term.Ok()) {
     return term.Error();
   }
@@ -49,11 +51,11 @@ util::ParseResult<Abst> ParseAbst(std::istream* input) {
   return Abst(var_name.Value(), term.Value());
 }
 
-util::ParseResult<Appl> ParseAppl(std::istream* input) {
+util::ErrorOr<Appl> ParseAppl(std::istream* input) {
   util::DiscardWhitespace(input);
 
   // parse func term
-  util::ParseResult<Term> left = Parse(input);
+  util::ErrorOr<Term> left = Parse(input);
   if (!left.Ok()) {
     return left.Error();
   }
@@ -61,7 +63,7 @@ util::ParseResult<Appl> ParseAppl(std::istream* input) {
   util::DiscardWhitespace(input);
 
   // parse arg term
-  util::ParseResult<Term> right = Parse(input);
+  util::ErrorOr<Term> right = Parse(input);
   if (!right.Ok()) {
     return right.Error();
   }
@@ -75,14 +77,14 @@ util::ParseResult<Appl> ParseAppl(std::istream* input) {
 }
 }  // namespace
 
-util::ParseResult<Term> Parse(std::istream* input) {
+util::ErrorOr<Term> Parse(std::istream* input) {
   util::DiscardWhitespace(input);
 
   if (input->eof()) {
-    return util::ParseError("Failed to parse term: given expression is empty");
+    return util::Error("Failed to parse term: given expression is empty");
   }
   if (input->peek() != '(') {
-    util::ParseResult<Var> var = ParseVar(input);
+    util::ErrorOr<Var> var = ParseVar(input);
     if (!var.Ok()) {
       return var.Error();
     }
@@ -95,18 +97,18 @@ util::ParseResult<Term> Parse(std::istream* input) {
   util::DiscardWhitespace(input);
 
   if (input->eof()) {
-    return util::ParseError("Failed to parse term: ( is not closed");
+    return util::Error("Failed to parse term: ( is not closed");
   }
 
   if (input->peek() == '^') {
-    util::ParseResult<Abst> abst = ParseAbst(input);
+    util::ErrorOr<Abst> abst = ParseAbst(input);
     if (!abst.Ok()) {
       return abst.Error();
     }
     return Term(abst.Value());
   }
 
-  util::ParseResult<Appl> appl = ParseAppl(input);
+  util::ErrorOr<Appl> appl = ParseAppl(input);
   if (!appl.Ok()) {
     return appl.Error();
   }

@@ -4,7 +4,7 @@
 #include <istream>
 
 #include "lhat/nameless/ast.h"
-#include "lhat/util/parse.h"
+#include "lhat/util/error.h"
 
 namespace lhat {
 namespace nameless {
@@ -12,15 +12,15 @@ namespace nameless {
 class Parser {
  public:
   // Parses expr and returns the corresponding AST.
-  static util::ParseResult<Term> Parse(std::istream* input);
+  static util::ErrorOr<Term> Parse(std::istream* input);
 
  private:
   Parser(std::istream* input);
 
-  util::ParseResult<Term> ParseTerm();
-  util::ParseResult<Abst> ParseAbst();
-  util::ParseResult<Appl> ParseAppl();
-  util::ParseResult<Var> ParseVar();
+  util::ErrorOr<Term> ParseTerm();
+  util::ErrorOr<Abst> ParseAbst();
+  util::ErrorOr<Appl> ParseAppl();
+  util::ErrorOr<Var> ParseVar();
 
   std::istream* input_;
   int abst_count_;
