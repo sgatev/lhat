@@ -210,7 +210,10 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
 
   while (!file.eof()) {
     util::LineTransformBuf const_resolve_buf(
-        &file, [consts](std::string* line) { consts->Resolve(line); });
+        &file, [consts](std::string* line) -> bool {
+          consts->Resolve(line);
+          return true;
+        });
     std::istream input_stream(&const_resolve_buf);
 
     const util::ErrorOr<std::string> command = ParseCommand(&input_stream);
@@ -243,7 +246,10 @@ void Run(int argc, char* argv[]) {
     std::cout << "> ";
 
     util::LineTransformBuf const_resolve_buf(
-        &std::cin, [&consts](std::string* line) { consts.Resolve(line); });
+        &std::cin, [&consts](std::string* line) -> bool {
+          consts.Resolve(line);
+          return true;
+        });
     std::istream input_stream(&const_resolve_buf);
 
     const util::ErrorOr<std::string> command = ParseCommand(&input_stream);

@@ -8,6 +8,7 @@
 namespace lhat {
 namespace util {
 // A stream buffer that transforms each line of the underlying input stream.
+// If LineTransformer returns false the stream terminates with eof.
 template <class LineTransformer>
 class LineTransformBuf : public std::streambuf {
  public:
@@ -23,7 +24,9 @@ class LineTransformBuf : public std::streambuf {
     }
 
     std::getline(*input_, line_);
-    transform_(&line_);
+    if (!transform_(&line_)) {
+      return traits_type::eof();
+    }
 
     if (!input_->eof()) {
       line_.push_back('\n');
