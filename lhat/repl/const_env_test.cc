@@ -12,7 +12,7 @@ TEST(ConstEnv, NoConst) {
   consts.Set("K", "hello");
 
   std::string s = "world";
-  consts.Resolve(&s);
+  EXPECT_FALSE(consts.Resolve(&s));
 
   EXPECT_EQ(s, "world");
 }
@@ -22,7 +22,7 @@ TEST(ConstEnv, SingleConst) {
   consts.Set("K", "hello");
 
   std::string s = "'K world";
-  consts.Resolve(&s);
+  EXPECT_FALSE(consts.Resolve(&s));
 
   EXPECT_EQ(s, "hello world");
 }
@@ -33,7 +33,7 @@ TEST(ConstEnv, MultipleConsts) {
   consts.Set("N", "world");
 
   std::string s = "'M 'N";
-  consts.Resolve(&s);
+  EXPECT_FALSE(consts.Resolve(&s));
 
   EXPECT_EQ(s, "hello world");
 }
@@ -44,7 +44,7 @@ TEST(ConstEnv, NestedConsts) {
   consts.Set("N", "'M world");
 
   std::string s = "'N";
-  consts.Resolve(&s);
+  EXPECT_FALSE(consts.Resolve(&s));
 
   EXPECT_EQ(s, "hello world");
 }
@@ -55,9 +55,20 @@ TEST(ConstEnv, PrefixConst) {
   consts.Set("KK", "world");
 
   std::string s = "'KK";
-  consts.Resolve(&s);
+  EXPECT_FALSE(consts.Resolve(&s));
 
   EXPECT_EQ(s, "world");
+}
+
+TEST(ConstEnv, NotRegistered) {
+  ConstEnv consts;
+
+  std::string s = "'M";
+  const std::optional<util::Error> resolve_error = consts.Resolve(&s);
+  EXPECT_TRUE(resolve_error);
+  EXPECT_EQ("M is not registered", resolve_error->Message());
+
+  EXPECT_EQ(s, "'M");
 }
 }  // namespace
 }  // namespace repl

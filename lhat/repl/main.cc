@@ -211,7 +211,13 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
   while (!file.eof()) {
     util::LineTransformBuf const_resolve_buf(
         &file, [consts](std::string* line) -> bool {
-          consts->Resolve(line);
+          const std::optional<util::Error> resolve_error =
+              consts->Resolve(line);
+          if (resolve_error) {
+            std::cout << "Failed to resolve const: " << resolve_error->Message()
+                      << std::endl;
+            return false;
+          }
           return true;
         });
     std::istream input_stream(&const_resolve_buf);
@@ -247,7 +253,12 @@ void Run(int argc, char* argv[]) {
 
     util::LineTransformBuf const_resolve_buf(
         &std::cin, [&consts](std::string* line) -> bool {
-          consts.Resolve(line);
+          const std::optional<util::Error> resolve_error = consts.Resolve(line);
+          if (resolve_error) {
+            std::cout << "Failed to resolve const: " << resolve_error->Message()
+                      << std::endl;
+            return false;
+          }
           return true;
         });
     std::istream input_stream(&const_resolve_buf);
