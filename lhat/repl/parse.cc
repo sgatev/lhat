@@ -10,10 +10,14 @@ namespace {
 bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
+
+bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
 }  // namespace
 
 util::ErrorOr<std::string> ParseCommand(std::istream* input) {
-  util::DiscardWhitespace(input);
+  while (!input->eof() && IsWhitespace(input->peek())) {
+    input->get();
+  }
 
   std::string name;
   while (!input->eof() && IsCommandChar(input->peek())) {
