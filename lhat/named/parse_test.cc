@@ -122,6 +122,23 @@ TEST(Parse, Whitespace) {
   EXPECT_EQ(arg_var->Name(), "v");
 }
 
+TEST(Parse, AbstNewLine) {
+  const std::string expr = "(^ x\ny)";
+  std::istringstream expr_stream(expr);
+  const util::ErrorOr<Term> parse_result = Parse(&expr_stream);
+  EXPECT_TRUE(parse_result.Ok());
+
+  const Term term = parse_result.Value();
+  const Abst* abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  EXPECT_EQ(abst->VarName(), "x");
+
+  const Var* body_var = abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Name(), "y");
+}
+
 TEST(Parse, EmptyExpr) {
   const std::string expr = "";
 

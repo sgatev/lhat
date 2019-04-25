@@ -1,11 +1,15 @@
 #include "lhat/named/parse.h"
 
+#include <cctype>
+
 #include "lhat/util/parse.h"
 
 namespace lhat {
 namespace named {
 namespace {
-bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
+bool IsSpecial(char c) {
+  return c == '(' || c == ')' || c == '^' || std::isspace(c);
+}
 
 util::ErrorOr<std::string> ParseName(std::istream* input) {
   std::string name;
