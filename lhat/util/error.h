@@ -41,7 +41,7 @@ class ErrorOr {
   const T& Value() const { return std::get<T>(result_); }
 
   // Returns the contained error.
-  util::Error Error() const { return std::get<util::Error>(result_); }
+  const util::Error& Error() const { return std::get<util::Error>(result_); }
 
   // Returns true if the container contains a value.
   bool Ok() const { return std::holds_alternative<T>(result_); }
