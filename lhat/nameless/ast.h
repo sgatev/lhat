@@ -15,9 +15,9 @@ class Abst {
  public:
   Abst(Term body);
   Abst(const Abst& other);
-  Abst(Abst&& other) = default;
-
   Abst& operator=(const Abst& other);
+
+  Abst(Abst&& other) = default;
   Abst& operator=(Abst&& other) = default;
 
   // Returns the lambda term representing the body of the function.
@@ -35,9 +35,9 @@ class Appl {
  public:
   Appl(Term func, Term arg);
   Appl(const Appl& other);
-  Appl(Appl&& other) = default;
-
   Appl& operator=(const Appl& other);
+
+  Appl(Appl&& other) = default;
   Appl& operator=(Appl&& other) = default;
 
   // Returns the lambda term representing the function.
@@ -61,9 +61,9 @@ class Appl {
 class Var {
  public:
   Var(int idx);
+
   Var(const Var& other) = default;
   Var(Var&& other) = default;
-
   Var& operator=(const Var& other) = default;
   Var& operator=(Var&& other) = default;
 
@@ -90,9 +90,9 @@ class Term {
   Term(Abst abst);
   Term(Appl appl);
   Term(Var var);
+
   Term(const Term& term) = default;
   Term(Term&& term) = default;
-
   Term& operator=(const Term& other) = default;
   Term& operator=(Term&& other) = default;
 

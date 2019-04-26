@@ -98,6 +98,15 @@ Normal β-normalization of lambda terms is performed using `eval-normal`.
 y
 ```
 
+### infer-type
+
+To infer the type of a term use `infer-type`.
+
+```
+> infer-type (^ x (^ y (x y)))
+(T4 -> T5) -> T4 -> T5
+```
+
 ### def
 
 The interpreter supports definition of constants via the `def` command. While

@@ -11,6 +11,7 @@
 #include "lhat/repl/const_env.h"
 #include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
+#include "lhat/transform/types.h"
 #include "lhat/util/line_transform_buf.h"
 
 namespace lhat {
@@ -44,7 +45,6 @@ void IsAlphaEquiv(std::istream* input_stream) {
               << first_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term first_term = first_parse_result.Value();
 
   const util::ErrorOr<named::Term> second_term_result =
       named::Parse(input_stream);
@@ -53,9 +53,10 @@ void IsAlphaEquiv(std::istream* input_stream) {
               << second_term_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term second_term = second_term_result.Value();
 
-  std::cout << std::boolalpha << named::IsAlphaEquiv(first_term, second_term)
+  std::cout << std::boolalpha
+            << named::IsAlphaEquiv(first_parse_result.Value(),
+                                   second_term_result.Value())
             << std::endl;
 }
 
@@ -67,10 +68,10 @@ void IsBetaRedex(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsBetaRedex(term) << std::endl;
 }
@@ -83,10 +84,10 @@ void IsBetaNormal(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsBetaNormalForm(term) << std::endl;
 }
@@ -99,10 +100,10 @@ void IsHeadNormal(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   std::cout << std::boolalpha << nameless::IsHeadNormalForm(term) << std::endl;
 }
@@ -115,10 +116,10 @@ void BetaReduce(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   nameless::BetaReduceTerm(&term);
 
@@ -136,10 +137,10 @@ void EvalAppl(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   while (nameless::BetaReduceAppl(&term)) {
     // Normalize the term.
@@ -159,10 +160,10 @@ void EvalNormal(std::istream* input_stream) {
               << input_parse_result.Error().Message() << std::endl;
     return;
   }
-  const named::Term input_term = input_parse_result.Value();
 
   transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term, &free_nctx);
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
 
   while (nameless::BetaReduceNormal(&term)) {
     // Normalize the term.
@@ -172,6 +173,41 @@ void EvalNormal(std::istream* input_stream) {
   std::string output;
   named::Printer::Print(output_term, &output);
   std::cout << output << std::endl;
+}
+
+void InferType(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_parse_result =
+      named::Parse(input_stream);
+  if (!input_parse_result.Ok()) {
+    std::cout << "Failed to parse term: "
+              << input_parse_result.Error().Message() << std::endl;
+    return;
+  }
+
+  transform::NameContext free_nctx;
+  nameless::Term term =
+      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+
+  const std::unordered_map<int, int> free_var_types;
+  std::vector<transform::Type> types;
+  std::vector<transform::TypeConstraint> constraints;
+  const util::ErrorOr<int> term_type_idx =
+      transform::CollectTypes(term, free_var_types, &types, &constraints);
+  if (!term_type_idx.Ok()) {
+    std::cout << "Failed to infer type: " << term_type_idx.Error().Message()
+              << std::endl;
+    return;
+  }
+
+  std::unordered_map<transform::SimpleType, int> subs;
+  if (!transform::UnifyTypes(types, constraints, &subs)) {
+    std::cout << "Failed to infer type" << std::endl;
+    return;
+  }
+
+  transform::ApplyTypeSubs(subs, &types);
+  std::cout << transform::TypeToString(types, term_type_idx.Value())
+            << std::endl;
 }
 
 void ExecuteCommand(const std::string& command, ConstEnv* consts,
@@ -196,6 +232,8 @@ void ExecuteCommand(const std::string& command, ConstEnv* consts,
     EvalAppl(input_stream);
   } else if (command == "eval-normal") {
     EvalNormal(input_stream);
+  } else if (command == "infer-type") {
+    InferType(input_stream);
   } else {
     std::cout << "Unknown command: " << command << std::endl;
   }

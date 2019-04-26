@@ -26,3 +26,33 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "types",
+    srcs = [
+        "types.cc",
+    ],
+    hdrs = [
+        "types.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//lhat/nameless:ast",
+        "//lhat/util:error",
+        "@absl//absl/strings",
+    ],
+)
+
+cc_test(
+    name = "types_test",
+    srcs = [
+        "types_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":types",
+        "//lhat/nameless:ast",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)

@@ -4,7 +4,7 @@ namespace lhat {
 namespace nameless {
 namespace {
 void ShiftFreeVarIndex(int c, int d, Term* term) {
-  return term->Match(
+  term->Match(
       [c, d](Abst& abst) { ShiftFreeVarIndex(c + 1, d, abst.MutableBody()); },
       [c, d](Appl& appl) {
         ShiftFreeVarIndex(c, d, appl.MutableFunc());
