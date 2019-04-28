@@ -23,9 +23,7 @@ util::ErrorOr<int> CollectTypes(
         const util::ErrorOr<int> res_type_idx =
             CollectTypes(abst.Body(), free_var_types, abst_count + 1, types,
                          constraints, bound_var_types);
-        if (!res_type_idx.Ok()) {
-          return res_type_idx.Error();
-        }
+        RETURN_IF_ERROR(res_type_idx);
 
         bound_var_types->pop_back();
 
@@ -40,16 +38,12 @@ util::ErrorOr<int> CollectTypes(
         const util::ErrorOr<int> func_type_idx =
             CollectTypes(appl.Func(), free_var_types, abst_count, types,
                          constraints, bound_var_types);
-        if (!func_type_idx.Ok()) {
-          return func_type_idx.Error();
-        }
+        RETURN_IF_ERROR(func_type_idx);
 
         const util::ErrorOr<int> arg_type_idx =
             CollectTypes(appl.Arg(), free_var_types, abst_count, types,
                          constraints, bound_var_types);
-        if (!arg_type_idx.Ok()) {
-          return arg_type_idx.Error();
-        }
+        RETURN_IF_ERROR(arg_type_idx);
 
         const int func_var_type_idx = types->size();
         types->push_back(SimpleType{func_var_type_idx});

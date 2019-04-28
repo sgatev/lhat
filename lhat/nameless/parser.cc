@@ -23,9 +23,7 @@ util::ErrorOr<Term> Parser::ParseTerm() {
 
   if (input_->peek() != '(') {
     util::ErrorOr<Var> var = ParseVar();
-    if (!var.Ok()) {
-      return var.Error();
-    }
+    RETURN_IF_ERROR(var);
     return Term(var.Value());
   }
 
@@ -40,16 +38,12 @@ util::ErrorOr<Term> Parser::ParseTerm() {
 
   if (input_->peek() == '^') {
     util::ErrorOr<Abst> abst = ParseAbst();
-    if (!abst.Ok()) {
-      return abst.Error();
-    }
+    RETURN_IF_ERROR(abst);
     return Term(abst.Value());
   }
 
   util::ErrorOr<Appl> appl = ParseAppl();
-  if (!appl.Ok()) {
-    return appl.Error();
-  }
+  RETURN_IF_ERROR(appl);
   return Term(appl.Value());
 }
 
@@ -63,9 +57,7 @@ util::ErrorOr<Abst> Parser::ParseAbst() {
 
   // parse body term
   const util::ErrorOr<Term> body = ParseTerm();
-  if (!body.Ok()) {
-    return body.Error();
-  }
+  RETURN_IF_ERROR(body);
 
   util::DiscardWhitespace(input_);
 
@@ -82,17 +74,13 @@ util::ErrorOr<Appl> Parser::ParseAppl() {
 
   // parse func term
   const util::ErrorOr<Term> func = ParseTerm();
-  if (!func.Ok()) {
-    return func.Error();
-  }
+  RETURN_IF_ERROR(func);
 
   util::DiscardWhitespace(input_);
 
   // parse arg term
   const util::ErrorOr<Term> arg = ParseTerm();
-  if (!arg.Ok()) {
-    return arg.Error();
-  }
+  RETURN_IF_ERROR(arg);
 
   util::DiscardWhitespace(input_);
 

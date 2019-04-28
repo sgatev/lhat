@@ -21,9 +21,7 @@ util::ErrorOr<std::string> ParseName(std::istream* input) {
 
 util::ErrorOr<Var> ParseVar(std::istream* input) {
   util::ErrorOr<std::string> var_name = ParseName(input);
-  if (!var_name.Ok()) {
-    return var_name.Error();
-  }
+  RETURN_IF_ERROR(var_name);
   return Var(var_name.Value());
 }
 
@@ -35,17 +33,13 @@ util::ErrorOr<Abst> ParseAbst(std::istream* input) {
 
   // parse var name
   util::ErrorOr<std::string> var_name = ParseName(input);
-  if (!var_name.Ok()) {
-    return var_name.Error();
-  }
+  RETURN_IF_ERROR(var_name);
 
   util::DiscardWhitespace(input);
 
   // parse body term
   util::ErrorOr<Term> term = Parse(input);
-  if (!term.Ok()) {
-    return term.Error();
-  }
+  RETURN_IF_ERROR(term);
 
   util::DiscardWhitespace(input);
 
@@ -59,25 +53,21 @@ util::ErrorOr<Appl> ParseAppl(std::istream* input) {
   util::DiscardWhitespace(input);
 
   // parse func term
-  util::ErrorOr<Term> left = Parse(input);
-  if (!left.Ok()) {
-    return left.Error();
-  }
+  util::ErrorOr<Term> func = Parse(input);
+  RETURN_IF_ERROR(func);
 
   util::DiscardWhitespace(input);
 
   // parse arg term
-  util::ErrorOr<Term> right = Parse(input);
-  if (!right.Ok()) {
-    return right.Error();
-  }
+  util::ErrorOr<Term> arg = Parse(input);
+  RETURN_IF_ERROR(arg);
 
   util::DiscardWhitespace(input);
 
   // discard ')'
   input->get();
 
-  return Appl(left.Value(), right.Value());
+  return Appl(func.Value(), arg.Value());
 }
 }  // namespace
 
@@ -89,9 +79,7 @@ util::ErrorOr<Term> Parse(std::istream* input) {
   }
   if (input->peek() != '(') {
     util::ErrorOr<Var> var = ParseVar(input);
-    if (!var.Ok()) {
-      return var.Error();
-    }
+    RETURN_IF_ERROR(var);
     return Term(var.Value());
   }
 
@@ -106,16 +94,12 @@ util::ErrorOr<Term> Parse(std::istream* input) {
 
   if (input->peek() == '^') {
     util::ErrorOr<Abst> abst = ParseAbst(input);
-    if (!abst.Ok()) {
-      return abst.Error();
-    }
+    RETURN_IF_ERROR(abst);
     return Term(abst.Value());
   }
 
   util::ErrorOr<Appl> appl = ParseAppl(input);
-  if (!appl.Ok()) {
-    return appl.Error();
-  }
+  RETURN_IF_ERROR(appl);
   return Term(appl.Value());
 }
 }  // namespace named

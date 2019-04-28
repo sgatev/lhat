@@ -4,6 +4,10 @@
 #include <string>
 #include <variant>
 
+// Tests an lhat::util::ErrorOr and returns the error if present.
+#define RETURN_IF_ERROR(error_or) \
+  if (!error_or.Ok()) return error_or.Error()
+
 namespace lhat {
 namespace util {
 // Represents a generic error.
