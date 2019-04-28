@@ -17,225 +17,177 @@
 namespace lhat {
 namespace repl {
 namespace {
-void Def(ConstEnv* consts, std::istream* input_stream) {
-  const util::ErrorOr<std::string> const_name = ParseConstName(input_stream);
-  if (!const_name.Ok()) {
-    std::cout << "Failed to parse const name: " << const_name.Error().Message()
-              << std::endl;
-    return;
+std::string BoolToString(bool b) {
+  if (b) {
+    return std::string("true");
+  } else {
+    return std::string("false");
   }
+}
+
+std::string ToNamedTermString(const nameless::Term& term,
+                              transform::NameContext* free_nctx) {
+  const named::Term output_term = transform::AddNames(term, free_nctx);
+  std::string output;
+  named::Printer::Print(output_term, &output);
+  return output;
+}
+
+util::ErrorOr<std::string> Def(ConstEnv* consts, std::istream* input_stream) {
+  const util::ErrorOr<std::string> const_name = ParseConstName(input_stream);
+  RETURN_IF_ERROR(const_name);
 
   const util::ErrorOr<named::Term> term = named::Parse(input_stream);
-  if (!term.Ok()) {
-    std::cout << "Failed to parse term: " << term.Error().Message()
-              << std::endl;
-    return;
-  }
+  RETURN_IF_ERROR(term);
 
   std::string term_str;
   named::Printer::Print(term.Value(), &term_str);
   consts->Set(const_name.Value(), term_str);
+
+  return std::string("");
 }
 
-void IsAlphaEquiv(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> first_parse_result =
-      named::Parse(input_stream);
-  if (!first_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << first_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> IsAlphaEquiv(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> first_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(first_term);
 
-  const util::ErrorOr<named::Term> second_term_result =
-      named::Parse(input_stream);
-  if (!second_term_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << second_term_result.Error().Message() << std::endl;
-    return;
-  }
+  const util::ErrorOr<named::Term> second_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(second_term);
 
-  std::cout << std::boolalpha
-            << named::IsAlphaEquiv(first_parse_result.Value(),
-                                   second_term_result.Value())
-            << std::endl;
+  return BoolToString(
+      named::IsAlphaEquiv(first_term.Value(), second_term.Value()));
 }
 
-void IsBetaRedex(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> IsBetaRedex(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
-  std::cout << std::boolalpha << nameless::IsBetaRedex(term) << std::endl;
+  return BoolToString(nameless::IsBetaRedex(term));
 }
 
-void IsBetaNormal(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> IsBetaNormal(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
-  std::cout << std::boolalpha << nameless::IsBetaNormalForm(term) << std::endl;
+  return BoolToString(nameless::IsBetaNormalForm(term));
 }
 
-void IsHeadNormal(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> IsHeadNormal(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
-  std::cout << std::boolalpha << nameless::IsHeadNormalForm(term) << std::endl;
+  return BoolToString(nameless::IsHeadNormalForm(term));
 }
 
-void BetaReduce(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> BetaReduce(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
   nameless::BetaReduceTerm(&term);
 
-  const named::Term output_term = transform::AddNames(term, &free_nctx);
-  std::string output;
-  named::Printer::Print(output_term, &output);
-  std::cout << output << std::endl;
+  return ToNamedTermString(term, &free_nctx);
 }
 
-void EvalAppl(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> EvalAppl(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
   while (nameless::BetaReduceAppl(&term)) {
     // Normalize the term.
   }
 
-  const named::Term output_term = transform::AddNames(term, &free_nctx);
-  std::string output;
-  named::Printer::Print(output_term, &output);
-  std::cout << output << std::endl;
+  return ToNamedTermString(term, &free_nctx);
 }
 
-void EvalNormal(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> EvalNormal(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
   while (nameless::BetaReduceNormal(&term)) {
     // Normalize the term.
   }
 
-  const named::Term output_term = transform::AddNames(term, &free_nctx);
-  std::string output;
-  named::Printer::Print(output_term, &output);
-  std::cout << output << std::endl;
+  return ToNamedTermString(term, &free_nctx);
 }
 
-void InferType(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_parse_result =
-      named::Parse(input_stream);
-  if (!input_parse_result.Ok()) {
-    std::cout << "Failed to parse term: "
-              << input_parse_result.Error().Message() << std::endl;
-    return;
-  }
+util::ErrorOr<std::string> InferType(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
 
   transform::NameContext free_nctx;
-  nameless::Term term =
-      transform::RemoveNames(input_parse_result.Value(), &free_nctx);
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
   const std::unordered_map<int, int> free_var_types;
   std::vector<transform::Type> types;
   std::vector<transform::TypeConstraint> constraints;
   const util::ErrorOr<int> term_type_idx =
       transform::CollectTypes(term, free_var_types, &types, &constraints);
-  if (!term_type_idx.Ok()) {
-    std::cout << "Failed to infer type: " << term_type_idx.Error().Message()
-              << std::endl;
-    return;
-  }
+  RETURN_IF_ERROR(term_type_idx);
 
   std::unordered_map<transform::SimpleType, int> subs;
   if (!transform::UnifyTypes(types, constraints, &subs)) {
-    std::cout << "Failed to infer type" << std::endl;
-    return;
+    return util::Error("Failed to infer type");
   }
 
   transform::ApplyTypeSubs(subs, &types);
-  std::cout << transform::TypeToString(types, term_type_idx.Value())
-            << std::endl;
+
+  return transform::TypeToString(types, term_type_idx.Value());
 }
 
-void ExecuteCommand(const std::string& command, ConstEnv* consts,
-                    std::istream* input_stream) {
+util::ErrorOr<std::string> ExecuteCommand(const std::string& command,
+                                          ConstEnv* consts,
+                                          std::istream* input_stream) {
   if (command.empty()) {
+    return std::string("");
+  } else if (command == "def") {
+    return Def(consts, input_stream);
+  } else if (command == "alpha-equiv?") {
+    return IsAlphaEquiv(input_stream);
+  } else if (command == "beta-redex?") {
+    return IsBetaRedex(input_stream);
+  } else if (command == "beta-normal?") {
+    return IsBetaNormal(input_stream);
+  } else if (command == "head-normal?") {
+    return IsHeadNormal(input_stream);
+  } else if (command == "beta-reduce") {
+    return BetaReduce(input_stream);
+  } else if (command == "eval-appl") {
+    return EvalAppl(input_stream);
+  } else if (command == "eval-normal") {
+    return EvalNormal(input_stream);
+  } else if (command == "infer-type") {
+    return InferType(input_stream);
+  } else {
+    return std::string("Unknown command: ") + command;
+  }
+}
+
+void PrintCommandOutput(const util::ErrorOr<std::string>& output) {
+  if (!output.Ok()) {
+    std::cout << output.Error().Message() << std::endl;
     return;
   }
 
-  if (command == "def") {
-    Def(consts, input_stream);
-  } else if (command == "alpha-equiv?") {
-    IsAlphaEquiv(input_stream);
-  } else if (command == "beta-redex?") {
-    IsBetaRedex(input_stream);
-  } else if (command == "beta-normal?") {
-    IsBetaNormal(input_stream);
-  } else if (command == "head-normal?") {
-    IsHeadNormal(input_stream);
-  } else if (command == "beta-reduce") {
-    BetaReduce(input_stream);
-  } else if (command == "eval-appl") {
-    EvalAppl(input_stream);
-  } else if (command == "eval-normal") {
-    EvalNormal(input_stream);
-  } else if (command == "infer-type") {
-    InferType(input_stream);
-  } else {
-    std::cout << "Unknown command: " << command << std::endl;
+  if (!output.Value().empty()) {
+    std::cout << output.Value() << std::endl;
   }
 }
 
@@ -312,7 +264,9 @@ void Run(int argc, char* argv[]) {
       break;
     }
 
-    ExecuteCommand(command.Value(), &consts, &input_stream);
+    const util::ErrorOr<std::string> output =
+        ExecuteCommand(command.Value(), &consts, &input_stream);
+    PrintCommandOutput(output);
   }
 }
 }  // namespace
