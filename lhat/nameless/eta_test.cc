@@ -76,6 +76,18 @@ TEST(EtaReduceTerm, AbstApplBound) {
 
   EXPECT_EQ(var->Index(), 0);
 }
+
+TEST(EtaReduceTerm, Complex) {
+  Term term = Abst(Appl(Abst(Var(1)), Var(-1)));
+  EXPECT_TRUE(EtaReduceTerm(&term));
+
+  const Abst* abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const Var* body_var = abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), 1);
+}
 }  // namespace
 }  // namespace nameless
 }  // namespace lhat

@@ -34,12 +34,12 @@ named::Term AddNames(const nameless::Term& term, NameContext* free_nctx,
           return named::Var(
               bound_nctx->GetNameForIndex(abst_count + var.Index()));
         }
-        if (!free_nctx->HasIndex(var.Index() - abst_count)) {
+        if (!free_nctx->HasIndex(var.Index())) {
           std::string name = named::NewVarName(*names);
-          free_nctx->SetName(name, var.Index() - abst_count);
+          free_nctx->SetName(name, var.Index());
           names->insert(name);
         }
-        return named::Var(free_nctx->GetNameForIndex(var.Index() - abst_count));
+        return named::Var(free_nctx->GetNameForIndex(var.Index()));
       });
 }
 

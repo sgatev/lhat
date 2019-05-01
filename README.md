@@ -86,7 +86,7 @@ false
 
 ```
 > eta-reduce (^ x ((^ y z) x))
-(^ a b)
+(^ a z)
 ```
 
 ### eval-appl

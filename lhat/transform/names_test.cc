@@ -260,7 +260,7 @@ TEST(AddNames, PredefinedNames) {
   NameContext free_nctx;
   free_nctx.SetName("g", 0);
 
-  const nameless::Term nameless_term = nameless::Abst(nameless::Var(1));
+  const nameless::Term nameless_term = nameless::Abst(nameless::Var(0));
   const named::Term named_term = AddNames(nameless_term, &free_nctx);
 
   const named::Abst* abst = named_term.Get<named::Abst>();
