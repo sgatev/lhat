@@ -80,6 +80,15 @@ false
 ((^ a a) z)
 ```
 
+### eta-reduce
+
+η-reduction of lambda terms is performed using `eta-reduce`.
+
+```
+> eta-reduce (^ x ((^ y z) x))
+(^ a b)
+```
+
 ### eval-appl
 
 Applicative β-normalization of lambda terms is performed using `eval-appl`.

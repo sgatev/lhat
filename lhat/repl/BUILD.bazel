@@ -37,6 +37,7 @@ cc_binary(
         "//lhat/named:ast",
         "//lhat/nameless:ast",
         "//lhat/nameless:beta",
+        "//lhat/nameless:eta",
         "//lhat/transform:names",
         "//lhat/transform:types",
         "//lhat/util:line_transform_buf",

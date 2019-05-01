@@ -8,6 +8,7 @@
 #include "lhat/named/printer.h"
 #include "lhat/nameless/ast.h"
 #include "lhat/nameless/beta.h"
+#include "lhat/nameless/eta.h"
 #include "lhat/repl/const_env.h"
 #include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
@@ -100,6 +101,18 @@ util::ErrorOr<std::string> BetaReduce(std::istream* input_stream) {
   return ToNamedTermString(term, &free_nctx);
 }
 
+util::ErrorOr<std::string> EtaReduce(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
+
+  nameless::EtaReduceTerm(&term);
+
+  return ToNamedTermString(term, &free_nctx);
+}
+
 util::ErrorOr<std::string> EvalAppl(std::istream* input_stream) {
   const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
   RETURN_IF_ERROR(input_term);
@@ -169,6 +182,8 @@ util::ErrorOr<std::string> ExecuteCommand(const std::string& command,
     return IsHeadNormal(input_stream);
   } else if (command == "beta-reduce") {
     return BetaReduce(input_stream);
+  } else if (command == "eta-reduce") {
+    return EtaReduce(input_stream);
   } else if (command == "eval-appl") {
     return EvalAppl(input_stream);
   } else if (command == "eval-normal") {

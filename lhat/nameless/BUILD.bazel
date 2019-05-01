@@ -64,6 +64,34 @@ cc_test(
 )
 
 cc_library(
+    name = "eta",
+    srcs = [
+        "eta.cc",
+    ],
+    hdrs = [
+        "eta.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ast",
+    ],
+)
+
+cc_test(
+    name = "eta_test",
+    srcs = [
+        "eta_test.cc",
+    ],
+    copts = ["-Iexternal/gtest/include"],
+    deps = [
+        ":ast",
+        ":eta",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "sub",
     srcs = [
         "sub.cc",
