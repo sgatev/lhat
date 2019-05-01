@@ -101,19 +101,7 @@ util::ErrorOr<std::string> BetaReduce(std::istream* input_stream) {
   return ToNamedTermString(term, &free_nctx);
 }
 
-util::ErrorOr<std::string> EtaReduce(std::istream* input_stream) {
-  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
-  RETURN_IF_ERROR(input_term);
-
-  transform::NameContext free_nctx;
-  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
-
-  nameless::EtaReduceTerm(&term);
-
-  return ToNamedTermString(term, &free_nctx);
-}
-
-util::ErrorOr<std::string> EvalAppl(std::istream* input_stream) {
+util::ErrorOr<std::string> BetaEvalAppl(std::istream* input_stream) {
   const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
   RETURN_IF_ERROR(input_term);
 
@@ -127,7 +115,7 @@ util::ErrorOr<std::string> EvalAppl(std::istream* input_stream) {
   return ToNamedTermString(term, &free_nctx);
 }
 
-util::ErrorOr<std::string> EvalNormal(std::istream* input_stream) {
+util::ErrorOr<std::string> BetaEvalNormal(std::istream* input_stream) {
   const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
   RETURN_IF_ERROR(input_term);
 
@@ -135,6 +123,32 @@ util::ErrorOr<std::string> EvalNormal(std::istream* input_stream) {
   nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
 
   while (nameless::BetaReduceNormal(&term)) {
+    // Normalize the term.
+  }
+
+  return ToNamedTermString(term, &free_nctx);
+}
+
+util::ErrorOr<std::string> EtaReduce(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
+
+  nameless::EtaReduceTerm(&term);
+
+  return ToNamedTermString(term, &free_nctx);
+}
+
+util::ErrorOr<std::string> EtaEval(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
+
+  while (nameless::EtaReduceSubTerms(&term)) {
     // Normalize the term.
   }
 
@@ -182,12 +196,14 @@ util::ErrorOr<std::string> ExecuteCommand(const std::string& command,
     return IsHeadNormal(input_stream);
   } else if (command == "beta-reduce") {
     return BetaReduce(input_stream);
+  } else if (command == "beta-eval-appl") {
+    return BetaEvalAppl(input_stream);
+  } else if (command == "beta-eval-normal") {
+    return BetaEvalNormal(input_stream);
   } else if (command == "eta-reduce") {
     return EtaReduce(input_stream);
-  } else if (command == "eval-appl") {
-    return EvalAppl(input_stream);
-  } else if (command == "eval-normal") {
-    return EvalNormal(input_stream);
+  } else if (command == "eta-eval") {
+    return EtaEval(input_stream);
   } else if (command == "infer-type") {
     return InferType(input_stream);
   } else {

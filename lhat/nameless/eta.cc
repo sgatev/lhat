@@ -19,10 +19,23 @@ bool EtaReduceTerm(Term* term) {
           return false;
         }
 
-        *term = body->Func();
+        Term result = body->Func();
+        *term = result;
         return true;
       },
       [](const Appl& appl) -> bool { return false; },
+      [](const Var& var) -> bool { return false; });
+}
+
+bool EtaReduceSubTerms(Term* term) {
+  return term->Match(
+      [term](Abst& abst) -> bool {
+        return EtaReduceTerm(term) || EtaReduceSubTerms(abst.MutableBody());
+      },
+      [](Appl& appl) -> bool {
+        return EtaReduceSubTerms(appl.MutableFunc()) ||
+               EtaReduceSubTerms(appl.MutableArg());
+      },
       [](const Var& var) -> bool { return false; });
 }
 }  // namespace nameless

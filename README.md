@@ -80,6 +80,24 @@ false
 ((^ a a) z)
 ```
 
+### beta-eval-appl
+
+Applicative β-normalization of lambda terms is performed using `beta-eval-appl`.
+
+```
+> beta-eval-appl ((^ x (x y)) z)
+(z y)
+```
+
+### beta-eval-normal
+
+Normal β-normalization of lambda terms is performed using `beta-eval-normal`.
+
+```
+> beta-eval-normal ((^ x y) ((^ x (x x)) (^ x (x x))))
+y
+```
+
 ### eta-reduce
 
 η-reduction of lambda terms is performed using `eta-reduce`.
@@ -89,22 +107,13 @@ false
 (^ a z)
 ```
 
-### eval-appl
+### eta-eval
 
-Applicative β-normalization of lambda terms is performed using `eval-appl`.
-
-```
-> eval-appl ((^ x (x y)) z)
-(z y)
-```
-
-### eval-normal
-
-Normal β-normalization of lambda terms is performed using `eval-normal`.
+η-normalization of lambda terms is performed using `eta-eval`.
 
 ```
-> eval-normal ((^ x y) ((^ x (x x)) (^ x (x x))))
-y
+> eta-eval (^ v ((w (^ x ((^ y z) x))) v))
+(w (^ a z))
 ```
 
 ### infer-type
