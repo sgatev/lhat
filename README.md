@@ -116,6 +116,24 @@ y
 (w (^ a z))
 ```
 
+### beta-eta-eval-appl
+
+Applicative βη-normalization of lambda terms is performed using `beta-eta-eval-appl`.
+
+```
+> beta-eta-eval-appl (^ u (((^ x (x y)) z) u))
+(z y)
+```
+
+### beta-eta-eval-normal
+
+Normal βη-normalization of lambda terms is performed using `beta-eta-eval-normal`.
+
+```
+> beta-eta-eval-normal (^ u (((^ x y) ((^ x (x x)) (^ x (x x)))) u))
+y
+```
+
 ### infer-type
 
 To infer the type of a term use `infer-type`.

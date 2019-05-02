@@ -274,8 +274,7 @@ TEST(BetaReduceNormal, ApplBeforeFunc) {
 }
 
 TEST(BetaReduceNormal, FuncBeforeArg) {
-  Term term = Appl(Var(2), Appl(Abst(Appl(Abst(Var(-1)), Var(0))),
-                                Abst(Appl(Abst(Var(-1)), Var(1)))));
+  Term term = Appl(Appl(Abst(Var(-1)), Var(0)), Appl(Abst(Var(-1)), Var(1)));
   EXPECT_TRUE(BetaReduceNormal(&term));
 
   const Appl* appl = term.Get<Appl>();
@@ -283,7 +282,7 @@ TEST(BetaReduceNormal, FuncBeforeArg) {
 
   const Var* func_var = appl->Func().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->Index(), 2);
+  EXPECT_EQ(func_var->Index(), 0);
 
   const Appl* arg_appl = appl->Arg().Get<Appl>();
   ASSERT_THAT(arg_appl, NotNull());
@@ -293,24 +292,11 @@ TEST(BetaReduceNormal, FuncBeforeArg) {
 
   const Var* body_var = func_abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Index(), 0);
+  EXPECT_EQ(body_var->Index(), -1);
 
-  const Abst* arg_abst = arg_appl->Arg().Get<Abst>();
-  ASSERT_THAT(arg_abst, NotNull());
-
-  const Appl* body_appl = arg_abst->Body().Get<Appl>();
-  ASSERT_THAT(body_appl, NotNull());
-
-  const Abst* body_func_abst = body_appl->Func().Get<Abst>();
-  ASSERT_THAT(body_func_abst, NotNull());
-
-  const Var* abst_body_var = body_func_abst->Body().Get<Var>();
-  ASSERT_THAT(abst_body_var, NotNull());
-  EXPECT_EQ(abst_body_var->Index(), -1);
-
-  const Var* body_arg_var = body_appl->Arg().Get<Var>();
-  ASSERT_THAT(body_arg_var, NotNull());
-  EXPECT_EQ(body_arg_var->Index(), 1);
+  const Var* arg_var = arg_appl->Arg().Get<Var>();
+  ASSERT_THAT(arg_var, NotNull());
+  EXPECT_EQ(arg_var->Index(), 1);
 }
 
 TEST(IsBetaRedex, Var) {

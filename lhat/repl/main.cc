@@ -155,6 +155,36 @@ util::ErrorOr<std::string> EtaEval(std::istream* input_stream) {
   return ToNamedTermString(term, &free_nctx);
 }
 
+util::ErrorOr<std::string> BetaEtaEvalAppl(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
+
+  while (nameless::BetaReduceAppl(&term) ||
+         nameless::EtaReduceSubTerms(&term)) {
+    // Normalize the term.
+  }
+
+  return ToNamedTermString(term, &free_nctx);
+}
+
+util::ErrorOr<std::string> BetaEtaEvalNormal(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(input_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term term = transform::RemoveNames(input_term.Value(), &free_nctx);
+
+  while (nameless::BetaReduceNormal(&term) ||
+         nameless::EtaReduceSubTerms(&term)) {
+    // Normalize the term.
+  }
+
+  return ToNamedTermString(term, &free_nctx);
+}
+
 util::ErrorOr<std::string> InferType(std::istream* input_stream) {
   const util::ErrorOr<named::Term> input_term = named::Parse(input_stream);
   RETURN_IF_ERROR(input_term);
@@ -204,6 +234,10 @@ util::ErrorOr<std::string> ExecuteCommand(const std::string& command,
     return EtaReduce(input_stream);
   } else if (command == "eta-eval") {
     return EtaEval(input_stream);
+  } else if (command == "beta-eta-eval-appl") {
+    return BetaEtaEvalAppl(input_stream);
+  } else if (command == "beta-eta-eval-normal") {
+    return BetaEtaEvalNormal(input_stream);
   } else if (command == "infer-type") {
     return InferType(input_stream);
   } else {

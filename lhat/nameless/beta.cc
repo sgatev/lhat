@@ -36,8 +36,8 @@ bool BetaReduceNormal(Term* term) {
   return term->Match(
       [](Abst& abst) -> bool { return BetaReduceNormal(abst.MutableBody()); },
       [term](Appl& appl) -> bool {
-        return BetaReduceTerm(term) || BetaReduceAppl(appl.MutableFunc()) ||
-               BetaReduceAppl(appl.MutableArg());
+        return BetaReduceTerm(term) || BetaReduceNormal(appl.MutableFunc()) ||
+               BetaReduceNormal(appl.MutableArg());
       },
       [](const Var& var) -> bool { return false; });
 }
