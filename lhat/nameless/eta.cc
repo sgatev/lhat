@@ -2,6 +2,20 @@
 
 namespace lhat {
 namespace nameless {
+namespace {
+bool HasBoundVarIndex(const Term& term, int idx) {
+  return term.Match(
+      [idx](const Abst& abst) -> bool {
+        return HasBoundVarIndex(abst.Body(), idx - 1);
+      },
+      [idx](const Appl& appl) -> bool {
+        return HasBoundVarIndex(appl.Func(), idx) ||
+               HasBoundVarIndex(appl.Arg(), idx);
+      },
+      [idx](const Var& var) -> bool { return var.Index() == idx; });
+}
+}  // namespace
+
 bool EtaReduceTerm(Term* term) {
   return term->Match(
       [term](const Abst& abst) -> bool {
@@ -16,6 +30,10 @@ bool EtaReduceTerm(Term* term) {
 
         const Var* arg = body->Arg().Get<Var>();
         if (arg->Index() != -1) {
+          return false;
+        }
+
+        if (HasBoundVarIndex(body->Func(), -1)) {
           return false;
         }
 

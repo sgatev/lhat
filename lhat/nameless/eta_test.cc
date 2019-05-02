@@ -76,6 +76,28 @@ TEST(EtaReduceTerm, AbstApplBound) {
   EXPECT_EQ(var->Index(), 1);
 }
 
+TEST(EtaReduceTerm, AbstApplBoundUsed) {
+  Term term = Abst(Appl(Abst(Var(-2)), Var(-1)));
+  EXPECT_FALSE(EtaReduceTerm(&term));
+
+  const Abst* abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const Appl* body_appl = abst->Body().Get<Appl>();
+  ASSERT_THAT(body_appl, NotNull());
+
+  const Abst* func_abst = body_appl->Func().Get<Abst>();
+  ASSERT_THAT(func_abst, NotNull());
+
+  const Var* body_var = func_abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), -2);
+
+  const Var* arg_var = body_appl->Arg().Get<Var>();
+  ASSERT_THAT(arg_var, NotNull());
+  EXPECT_EQ(arg_var->Index(), -1);
+}
+
 TEST(EtaReduceTerm, Complex) {
   Term term = Abst(Appl(Abst(Var(1)), Var(-1)));
   EXPECT_TRUE(EtaReduceTerm(&term));
