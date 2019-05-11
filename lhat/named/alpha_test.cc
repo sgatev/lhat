@@ -64,6 +64,12 @@ TEST(IsAlphaEquiv, Complex) {
   const Term n = Abst("v", Appl(Abst("z", Var("z")), Var("y")));
   EXPECT_TRUE(IsAlphaEquiv(m, n));
 }
+
+TEST(IsAlphaEquiv, BoundVarIsFreeVarInOtherTerm) {
+  const Term m = Abst("y", Appl(Var("y"), Var("y")));
+  const Term n = Abst("x", Appl(Var("x"), Var("y")));
+  EXPECT_FALSE(IsAlphaEquiv(m, n));
+}
 }  // namespace
 }  // namespace named
 }  // namespace lhat
