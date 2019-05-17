@@ -35,6 +35,24 @@ $ bazel run //lhat/repl:main
 
 ## Commands
 
+### add-names
+
+To add names to a nameless combinator term use 'add-names'.
+
+```
+> add-names (^ 0)
+(^ a a)
+```
+
+### remove-names
+
+To remove names from a term use 'remove-names'.
+
+```
+> remove-names (^ x x)
+(^ 0)
+```
+
 ### alpha-equiv?
 
 To check if two terms are α-equivalent use `alpha-equiv?`.

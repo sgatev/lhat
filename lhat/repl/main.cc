@@ -9,6 +9,8 @@
 #include "lhat/nameless/ast.h"
 #include "lhat/nameless/beta.h"
 #include "lhat/nameless/eta.h"
+#include "lhat/nameless/parser.h"
+#include "lhat/nameless/printer.h"
 #include "lhat/repl/const_env.h"
 #include "lhat/repl/parse.h"
 #include "lhat/transform/names.h"
@@ -46,6 +48,29 @@ util::ErrorOr<std::string> Def(ConstEnv* consts, std::istream* input_stream) {
   consts->Set(const_name.Value(), term_str);
 
   return std::string("");
+}
+
+util::ErrorOr<std::string> AddNames(std::istream* input_stream) {
+  const util::ErrorOr<nameless::Term> nameless_term =
+      nameless::Parser::Parse(input_stream);
+  RETURN_IF_ERROR(nameless_term);
+
+  transform::NameContext free_nctx;
+  return ToNamedTermString(nameless_term.Value(), &free_nctx);
+}
+
+util::ErrorOr<std::string> RemoveNames(std::istream* input_stream) {
+  const util::ErrorOr<named::Term> named_term = named::Parse(input_stream);
+  RETURN_IF_ERROR(named_term);
+
+  transform::NameContext free_nctx;
+  nameless::Term nameless_term =
+      transform::RemoveNames(named_term.Value(), &free_nctx);
+
+  std::string nameless_term_str;
+  nameless::Printer::Print(nameless_term, &nameless_term_str);
+
+  return nameless_term_str;
 }
 
 util::ErrorOr<std::string> IsAlphaEquiv(std::istream* input_stream) {
@@ -214,32 +239,36 @@ util::ErrorOr<std::string> ExecuteCommand(const std::string& command,
                                           std::istream* input_stream) {
   if (command.empty()) {
     return std::string("");
-  } else if (command == "def") {
-    return Def(consts, input_stream);
+  } else if (command == "add-names") {
+    return AddNames(input_stream);
   } else if (command == "alpha-equiv?") {
     return IsAlphaEquiv(input_stream);
   } else if (command == "beta-redex?") {
     return IsBetaRedex(input_stream);
   } else if (command == "beta-normal?") {
     return IsBetaNormal(input_stream);
-  } else if (command == "head-normal?") {
-    return IsHeadNormal(input_stream);
   } else if (command == "beta-reduce") {
     return BetaReduce(input_stream);
   } else if (command == "beta-eval-appl") {
     return BetaEvalAppl(input_stream);
   } else if (command == "beta-eval-normal") {
     return BetaEvalNormal(input_stream);
-  } else if (command == "eta-reduce") {
-    return EtaReduce(input_stream);
-  } else if (command == "eta-eval") {
-    return EtaEval(input_stream);
   } else if (command == "beta-eta-eval-appl") {
     return BetaEtaEvalAppl(input_stream);
   } else if (command == "beta-eta-eval-normal") {
     return BetaEtaEvalNormal(input_stream);
+  } else if (command == "def") {
+    return Def(consts, input_stream);
+  } else if (command == "eta-reduce") {
+    return EtaReduce(input_stream);
+  } else if (command == "eta-eval") {
+    return EtaEval(input_stream);
+  } else if (command == "head-normal?") {
+    return IsHeadNormal(input_stream);
   } else if (command == "infer-type") {
     return InferType(input_stream);
+  } else if (command == "remove-names") {
+    return RemoveNames(input_stream);
   } else {
     return std::string("Unknown command: ") + command;
   }
