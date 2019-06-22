@@ -91,11 +91,16 @@ util::ErrorOr<Appl> Parser::ParseAppl() {
 }
 
 util::ErrorOr<Var> Parser::ParseVar() {
-  std::string idx;
+  std::string var_idx;
   while (!input_->eof() && input_->peek() >= 0 && !IsSpecial(input_->peek())) {
-    idx.push_back(input_->get());
+    var_idx.push_back(input_->get());
   }
-  return Var(std::stoi(idx) - abst_count_);
+  const int idx = std::stoi(var_idx);
+
+  if (idx < abst_count_) {
+    return Var(-idx - 1);
+  }
+  return Var(idx - abst_count_);
 }
 }  // namespace nameless
 }  // namespace lhat

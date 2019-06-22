@@ -55,7 +55,7 @@ TEST(Parser, AbstFree) {
 }
 
 TEST(Parser, MultiAbstBound) {
-  const std::string expr = "(^ (^ 1))";
+  const std::string expr = "(^ (^ 0))";
   std::istringstream expr_stream(expr);
   const util::ErrorOr<Term> parse_result = Parser::Parse(&expr_stream);
   EXPECT_TRUE(parse_result.Ok());

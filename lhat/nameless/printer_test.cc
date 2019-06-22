@@ -32,7 +32,14 @@ TEST(Printer, MultiAbstBound) {
   const Term term = Abst(Term(Abst(Var(-1))));
   std::string out;
   Printer::Print(term, &out);
-  EXPECT_EQ(out, "(^ (^ 1))");
+  EXPECT_EQ(out, "(^ (^ 0))");
+}
+
+TEST(Printer, MultiAbstAppl) {
+  const Term term = Abst(Term(Abst(Appl(Var(-1), Var(-2)))));
+  std::string out;
+  Printer::Print(term, &out);
+  EXPECT_EQ(out, "(^ (^ (0 1)))");
 }
 
 TEST(Printer, Appl) {

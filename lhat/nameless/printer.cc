@@ -18,7 +18,11 @@ void Printer::Print(const Term& term) {
 }
 
 void Printer::Print(const Var& var) {
-  result_pieces_.push_back(std::to_string(var.Index() + abst_count_));
+  if (var.Index() >= 0) {
+    result_pieces_.push_back(std::to_string(var.Index() + abst_count_));
+  } else {
+    result_pieces_.push_back(std::to_string(-var.Index() - 1));
+  }
 }
 
 void Printer::Print(const Abst& abst) {
