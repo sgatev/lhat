@@ -3,8 +3,6 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "lhat/named/printer.h"
-
 namespace lhat {
 namespace named {
 namespace {
@@ -105,11 +103,11 @@ TEST(SafeSub, AbstSameVar) {
   const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->VarName(), "x");
+  EXPECT_EQ(abst->VarName(), "a");
 
   const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Name(), "x");
+  EXPECT_EQ(body_var->Name(), "a");
 }
 
 TEST(SafeSub, AbstOtherVar) {
@@ -143,34 +141,31 @@ TEST(SafeSub, Appl) {
   ASSERT_THAT(arg_var, NotNull());
   EXPECT_EQ(arg_var->Name(), "y");
 }
-  
+
 TEST(SafeSub, RenameToBoundVar) {
   Term target = Abst("a", Abst("c", Appl(Var("a"), Var("b"))));
   const Term replacement = Var("a");
   SafeSub("b", replacement, &target);
 
-  std::string out;
-  Printer::Print(target, &out); 
-  std::cerr << out << std::endl; // expecting (^ d (^ c (d a)))
   const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
-  
   EXPECT_NE(abst->VarName(), "a");
   EXPECT_NE(abst->VarName(), "b");
 
-  abst = abst->Body().Get<Abst>();
-  EXPECT_EQ(abst->VarName(), "c");
-  
-  const Appl* appl = abst->Body().Get<Appl>();
+  const Abst* inner_abst = abst->Body().Get<Abst>();
+  EXPECT_EQ(inner_abst->VarName(), "c");
+
+  const Appl* appl = inner_abst->Body().Get<Appl>();
   ASSERT_THAT(appl, NotNull());
-  
+
   const Var* func_var = appl->Func().Get<Var>();
-  const Var* arg_var = appl->Arg().Get<Var>();
   ASSERT_THAT(func_var, NotNull());
-  ASSERT_THAT(arg_var, NotNull());
   EXPECT_NE(func_var->Name(), "a");
   EXPECT_NE(func_var->Name(), "b");
   EXPECT_NE(func_var->Name(), "c");
+
+  const Var* arg_var = appl->Arg().Get<Var>();
+  ASSERT_THAT(arg_var, NotNull());
   EXPECT_EQ(arg_var->Name(), "a");
 }
 }  // namespace
