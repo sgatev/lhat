@@ -103,11 +103,9 @@ TEST(SafeSub, AbstSameVar) {
   const Abst* abst = target.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  EXPECT_EQ(abst->VarName(), "a");
-
   const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Name(), "a");
+  EXPECT_EQ(abst->VarName(), body_var->Name());
 }
 
 TEST(SafeSub, AbstOtherVar) {
