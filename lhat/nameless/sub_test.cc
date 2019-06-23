@@ -143,6 +143,36 @@ TEST(Sub, BoundVar) {
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), 2);
 }
+
+TEST(Sub, AbstApplSameVar) {
+  // (0 (^ (1 2))) or (a (^ b (a c))) with context {0 -> a, 1 -> c}
+  Term term = Appl(Var(0), Abst(Appl(Var(0), Var(1))));
+  const Term replacement = Var(1);
+  // [0 -> 1], or [a -> c] with context {0 -> a, 1 -> c}
+  Sub(0, replacement, &term);
+  // expecting (1 (^ (2 2))) or (c (^ b (c c))) with context {0 -> a, 1 -> c}
+
+  const Appl* appl = term.Get<Appl>();
+  ASSERT_THAT(appl, NotNull());
+
+  const Var* func_var = appl->Func().Get<Var>();
+  ASSERT_THAT(func_var, NotNull());
+  EXPECT_EQ(func_var->Index(), 1);
+
+  const Abst* abst = appl->Arg().Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const Appl* inner_appl = abst->Body().Get<Appl>();
+  ASSERT_THAT(inner_appl, NotNull());
+
+  const Var* inner_func_var = inner_appl->Func().Get<Var>();
+  ASSERT_THAT(inner_func_var, NotNull());
+  const Var* inner_arg_var = inner_appl->Arg().Get<Var>();
+  ASSERT_THAT(inner_arg_var, NotNull());
+
+  EXPECT_EQ(inner_func_var->Index(), 1);
+  EXPECT_EQ(inner_arg_var->Index(), 1);
+}
 }  // namespace
 }  // namespace nameless
 }  // namespace lhat
