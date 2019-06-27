@@ -44,13 +44,13 @@ TEST(SubBoundVar, AbstReplacement) {
   const Term replacement = Abst(Var(-1));
   SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
 
-  const auto abst = term.Get<Abst>();
+  const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto body_abst = abst->Body().Get<Abst>();
+  const Abst* body_abst = abst->Body().Get<Abst>();
   ASSERT_THAT(body_abst, NotNull());
 
-  const auto body_var = body_abst->Body().Get<Var>();
+  const Var* body_var = body_abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), -1);
 }
@@ -60,19 +60,19 @@ TEST(SubBoundVar, NestedApplReplacement) {
   const Term replacement = Appl(Abst(Var(-1)), Var(1));
   SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
 
-  const auto abst = term.Get<Abst>();
+  const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto body_abst = abst->Body().Get<Abst>();
+  const Abst* body_abst = abst->Body().Get<Abst>();
   ASSERT_THAT(body_abst, NotNull());
 
-  const auto appl = body_abst->Body().Get<Appl>();
+  const Appl* appl = body_abst->Body().Get<Appl>();
   ASSERT_THAT(appl, NotNull());
 
-  const auto func_abst = appl->Func().Get<Abst>();
+  const Abst* func_abst = appl->Func().Get<Abst>();
   ASSERT_THAT(func_abst, NotNull());
 
-  const auto abst_var = func_abst->Body().Get<Var>();
+  const Var* abst_var = func_abst->Body().Get<Var>();
   ASSERT_THAT(abst_var, NotNull());
   EXPECT_EQ(abst_var->Index(), -1);
 
@@ -83,46 +83,46 @@ TEST(SubBoundVar, NestedApplReplacement) {
 
 TEST(SubFreeVar, SameVar) {
   Term term = Var(0);
-  const Term replacement(Var(1));
+  const Term replacement = Var(1);
   SubFreeVar(0, replacement, &term);
 
-  const auto var = term.Get<Var>();
+  const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 1);
 }
 
 TEST(SubFreeVar, OtherVar) {
   Term term = Var(1);
-  const Term replacement(Var(2));
+  const Term replacement = Var(2);
   SubFreeVar(0, replacement, &term);
 
-  const auto var = term.Get<Var>();
+  const Var* var = term.Get<Var>();
   ASSERT_THAT(var, NotNull());
   EXPECT_EQ(var->Index(), 1);
 }
 
 TEST(SubFreeVar, AbstDistinctVar) {
   Term term = Abst(Var(2));
-  const Term replacement(Var(1));
+  const Term replacement = Var(1);
   SubFreeVar(0, replacement, &term);
 
-  const auto abst = term.Get<Abst>();
+  const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto body_var = abst->Body().Get<Var>();
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), 2);
 }
 
 TEST(SubFreeVar, AbstSameVar) {
   Term term = Abst(Var(0));
-  const Term replacement(Var(1));
+  const Term replacement = Var(1);
   SubFreeVar(0, replacement, &term);
 
-  const auto abst = term.Get<Abst>();
+  const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
 
-  const auto body_var = abst->Body().Get<Var>();
+  const Var* body_var = abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), 1);
 }
