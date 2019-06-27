@@ -125,7 +125,7 @@ TEST(BetaReduceAppl, BoundVarNestedAbst) {
 
   const Var* var = abst->Body().Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->Index(), 1);
+  EXPECT_EQ(var->Index(), 0);
 }
 
 TEST(BetaReduceAppl, FuncBeforeArg) {
@@ -251,7 +251,7 @@ TEST(BetaReduceNormal, BoundVarNestedAbst) {
 
   const Var* var = abst->Body().Get<Var>();
   ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->Index(), 1);
+  EXPECT_EQ(var->Index(), 0);
 }
 
 TEST(BetaReduceNormal, ApplBeforeFunc) {

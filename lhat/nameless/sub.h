@@ -5,11 +5,13 @@
 
 namespace lhat {
 namespace nameless {
-// Shifts the indexes of the free variables in term by d.
-void ShiftFreeVarIndex(int d, Term* term);
+// Substitutes the occurrences of the bound variable indicated by idx in target
+// with replacement.
+void SubBoundVar(int idx, const Term& replacement, Term* target);
 
-// Substitutes the occurrences of idx in target with replacement.
-void Sub(int idx, const Term& replacement, Term* target);
+// Substitutes the occurrences of the free variable indicated by idx in target
+// with replacement.
+void SubFreeVar(int idx, const Term& replacement, Term* target);
 }  // namespace nameless
 }  // namespace lhat
 

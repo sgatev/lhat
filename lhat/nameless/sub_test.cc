@@ -10,47 +10,10 @@ namespace nameless {
 namespace {
 using ::testing::NotNull;
 
-TEST(ShiftFreeVarIndex, Var) {
-  Term term = Var(1);
-  ShiftFreeVarIndex(1, &term);
-
-  const Var* var = term.Get<Var>();
-  ASSERT_THAT(var, NotNull());
-
-  EXPECT_EQ(var->Index(), 2);
-}
-
-TEST(ShiftFreeVarIndex, Appl) {
-  Term term = Appl(Var(1), Var(2));
-  ShiftFreeVarIndex(1, &term);
-
-  const Appl* appl = term.Get<Appl>();
-  ASSERT_THAT(appl, NotNull());
-
-  const Var* func_var = appl->Func().Get<Var>();
-  ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->Index(), 2);
-
-  const Var* arg_var = appl->Arg().Get<Var>();
-  ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->Index(), 3);
-}
-
-TEST(ShiftFreeVarIndex, AbstFreeVar) {
-  Term term = Abst(Var(1));
-  ShiftFreeVarIndex(1, &term);
-
-  const Abst* abst = term.Get<Abst>();
-  ASSERT_THAT(abst, NotNull());
-
-  const Var* body_var = abst->Body().Get<Var>();
-  ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Index(), 2);
-}
-
-TEST(ShiftFreeVarIndex, AbstBoundVar) {
-  Term term = Abst(Var(0));
-  ShiftFreeVarIndex(1, &term);
+TEST(SubBoundVar, VarReplacement) {
+  Term term = Abst(Var(-1));
+  const Term replacement = Var(0);
+  SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
 
   const Abst* abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -60,78 +23,26 @@ TEST(ShiftFreeVarIndex, AbstBoundVar) {
   EXPECT_EQ(body_var->Index(), 0);
 }
 
-TEST(ShiftFreeVarIndex, Complex) {
-  Term term = Abst(Term(Abst(Appl(Var(1), Var(2)))));
-  ShiftFreeVarIndex(1, &term);
-
-  const Abst* abst = term.Get<Abst>();
-  ASSERT_THAT(abst, NotNull());
-
-  const Abst* nested_abst = abst->Body().Get<Abst>();
-  ASSERT_THAT(nested_abst, NotNull());
-
-  const Appl* appl = nested_abst->Body().Get<Appl>();
-  ASSERT_THAT(appl, NotNull());
-
-  const Var* func_var = appl->Func().Get<Var>();
-  ASSERT_THAT(func_var, NotNull());
-  EXPECT_EQ(func_var->Index(), 1);
-
-  const Var* arg_var = appl->Arg().Get<Var>();
-  ASSERT_THAT(arg_var, NotNull());
-  EXPECT_EQ(arg_var->Index(), 3);
-}
-
-TEST(Sub, SameVar) {
-  Term term = Var(0);
-  const Term replacement(Var(1));
-  Sub(0, replacement, &term);
-
-  const auto var = term.Get<Var>();
-  ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->Index(), 1);
-}
-
-TEST(Sub, OtherVar) {
-  Term term = Var(1);
-  const Term replacement(Var(2));
-  Sub(0, replacement, &term);
-
-  const auto var = term.Get<Var>();
-  ASSERT_THAT(var, NotNull());
-  EXPECT_EQ(var->Index(), 1);
-}
-
-TEST(Sub, AbstDistinctVar) {
-  Term term = Abst(Var(0));
-  const Term replacement(Var(1));
-  Sub(0, replacement, &term);
-
-  const auto abst = term.Get<Abst>();
-  ASSERT_THAT(abst, NotNull());
-
-  const auto body_var = abst->Body().Get<Var>();
-  ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Index(), 0);
-}
-
-TEST(Sub, AbstSameVar) {
-  Term term = Abst(Var(1));
-  const Term replacement(Var(1));
-  Sub(0, replacement, &term);
-
-  const auto abst = term.Get<Abst>();
-  ASSERT_THAT(abst, NotNull());
-
-  const auto body_var = abst->Body().Get<Var>();
-  ASSERT_THAT(body_var, NotNull());
-  EXPECT_EQ(body_var->Index(), 2);
-}
-
-TEST(Sub, BoundVar) {
+TEST(SubBoundVar, NestedVarReplacement) {
   Term term = Abst(Term(Abst(Var(-2))));
-  const Term replacement(Var(1));
-  Sub(-1, replacement, term.Get<Abst>()->MutableBody());
+  const Term replacement = Var(1);
+  SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
+
+  const Abst* abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const Abst* body_abst = abst->Body().Get<Abst>();
+  ASSERT_THAT(body_abst, NotNull());
+
+  const Var* body_var = body_abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), 1);
+}
+
+TEST(SubBoundVar, AbstReplacement) {
+  Term term = Abst(Var(-1));
+  const Term replacement = Abst(Var(-1));
+  SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
 
   const auto abst = term.Get<Abst>();
   ASSERT_THAT(abst, NotNull());
@@ -141,16 +52,85 @@ TEST(Sub, BoundVar) {
 
   const auto body_var = body_abst->Body().Get<Var>();
   ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), -1);
+}
+
+TEST(SubBoundVar, NestedApplReplacement) {
+  Term term = Abst(Term(Abst(Var(-2))));
+  const Term replacement = Appl(Abst(Var(-1)), Var(1));
+  SubBoundVar(-1, replacement, term.Get<Abst>()->MutableBody());
+
+  const auto abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const auto body_abst = abst->Body().Get<Abst>();
+  ASSERT_THAT(body_abst, NotNull());
+
+  const auto appl = body_abst->Body().Get<Appl>();
+  ASSERT_THAT(appl, NotNull());
+
+  const auto func_abst = appl->Func().Get<Abst>();
+  ASSERT_THAT(func_abst, NotNull());
+
+  const auto abst_var = func_abst->Body().Get<Var>();
+  ASSERT_THAT(abst_var, NotNull());
+  EXPECT_EQ(abst_var->Index(), -1);
+
+  const Var* var = appl->Arg().Get<Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Index(), 1);
+}
+
+TEST(SubFreeVar, SameVar) {
+  Term term = Var(0);
+  const Term replacement(Var(1));
+  SubFreeVar(0, replacement, &term);
+
+  const auto var = term.Get<Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Index(), 1);
+}
+
+TEST(SubFreeVar, OtherVar) {
+  Term term = Var(1);
+  const Term replacement(Var(2));
+  SubFreeVar(0, replacement, &term);
+
+  const auto var = term.Get<Var>();
+  ASSERT_THAT(var, NotNull());
+  EXPECT_EQ(var->Index(), 1);
+}
+
+TEST(SubFreeVar, AbstDistinctVar) {
+  Term term = Abst(Var(2));
+  const Term replacement(Var(1));
+  SubFreeVar(0, replacement, &term);
+
+  const auto abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const auto body_var = abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Index(), 2);
 }
 
-TEST(Sub, AbstApplSameVar) {
-  // (0 (^ (1 2))) or (a (^ b (a c))) with context {0 -> a, 1 -> c}
+TEST(SubFreeVar, AbstSameVar) {
+  Term term = Abst(Var(0));
+  const Term replacement(Var(1));
+  SubFreeVar(0, replacement, &term);
+
+  const auto abst = term.Get<Abst>();
+  ASSERT_THAT(abst, NotNull());
+
+  const auto body_var = abst->Body().Get<Var>();
+  ASSERT_THAT(body_var, NotNull());
+  EXPECT_EQ(body_var->Index(), 1);
+}
+
+TEST(SubFreeVar, AbstApplSameVar) {
   Term term = Appl(Var(0), Abst(Appl(Var(0), Var(1))));
   const Term replacement = Var(1);
-  // [0 -> 1], or [a -> c] with context {0 -> a, 1 -> c}
-  Sub(0, replacement, &term);
-  // expecting (1 (^ (2 2))) or (c (^ b (c c))) with context {0 -> a, 1 -> c}
+  SubFreeVar(0, replacement, &term);
 
   const Appl* appl = term.Get<Appl>();
   ASSERT_THAT(appl, NotNull());
@@ -167,10 +147,10 @@ TEST(Sub, AbstApplSameVar) {
 
   const Var* inner_func_var = inner_appl->Func().Get<Var>();
   ASSERT_THAT(inner_func_var, NotNull());
+  EXPECT_EQ(inner_func_var->Index(), 1);
+
   const Var* inner_arg_var = inner_appl->Arg().Get<Var>();
   ASSERT_THAT(inner_arg_var, NotNull());
-
-  EXPECT_EQ(inner_func_var->Index(), 1);
   EXPECT_EQ(inner_arg_var->Index(), 1);
 }
 }  // namespace

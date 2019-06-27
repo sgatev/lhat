@@ -15,7 +15,7 @@ bool BetaReduceTerm(Term* term) {
                          return false;
                        }
                        Term result = appl.Func().Get<Abst>()->Body();
-                       Sub(-1, appl.Arg(), &result);
+                       SubBoundVar(-1, appl.Arg(), &result);
                        *term = result;
                        return true;
                      },
