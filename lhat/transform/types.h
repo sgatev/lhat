@@ -9,8 +9,8 @@
 #include "lhat/nameless/ast.h"
 #include "lhat/util/error.h"
 
-namespace lhat {
-namespace transform {
+namespace lhat::transform {
+
 // A simple lambda type.
 class SimpleType {
  public:
@@ -152,16 +152,18 @@ void ApplyTypeSubs(const std::unordered_map<SimpleType, int>& subs,
 
 // Converts the type at index idx to string.
 std::string TypeToString(const std::vector<Type>& types, int idx);
-}  // namespace transform
-}  // namespace lhat
+
+}  // namespace lhat::transform
 
 namespace std {
+
 template <>
 struct hash<lhat::transform::SimpleType> {
   size_t operator()(const lhat::transform::SimpleType& id) const {
     return hash<int>()(id.Id());
   }
 };
+
 }  // namespace std
 
 #endif  // LHAT_TRANSFORM_TYPES_H

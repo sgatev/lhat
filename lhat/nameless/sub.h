@@ -3,8 +3,8 @@
 
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 // Substitutes the occurrences of the bound variable indicated by idx in target
 // with replacement.
 void SubBoundVar(int idx, const Term& replacement, Term* target);
@@ -12,7 +12,7 @@ void SubBoundVar(int idx, const Term& replacement, Term* target);
 // Substitutes the occurrences of the free variable indicated by idx in target
 // with replacement.
 void SubFreeVar(int idx, const Term& replacement, Term* target);
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
 
 #endif  // LHAT_NAMELESS_SUB_H

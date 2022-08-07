@@ -5,8 +5,8 @@
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_replace.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
+
 std::optional<util::Error> ConstEnv::Set(std::string name, std::string value) {
   const std::optional<util::Error> resolve_error = Resolve(&value);
   if (resolve_error) {
@@ -37,5 +37,5 @@ std::optional<util::Error> ConstEnv::Resolve(std::string* s) const {
 
   return std::nullopt;
 }
-}  // namespace repl
-}  // namespace lhat
+
+}  // namespace lhat::repl

@@ -6,9 +6,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
 namespace {
+
 using ::testing::NotNull;
 
 TEST(Parse, Var) {
@@ -157,6 +157,6 @@ TEST(Parse, IncompleteExpr) {
   EXPECT_EQ(parse_result.Error().Message(),
             "Failed to parse term: ( is not closed");
 }
+
 }  // namespace
-}  // namespace named
-}  // namespace lhat
+}  // namespace lhat::named

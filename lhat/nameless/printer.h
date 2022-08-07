@@ -6,8 +6,8 @@
 
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 // Constructs lambda expressions from ASTs.
 class Printer {
  public:
@@ -25,7 +25,7 @@ class Printer {
   int abst_count_;
   std::vector<std::string> result_pieces_;
 };
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
 
 #endif  // LHAT_NAMELESS_PRINTER_H

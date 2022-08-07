@@ -1,13 +1,12 @@
 #include "lhat/nameless/eta.h"
 
-#include "lhat/nameless/ast.h"
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 using ::testing::NotNull;
 
 TEST(EtaReduceTerm, Var) {
@@ -191,6 +190,6 @@ TEST(EtaReduceSubTerms, AbstApplBoundNested) {
   ASSERT_THAT(arg_var, NotNull());
   EXPECT_EQ(arg_var->Index(), 1);
 }
+
 }  // namespace
-}  // namespace nameless
-}  // namespace lhat
+}  // namespace lhat::nameless

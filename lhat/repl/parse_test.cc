@@ -5,9 +5,9 @@
 
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
 namespace {
+
 TEST(ParseCommand, Empty) {
   const std::string expr = "";
 
@@ -87,6 +87,6 @@ TEST(ParseConstName, PermitsSpecialChars) {
 
   EXPECT_EQ(const_name.Value(), "foo*");
 }
+
 }  // namespace
-}  // namespace repl
-}  // namespace lhat
+}  // namespace lhat::repl

@@ -3,11 +3,11 @@
 
 #include <istream>
 
-namespace lhat {
-namespace util {
+namespace lhat::util {
+
 // Discards all starting whitespaces from input.
 void DiscardWhitespace(std::istream* input);
-}  // namespace util
-}  // namespace lhat
+
+}  // namespace lhat::util
 
 #endif  // LHAT_UTIL_PARSE_H

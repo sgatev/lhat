@@ -1,13 +1,12 @@
 #include "lhat/nameless/sub.h"
 
-#include "lhat/nameless/ast.h"
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 using ::testing::NotNull;
 
 TEST(SubBoundVar, VarReplacement) {
@@ -153,6 +152,6 @@ TEST(SubFreeVar, AbstApplSameVar) {
   ASSERT_THAT(inner_arg_var, NotNull());
   EXPECT_EQ(inner_arg_var->Index(), 1);
 }
+
 }  // namespace
-}  // namespace nameless
-}  // namespace lhat
+}  // namespace lhat::nameless

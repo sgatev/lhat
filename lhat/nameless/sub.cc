@@ -1,7 +1,7 @@
 #include "lhat/nameless/sub.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 void SubBoundVar(int idx, const Term& replacement, Term* target) {
   target->Match(
       [idx, replacement = replacement](Abst& abst) mutable {
@@ -33,5 +33,5 @@ void SubFreeVar(int idx, const Term& replacement, Term* target) {
         }
       });
 }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless

@@ -1,8 +1,8 @@
 #include "lhat/nameless/eta.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 bool HasBoundVarIndex(const Term& term, int idx) {
   return term.Match(
       [idx](const Abst& abst) -> bool {
@@ -14,6 +14,7 @@ bool HasBoundVarIndex(const Term& term, int idx) {
       },
       [idx](const Var& var) -> bool { return var.Index() == idx; });
 }
+
 }  // namespace
 
 bool EtaReduceTerm(Term* term) {
@@ -56,5 +57,5 @@ bool EtaReduceSubTerms(Term* term) {
       },
       [](const Var& var) -> bool { return false; });
 }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless

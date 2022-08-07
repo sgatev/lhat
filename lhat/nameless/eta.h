@@ -3,14 +3,14 @@
 
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 // Performs eta reduction on term.
 bool EtaReduceTerm(Term* term);
 
 // Performs eta reduction on term and its subterms.
 bool EtaReduceSubTerms(Term* term);
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
 
 #endif  // LHAT_NAMELESS_ETA_H

@@ -3,8 +3,8 @@
 
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 // Performs a beta reduction on term if term is a beta redex, that is term is an
 // application node and its function is an abstraction node.
 bool BetaReduceTerm(Term* term);
@@ -23,7 +23,7 @@ bool IsBetaNormalForm(const Term& term);
 
 // Returns true if the head position in term is not a redex.
 bool IsHeadNormalForm(const Term& term);
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
 
 #endif  // LHAT_NAMELESS_BETA_H

@@ -2,9 +2,9 @@
 
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
 namespace {
+
 TEST(IsAlphaEquiv, DistinctTypes) {
   const Term m = Var("x");
   const Term n = Abst("x", Var("y"));
@@ -70,6 +70,6 @@ TEST(IsAlphaEquiv, BoundVarIsFreeVarInOtherTerm) {
   const Term n = Abst("x", Appl(Var("x"), Var("y")));
   EXPECT_FALSE(IsAlphaEquiv(m, n));
 }
+
 }  // namespace
-}  // namespace named
-}  // namespace lhat
+}  // namespace lhat::named

@@ -1,14 +1,13 @@
-#include "lhat/nameless/parser.h"
-#include "lhat/nameless/printer.h"
-
 #include <sstream>
 #include <string>
 
 #include "gtest/gtest.h"
+#include "lhat/nameless/parser.h"
+#include "lhat/nameless/printer.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 TEST(Ast, ParsePrintConsistency) {
   const std::string expr = "((^ 0) (^ (0 ((^ 2) 1))))";
   std::istringstream expr_stream(expr);
@@ -18,6 +17,6 @@ TEST(Ast, ParsePrintConsistency) {
   Printer::Print(term.Value(), &out);
   EXPECT_EQ(out, expr);
 }
+
 }  // namespace
-}  // namespace nameless
-}  // namespace lhat
+}  // namespace lhat::nameless

@@ -2,10 +2,11 @@
 
 #include "lhat/util/parse.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 bool IsSpecial(char c) { return c == '(' || c == ')' || c == '^' || c == ' '; }
+
 }  // namespace
 
 util::ErrorOr<Term> Parser::Parse(std::istream* input) {
@@ -102,5 +103,5 @@ util::ErrorOr<Var> Parser::ParseVar() {
   }
   return Var(idx - abst_count_);
 }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless

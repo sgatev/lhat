@@ -6,9 +6,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
 namespace {
+
 using ::testing::IsEmpty;
 using ::testing::UnorderedElementsAre;
 
@@ -124,6 +124,6 @@ TEST(NewVarName, AllSingleLetterTaken) {
   }
   EXPECT_EQ(NewVarName(var_names), "aa");
 }
+
 }  // namespace
-}  // namespace named
-}  // namespace lhat
+}  // namespace lhat::named

@@ -3,8 +3,8 @@
 #include "lhat/named/sub.h"
 #include "lhat/named/vars.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 bool IsAlphaEquiv(const Term& m, const Term& n) {
   if (m.Type() != n.Type()) {
     return false;
@@ -36,5 +36,5 @@ bool IsAlphaEquiv(const Term& m, const Term& n) {
         return m_var.Name() == n_var->Name();
       });
 }
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named

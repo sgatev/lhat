@@ -6,8 +6,8 @@
 
 #include "lhat/named/ast.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 // Constructs lambda expressions from ASTs.
 class Printer {
  public:
@@ -22,7 +22,7 @@ class Printer {
 
   std::vector<std::string_view> result_pieces_;
 };
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named
 
 #endif  // LHAT_NAMED_PRINTER_H

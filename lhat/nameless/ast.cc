@@ -1,7 +1,7 @@
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 Term::Term(Abst abst) : term_(std::move(abst)) {}
 
 Term::Term(Appl appl) : term_(std::move(appl)) {}
@@ -43,5 +43,5 @@ Var::Var(int idx) : idx_(idx) {}
 int Var::Index() const { return idx_; }
 
 void Var::SetIndex(int idx) { idx_ = idx; }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless

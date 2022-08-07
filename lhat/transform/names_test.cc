@@ -3,9 +3,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace transform {
+namespace lhat::transform {
 namespace {
+
 using ::testing::IsEmpty;
 using ::testing::NotNull;
 using ::testing::UnorderedElementsAre;
@@ -271,6 +271,6 @@ TEST(AddNames, PredefinedNames) {
   ASSERT_THAT(body_var, NotNull());
   EXPECT_EQ(body_var->Name(), "g");
 }
+
 }  // namespace
-}  // namespace transform
-}  // namespace lhat
+}  // namespace lhat::transform

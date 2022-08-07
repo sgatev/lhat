@@ -1,13 +1,12 @@
 #include "lhat/nameless/beta.h"
 
-#include "lhat/nameless/ast.h"
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 using ::testing::NotNull;
 
 TEST(BetaReduceTerm, Var) {
@@ -378,6 +377,6 @@ TEST(IsHeadNormalForm, NonHeadRedex) {
   const Term term = Abst(Abst(Appl(Var(3), Appl(Abst(Var(-1)), Var(2)))));
   EXPECT_TRUE(IsHeadNormalForm(term));
 }
+
 }  // namespace
-}  // namespace nameless
-}  // namespace lhat
+}  // namespace lhat::nameless

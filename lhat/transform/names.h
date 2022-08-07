@@ -8,8 +8,8 @@
 #include "lhat/named/ast.h"
 #include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace transform {
+namespace lhat::transform {
+
 // A context of names of lambda variables.
 class NameContext {
  public:
@@ -52,7 +52,7 @@ named::Term AddNames(const nameless::Term& term, NameContext* free_nctx);
 // Converts a named lambda term into a nameless lambda term. Additionally,
 // registers the names of term's free vars in free_nctx.
 nameless::Term RemoveNames(const named::Term& term, NameContext* free_nctx);
-}  // namespace transform
-}  // namespace lhat
+
+}  // namespace lhat::transform
 
 #endif  // LHAT_TRANSFORM_NAMES_H

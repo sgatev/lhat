@@ -2,9 +2,9 @@
 
 #include "absl/strings/str_cat.h"
 
-namespace lhat {
-namespace transform {
+namespace lhat::transform {
 namespace {
+
 util::ErrorOr<int> CollectTypes(
     const nameless::Term& term,
     const std::unordered_map<int, int>& free_var_types, int abst_count,
@@ -139,6 +139,7 @@ bool UnifyTypes(const std::vector<Type>& types, int left_idx, int right_idx,
   }
   return false;
 }
+
 }  // namespace
 
 SimpleType::SimpleType(int id) : id_(id) {}
@@ -223,5 +224,5 @@ std::string TypeToString(const std::vector<Type>& types, int idx) {
         }
       });
 }
-}  // namespace transform
-}  // namespace lhat
+
+}  // namespace lhat::transform

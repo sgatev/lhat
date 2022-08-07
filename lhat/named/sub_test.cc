@@ -3,9 +3,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
 namespace {
+
 using ::testing::NotNull;
 
 TEST(Sub, SameVar) {
@@ -166,6 +166,6 @@ TEST(SafeSub, RenameToBoundVar) {
   ASSERT_THAT(arg_var, NotNull());
   EXPECT_EQ(arg_var->Name(), "a");
 }
+
 }  // namespace
-}  // namespace named
-}  // namespace lhat
+}  // namespace lhat::named

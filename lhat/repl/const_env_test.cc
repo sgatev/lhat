@@ -4,9 +4,9 @@
 
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
 namespace {
+
 TEST(ConstEnv, NoConst) {
   ConstEnv consts;
   consts.Set("K", "hello");
@@ -70,6 +70,6 @@ TEST(ConstEnv, NotRegistered) {
 
   EXPECT_EQ(s, "'M");
 }
+
 }  // namespace
-}  // namespace repl
-}  // namespace lhat
+}  // namespace lhat::repl

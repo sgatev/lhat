@@ -2,8 +2,8 @@
 
 #include <deque>
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 void InsertBoundVarNames(const Term& term,
                          std::unordered_set<std::string>* var_names) {
   term.Match(
@@ -77,5 +77,5 @@ std::string NewVarName(const std::unordered_set<std::string>& var_names) {
     }
   }
 }
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named

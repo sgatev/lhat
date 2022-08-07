@@ -4,8 +4,8 @@
 
 #include "lhat/named/vars.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 void SafeSub(const std::string& var_name, const Term& replacement,
              Term* target) {
   target->Match(
@@ -69,5 +69,5 @@ void Sub(const std::string& var_name, const Term& replacement, Term* target) {
         }
       });
 }
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named

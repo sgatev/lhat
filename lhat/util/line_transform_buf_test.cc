@@ -7,9 +7,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace util {
+namespace lhat::util {
 namespace {
+
 using ::testing::IsEmpty;
 
 TEST(LineTransformBuf, TransformsLines) {
@@ -55,6 +55,6 @@ TEST(LineTransformBuf, TerminatesStream) {
 
   EXPECT_TRUE(transformed_stream.eof());
 }
+
 }  // namespace
-}  // namespace util
-}  // namespace lhat
+}  // namespace lhat::util

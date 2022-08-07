@@ -4,9 +4,9 @@
 
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 TEST(Printer, Var) {
   const Term term = Var(21);
   std::string out;
@@ -55,6 +55,6 @@ TEST(Printer, Complex) {
   Printer::Print(term, &out);
   EXPECT_EQ(out, "((^ 1) (1 0))");
 }
+
 }  // namespace
-}  // namespace nameless
-}  // namespace lhat
+}  // namespace lhat::nameless

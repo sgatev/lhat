@@ -2,10 +2,11 @@
 
 #include "lhat/nameless/sub.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
 namespace {
+
 bool IsBetaRedex(const Appl& appl) { return appl.Func().Type() == ABST; }
+
 }  // namespace
 
 bool BetaReduceTerm(Term* term) {
@@ -62,5 +63,5 @@ bool IsHeadNormalForm(const Term& term) {
       [](const Appl& appl) -> bool { return !IsBetaRedex(appl); },
       [](const Var& var) -> bool { return true; });
 }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless

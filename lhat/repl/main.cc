@@ -17,9 +17,9 @@
 #include "lhat/transform/types.h"
 #include "lhat/util/line_transform_buf.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
 namespace {
+
 std::string BoolToString(bool b) {
   if (b) {
     return std::string("true");
@@ -363,8 +363,8 @@ void Run(int argc, char* argv[]) {
     PrintCommandOutput(output);
   }
 }
+
 }  // namespace
-}  // namespace repl
-}  // namespace lhat
+}  // namespace lhat::repl
 
 int main(int argc, char* argv[]) { lhat::repl::Run(argc, argv); }

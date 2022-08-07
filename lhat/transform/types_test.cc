@@ -3,14 +3,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include "lhat/nameless/ast.h"
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "lhat/nameless/ast.h"
 
-namespace lhat {
-namespace transform {
+namespace lhat::transform {
 namespace {
+
 using ::testing::ElementsAre;
 using ::testing::IsEmpty;
 using ::testing::Pointee;
@@ -147,6 +146,6 @@ TEST(CollectTypes, NestedAbstAppl) {
 
   EXPECT_EQ(term_type_idx.Value(), 9);
 }
+
 }  // namespace
-}  // namespace transform
-}  // namespace lhat
+}  // namespace lhat::transform

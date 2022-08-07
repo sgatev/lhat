@@ -4,9 +4,9 @@
 
 #include "lhat/util/parse.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
 namespace {
+
 bool IsSpecial(char c) {
   return c == '(' || c == ')' || c == '^' || std::isspace(c);
 }
@@ -69,6 +69,7 @@ util::ErrorOr<Appl> ParseAppl(std::istream* input) {
 
   return Appl(func.Value(), arg.Value());
 }
+
 }  // namespace
 
 util::ErrorOr<Term> Parse(std::istream* input) {
@@ -102,5 +103,5 @@ util::ErrorOr<Term> Parse(std::istream* input) {
   RETURN_IF_ERROR(appl);
   return Term(appl.Value());
 }
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named

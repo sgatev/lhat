@@ -4,14 +4,15 @@
 
 #include "lhat/util/parse.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
 namespace {
+
 bool IsCommandChar(char c) { return std::isalnum(c) || c == '-' || c == '?'; }
 
 bool IsConstNameChar(char c) { return std::isalnum(c) || c == '*'; }
 
 bool IsWhitespace(char c) { return c == ' ' || c == '\t'; }
+
 }  // namespace
 
 util::ErrorOr<std::string> ParseCommand(std::istream* input) {
@@ -37,5 +38,5 @@ util::ErrorOr<std::string> ParseConstName(std::istream* input) {
 
   return name;
 }
-}  // namespace repl
-}  // namespace lhat
+
+}  // namespace lhat::repl

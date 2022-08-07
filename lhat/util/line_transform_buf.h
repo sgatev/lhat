@@ -5,8 +5,8 @@
 #include <streambuf>
 #include <string>
 
-namespace lhat {
-namespace util {
+namespace lhat::util {
+
 // A stream buffer that transforms each line of the underlying input stream.
 // If LineTransformer returns false the stream terminates with eof.
 template <class LineTransformer>
@@ -41,7 +41,7 @@ class LineTransformBuf : public std::streambuf {
   std::string line_;
   LineTransformer transform_;
 };
-}  // namespace util
-}  // namespace lhat
+
+}  // namespace lhat::util
 
 #endif  // LHAT_UTIL_LINE_TRANSFORM_BUF_H

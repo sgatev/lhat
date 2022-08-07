@@ -1,7 +1,7 @@
 #include "lhat/named/ast.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 Term::Term(Abst abst) : term_(std::move(abst)) {}
 
 Term::Term(Appl appl) : term_(std::move(appl)) {}
@@ -50,5 +50,5 @@ Var::Var(std::string name) : name_(std::move(name)) {}
 const std::string& Var::Name() const { return name_; }
 
 void Var::SetName(std::string name) { name_ = std::move(name); }
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named

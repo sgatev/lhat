@@ -2,9 +2,9 @@
 
 #include "gtest/gtest.h"
 
-namespace lhat {
-namespace util {
+namespace lhat::util {
 namespace {
+
 TEST(DiscardWhitespace, DiscardsStartingWhitespace) {
   std::istringstream stream("  \t \n foo  \t \n");
   DiscardWhitespace(&stream);
@@ -13,5 +13,4 @@ TEST(DiscardWhitespace, DiscardsStartingWhitespace) {
 }
 
 }  // namespace
-}  // namespace util
-}  // namespace lhat
+}  // namespace lhat::util

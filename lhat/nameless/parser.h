@@ -6,8 +6,8 @@
 #include "lhat/nameless/ast.h"
 #include "lhat/util/error.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 // Constructs ASTs from lambda terms.
 class Parser {
  public:
@@ -25,7 +25,7 @@ class Parser {
   std::istream* input_;
   int abst_count_;
 };
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
 
 #endif  // LHAT_NAMELESS_PARSER_H

@@ -8,8 +8,8 @@
 
 #include "lhat/util/error.h"
 
-namespace lhat {
-namespace repl {
+namespace lhat::repl {
+
 // Environment of constant definitions.
 class ConstEnv {
  public:
@@ -24,7 +24,7 @@ class ConstEnv {
 
   std::unordered_map<std::string, std::string> vars_;
 };
-}  // namespace repl
-}  // namespace lhat
+
+}  // namespace lhat::repl
 
 #endif  // LHAT_REPL_CONST_ENV_H

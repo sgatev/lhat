@@ -7,8 +7,8 @@
 
 #include "lhat/util/overloaded.h"
 
-namespace lhat {
-namespace named {
+namespace lhat::named {
+
 class Term;
 
 // Lambda term that represents function abstraction.
@@ -136,7 +136,7 @@ class Term {
  private:
   std::variant<Abst, Appl, Var> term_;
 };
-}  // namespace named
-}  // namespace lhat
+
+}  // namespace lhat::named
 
 #endif  // LHAT_NAMED_AST_H

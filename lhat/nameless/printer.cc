@@ -3,8 +3,8 @@
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_join.h"
 
-namespace lhat {
-namespace nameless {
+namespace lhat::nameless {
+
 void Printer::Print(const Term& term, std::string* out) {
   Printer printer;
   printer.Print(term);
@@ -40,5 +40,5 @@ void Printer::Print(const Appl& appl) {
   Print(appl.Arg());
   result_pieces_.push_back(")");
 }
-}  // namespace nameless
-}  // namespace lhat
+
+}  // namespace lhat::nameless
