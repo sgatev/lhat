@@ -1,7 +1,5 @@
 # Λ^
 
-[![Build Status](https://travis-ci.org/sgatev/lhat.svg?branch=master)](https://travis-ci.org/sgatev/lhat)
-
 An interpreter for lambda calculus.
 
 ## Requires
