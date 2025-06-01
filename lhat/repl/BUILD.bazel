@@ -8,7 +8,7 @@ cc_library(
     ],
     deps = [
         "//lhat/util:error",
-        "@absl//absl/strings",
+        "@abseil-cpp//absl/strings",
     ],
 )
 
@@ -17,11 +17,9 @@ cc_test(
     srcs = [
         "const_env_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":const_env",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -63,10 +61,8 @@ cc_test(
     srcs = [
         "parse_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":parse",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

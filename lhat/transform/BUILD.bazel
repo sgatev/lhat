@@ -19,11 +19,9 @@ cc_test(
     srcs = [
         "names_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":names",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -39,7 +37,7 @@ cc_library(
     deps = [
         "//lhat/nameless:ast",
         "//lhat/util:error",
-        "@absl//absl/strings",
+        "@abseil-cpp//absl/strings",
     ],
 )
 
@@ -48,11 +46,9 @@ cc_test(
     srcs = [
         "types_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":types",
         "//lhat/nameless:ast",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

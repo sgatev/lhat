@@ -13,7 +13,7 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "@absl//absl/strings",
+        "@abseil-cpp//absl/strings",
     ],
 )
 
@@ -22,11 +22,9 @@ cc_test(
     srcs = [
         "line_transform_buf_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":line_transform_buf",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -54,10 +52,8 @@ cc_test(
     srcs = [
         "parse_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":parse",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

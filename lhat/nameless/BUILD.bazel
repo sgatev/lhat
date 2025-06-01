@@ -15,7 +15,7 @@ cc_library(
         "//lhat/util:error",
         "//lhat/util:overloaded",
         "//lhat/util:parse",
-        "@absl//absl/strings",
+        "@abseil-cpp//absl/strings",
     ],
 )
 
@@ -26,11 +26,9 @@ cc_test(
         "parser_test.cc",
         "printer_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -54,12 +52,10 @@ cc_test(
     srcs = [
         "beta_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
         ":beta",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -82,12 +78,10 @@ cc_test(
     srcs = [
         "eta_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
         ":eta",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -110,11 +104,9 @@ cc_test(
     srcs = [
         "sub_test.cc",
     ],
-    copts = ["-Iexternal/gtest/include"],
     deps = [
         ":ast",
         ":sub",
-        "@gtest",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

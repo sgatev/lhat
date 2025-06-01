@@ -1,0 +1,7 @@
+module(
+    name = "lhat",
+    version = "0.1",
+)
+
+bazel_dep(name = "abseil-cpp", version = "20250512.0")
+bazel_dep(name = "googletest", version = "1.17.0", dev_dependency = True)
