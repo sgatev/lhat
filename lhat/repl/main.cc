@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <string_view>
+#include <vector>
 
 #include "lhat/named/alpha.h"
 #include "lhat/named/ast.h"
@@ -286,8 +288,8 @@ void PrintCommandOutput(const util::ErrorOr<std::string>& output) {
   }
 }
 
-void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
-  std::ifstream file(file_name, std::ios::in);
+void LoadConstsFromFile(std::string_view file_name, ConstEnv* consts) {
+  std::ifstream file(file_name.data(), std::ios::in);
   if (!file.is_open()) {
     std::cout << "Failed to open file: " << file_name << std::endl;
     return;
@@ -318,18 +320,18 @@ void LoadConstsFromFile(const std::string& file_name, ConstEnv* consts) {
   }
 }
 
-void Run(int argc, char* argv[]) {
+void Run(std::vector<std::string_view> args) {
   ConstEnv consts;
 
-  for (int i = 1; i < argc; i += 2) {
-    if (std::strcmp(argv[i], "--exec") == 0) {
-      if (i + 1 >= argc) {
+  for (int i = 0; i < args.size(); i += 2) {
+    if (args[i] == "--exec") {
+      if (i + 1 >= args.size()) {
         std::cout << "Expected path to file" << std::endl;
       } else {
-        LoadConstsFromFile(argv[i + 1], &consts);
+        LoadConstsFromFile(args[i + 1], &consts);
       }
     } else {
-      std::cout << "Unknown flag: " << argv[i] << std::endl;
+      std::cout << "Unknown flag: " << args[i] << std::endl;
     }
   }
 
@@ -368,4 +370,4 @@ void Run(int argc, char* argv[]) {
 }  // namespace
 }  // namespace lhat::repl
 
-int main(int argc, char* argv[]) { lhat::repl::Run(argc, argv); }
+int main(int argc, char* argv[]) { lhat::repl::Run({argv + 1, argv + argc}); }
